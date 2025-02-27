@@ -1,11 +1,11 @@
-import cities from "@/public/Icons/cities-delivered.png"
-import delivered from "@/public/Icons/delivered-items.png"
-import pending from "@/public/Icons/pending-items.png"
-import admins from "@/public/Icons/total-admins.png"
-import employees2 from "@/public/Icons/total-employees-2.png"
-import employee from "@/public/Icons/total-employees.png"
-import orders from "@/public/Icons/total-orders.png"
-import revenue from "@/public/Icons/total-revenue.png"
+import cities from "@/public/Icons/cities-delivered.svg"
+import delivered from "@/public/Icons/delivered-items.svg"
+import pending from "@/public/Icons/pending-items.svg"
+import admins from "@/public/Icons/total-admins.svg"
+import employees2 from "@/public/Icons/total-employees-2.svg"
+import employee from "@/public/Icons/total-employees.svg"
+import orders from "@/public/Icons/total-orders.svg"
+import revenue from "@/public/Icons/total-revenue.svg"
 
 export const dashboardCards = [
   {

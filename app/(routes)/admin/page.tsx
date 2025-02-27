@@ -6,7 +6,7 @@ export default function Page() {
     <div className="flex-1 flex flex-col p-3 gap-3 bg-[#F1F2F8]">
       <div className="flex flex-col gap-2 py-3 px-1.5">
         <div className="text-[#060A87] text-2xl font-extrabold">Welcome Back, Owner!</div>
-        <div className="text-[#495D86] text-xs font-extrabold">Here’s What’s happening with deliveries today</div>
+        <div className="text-[#495D86] text-xs font-extrabold leading-4">Here’s What’s happening with deliveries today</div>
       </div>
       <div className="px-1.5 grid grid-cols-4 grid-rows-2 gap-2.5">
         {dashboardCards.map((card) => (
