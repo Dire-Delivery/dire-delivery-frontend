@@ -13,6 +13,8 @@ import { toast } from "sonner"
 import { authClient } from "@/lib/auth-client";
 import { signInFormSchema } from "@/lib/auth-schema";
 
+const BaseUrl = process.env.API_URL
+
 export default function SignIn() {
   const form = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
@@ -25,21 +27,33 @@ export default function SignIn() {
   async function onSubmit(values: z.infer<typeof signInFormSchema>) {
     const { email, password } = values;
     console.log("the values", values)
-    const { data, error } = await authClient.signIn.email({
-      email,
-      password,
-      callbackURL: "/admin",
-    }, {
-      onRequest: () => {
-         toast("Please wait...")
+    const loginDetails = {
+      email: email,
+      password: password
+    }
+
+    const response = await fetch(`https://1clr2kph-4000.uks1.devtunnels.ms/auth/log-in`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
       },
-      onSuccess: () => {
-        form.reset()
-      },
-      onError: (ctx) => {
-        alert(ctx.error.message);
-      },
-    });
+      body: JSON.stringify(loginDetails),
+    })
+
+
+    console.log('response', response)
+
+    const data = await response.json()
+
+    if (data) {
+      console.log("data", data)
+      localStorage.setItem("user", JSON.stringify(data.payload))
+      localStorage.setItem("token", data.token.token)
+    } else {
+      console.log("data not found")
+    }
+
+
   }
 
   return (
