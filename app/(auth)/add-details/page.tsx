@@ -39,7 +39,7 @@ export default function addDetails() {
     if (user && token) {
       const userData = JSON.parse(user)
 
-      const response = await fetch(`https://1clr2kph-4000.uks1.devtunnels.ms/auth/${userData.sub}/sign-up`, {
+      const response = await fetch(`https://1clr2kph-4000.uks1.devtunnels.ms/auth/${userData.id}/sign-up`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -52,6 +52,10 @@ export default function addDetails() {
       console.log('response', response)
 
       const data = await response.json()
+
+      if (data) {
+        localStorage.setItem("user", JSON.stringify(data.payload))
+      }
 
       console.log("data", data)
     }

@@ -45,10 +45,17 @@ export default function SignIn() {
 
     const data = await response.json()
 
-    if (data) {
+    if (data && !data.error) {
       console.log("data", data)
-      localStorage.setItem("user", JSON.stringify(data.payload))
-      localStorage.setItem("token", data.token.token)
+      if (data.mesage) {
+        const user = {
+          id: data.payload
+        }
+        localStorage.setItem("user", JSON.stringify(user))
+      } else {
+        localStorage.setItem("user", JSON.stringify(data.payload))
+      }
+      localStorage.setItem("token", data.token)
     } else {
       console.log("data not found")
     }
