@@ -12,6 +12,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner"
 import { authClient } from "@/lib/auth-client";
 import { signInFormSchema } from "@/lib/auth-schema";
+import Image from "next/image";
+import Login from "@/public/images/log-in.png"
 
 const BaseUrl = process.env.API_URL
 
@@ -64,57 +66,63 @@ export default function SignIn() {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle>Sign In</CardTitle>
-        <CardDescription>
-          Welcome back! Please sign in to continue.
-        </CardDescription>
-      </CardHeader>
+    <div className="flex flex-col justify-between h-screen w-screen">
+      <div className="h-[calc(100vh/2)] w-full">
+        <Image src={Login} alt="login image" className=" w-full h-full object-cover" />
+      </div>
+      <div className="flex-1 border-4 border-red-400"></div>
+    </div>
+    // <Card className="w-full max-w-md mx-auto">
+    //   <CardHeader>
+    //     <CardTitle>Sign In</CardTitle>
+    //     <CardDescription>
+    //       Welcome back! Please sign in to continue.
+    //     </CardDescription>
+    //   </CardHeader>
 
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="john@mail.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="Enter your password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button className="w-full" type="submit">Submit</Button>
-          </form>
-        </Form>
-      </CardContent>
+    //   <CardContent>
+    //     <Form {...form}>
+    //       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+    //         <FormField
+    //           control={form.control}
+    //           name="email"
+    //           render={({ field }) => (
+    //             <FormItem>
+    //               <FormLabel>Email</FormLabel>
+    //               <FormControl>
+    //                 <Input placeholder="john@mail.com" {...field} />
+    //               </FormControl>
+    //               <FormMessage />
+    //             </FormItem>
+    //           )}
+    //         />
+    //         <FormField
+    //           control={form.control}
+    //           name="password"
+    //           render={({ field }) => (
+    //             <FormItem>
+    //               <FormLabel>Password</FormLabel>
+    //               <FormControl>
+    //                 <Input type="password" placeholder="Enter your password" {...field} />
+    //               </FormControl>
+    //               <FormMessage />
+    //             </FormItem>
+    //           )}
+    //         />
+    //         <Button className="w-full" type="submit">Submit</Button>
+    //       </form>
+    //     </Form>
+    //   </CardContent>
 
-      <CardFooter className='flex justify-center'>
-        <p className='text-sm text-muted-foreground'>
-          Don&apos;t have an account yet?{' '}
-          <Link href='/sign-up' className='text-primary hover:underline'>
-            Sign up
-          </Link>
-        </p>
-      </CardFooter>
-    </Card>
+    //   <CardFooter className='flex justify-center'>
+    //     <p className='text-sm text-muted-foreground'>
+    //       Don&apos;t have an account yet?{' '}
+    //       <Link href='/sign-up' className='text-primary hover:underline'>
+    //         Sign up
+    //       </Link>
+    //     </p>
+    //   </CardFooter>
+    // </Card>
 
   )
 }
