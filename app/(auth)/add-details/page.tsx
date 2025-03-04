@@ -22,16 +22,17 @@ export default function addDetails() {
       fName: "",
       lName: "",
       location: "",
-      password: "",
+      newPassword: "",
+      confirmPassword: ""
     },
   })
 
   async function onSubmit(values: z.infer<typeof addDetailsSchema>) {
-    const { fName, lName, location, password } = values;
+    const { fName, lName, location, newPassword, confirmPassword } = values;
     console.log("the values", values)
     const addDetails = {
       name: `${fName} ${lName}`,
-       location, password
+       location, newPassword
     }
 
     const user = localStorage.getItem('user')
@@ -116,10 +117,23 @@ export default function addDetails() {
             />
             <FormField
               control={form.control}
-              name="password"
+              name="newPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>New Password</FormLabel>
+                  <FormControl>
+                    <Input type="password" placeholder="Enter your password" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
                     <Input type="password" placeholder="Enter your password" {...field} />
                   </FormControl>
