@@ -73,11 +73,11 @@ export default function addDetails() {
         <Image src={AddDetails} alt="login image" className=" w-full h-full object-cover hidden md:block" />
         <Image src={AddDetailsMobile} alt="login image" className=" w-full h-full object-cover md:hidden" />
       </div>
-      <Card className="w-full max-w-md mx-auto">
+      <Card className="w-full">
         <CardHeader>
-          <CardTitle>Sign In</CardTitle>
-          <CardDescription>
-            Welcome back! Please sign in to continue.
+          <CardTitle className="font-bold text-2xl text-[#060A87] text-center">Welcome To Dire Family</CardTitle>
+          <CardDescription className="font-normal text-sm text-[#060A87] text-center">
+            Please Fill the Form Below    
           </CardDescription>
         </CardHeader>
 
