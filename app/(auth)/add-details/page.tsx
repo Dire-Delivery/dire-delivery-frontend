@@ -12,6 +12,9 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner"
 import { authClient } from "@/lib/auth-client";
 import { addDetailsSchema } from "@/lib/auth-schema";
+import Image from "next/image";
+import AddDetails from "@/public/images/add-details.png"
+import AddDetailsMobile from "@/public/images/details-mobile-version.svg"
 
 const BaseUrl = process.env.API_URL
 
@@ -32,7 +35,7 @@ export default function addDetails() {
     console.log("the values", values)
     const addDetails = {
       name: `${fName} ${lName}`,
-       location, newPassword
+      location, newPassword
     }
 
     const user = localStorage.getItem('user')
@@ -65,96 +68,103 @@ export default function addDetails() {
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle>Sign In</CardTitle>
-        <CardDescription>
-          Welcome back! Please sign in to continue.
-        </CardDescription>
-      </CardHeader>
+    <div className="flex flex-col justify-between h-screen w-screen md:flex-row">
+      <div className="h-[calc(100vh/2.5)] w-full md:h-screen md:w-[calc(100vw/2)]">
+        <Image src={AddDetails} alt="login image" className=" w-full h-full object-cover hidden md:block" />
+        <Image src={AddDetailsMobile} alt="login image" className=" w-full h-full object-cover md:hidden" />
+      </div>
+      <Card className="w-full max-w-md mx-auto">
+        <CardHeader>
+          <CardTitle>Sign In</CardTitle>
+          <CardDescription>
+            Welcome back! Please sign in to continue.
+          </CardDescription>
+        </CardHeader>
 
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="fName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>First Name</FormLabel>
-                  <FormControl>
-                    <Input  {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="lName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Last Name</FormLabel>
-                  <FormControl>
-                    <Input  {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Location</FormLabel>
-                  <FormControl>
-                    <Input  {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="newPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>New Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="Enter your password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input type="password" placeholder="Enter your password" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button className="w-full" type="submit">Submit</Button>
-          </form>
-        </Form>
-      </CardContent>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="fName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>First Name</FormLabel>
+                    <FormControl>
+                      <Input  {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last Name</FormLabel>
+                    <FormControl>
+                      <Input  {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Location</FormLabel>
+                    <FormControl>
+                      <Input  {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="newPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>New Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="Enter your password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Confirm Password</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="Enter your password" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button className="w-full" type="submit">Submit</Button>
+            </form>
+          </Form>
+        </CardContent>
 
-      <CardFooter className='flex justify-center'>
-        <p className='text-sm text-muted-foreground'>
-          Don&apos;t have an account yet?{' '}
-          <Link href='/sign-up' className='text-primary hover:underline'>
-            Sign up
-          </Link>
-        </p>
-      </CardFooter>
-    </Card>
+        <CardFooter className='flex justify-center'>
+          <p className='text-sm text-muted-foreground'>
+            Don&apos;t have an account yet?{' '}
+            <Link href='/sign-up' className='text-primary hover:underline'>
+              Sign up
+            </Link>
+          </p>
+        </CardFooter>
+      </Card>
+
+    </div>
 
   )
 }
