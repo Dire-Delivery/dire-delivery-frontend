@@ -37,7 +37,11 @@ export const addUserSchema = z.object({
 });
 
 export const addDetailsSchema = z.object({
-  name: z
+  fName: z
+    .string()
+    .min(2, { message: 'Name must be at least 2 characters long' })
+    .max(50, { message: 'Name cannot exceed 50 characters' }),
+  lName: z
     .string()
     .min(2, { message: 'Name must be at least 2 characters long' })
     .max(50, { message: 'Name cannot exceed 50 characters' }),

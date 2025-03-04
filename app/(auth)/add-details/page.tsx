@@ -19,17 +19,19 @@ export default function addDetails() {
   const form = useForm<z.infer<typeof addDetailsSchema>>({
     resolver: zodResolver(addDetailsSchema),
     defaultValues: {
-      name: "",
+      fName: "",
+      lName: "",
       location: "",
       password: "",
     },
   })
 
   async function onSubmit(values: z.infer<typeof addDetailsSchema>) {
-    const { name, location, password } = values;
+    const { fName, lName, location, password } = values;
     console.log("the values", values)
     const addDetails = {
-      name, location, password
+      name: `${fName} ${lName}`,
+       location, password
     }
 
     const user = localStorage.getItem('user')
@@ -75,10 +77,23 @@ export default function addDetails() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
-              name="name"
+              name="fName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>name</FormLabel>
+                  <FormLabel>First Name</FormLabel>
+                  <FormControl>
+                    <Input  {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Last Name</FormLabel>
                   <FormControl>
                     <Input  {...field} />
                   </FormControl>
