@@ -1,14 +1,16 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import Header from "./header";
-import { AppSidebar } from "./app-sidebar";
+import SidebarLayout from "./sidebar-layout";
 
 export default function BaseLayout({ children }: BaseLayoutProps) {
     return (
         <SidebarProvider>
-            <AppSidebar />
-            <div className="flex flex-col w-full">
-                <Header></Header>
-                {children}
+            <div className="flex w-full">
+                <SidebarLayout />
+                <div className="flex flex-col flex-1">
+                    <Header></Header>
+                    {children}
+                </div>
             </div>
         </SidebarProvider>
     );
