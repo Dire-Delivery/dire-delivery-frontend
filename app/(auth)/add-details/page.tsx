@@ -90,7 +90,7 @@ export default function addDetails() {
                     control={form.control}
                     name="fName"
                     render={({ field }) => (
-                      <FormItem className="space-y-0">
+                      <FormItem className="space-y-0 flex-1">
                         <FormLabel className="font-medium text-base text-[#111827]">First Name <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
                           <Input className="border-[#27A376]" {...field} />
@@ -103,7 +103,7 @@ export default function addDetails() {
                     control={form.control}
                     name="lName"
                     render={({ field }) => (
-                      <FormItem className="space-y-0">
+                      <FormItem className="space-y-0 flex-1">
                         <FormLabel className="font-medium text-base text-[#111827]" >Last Name <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
                           <Input className="border-[#27A376]"  {...field} />
@@ -131,7 +131,7 @@ export default function addDetails() {
                     control={form.control}
                     name="newPassword"
                     render={({ field }) => (
-                      <FormItem className="space-y-0">
+                      <FormItem className="space-y-0 flex-1">
                         <FormLabel className="font-medium text-base text-[#111827]">New Password <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
                           <Input className="border-[#27A376]" type="password" placeholder="Enter your password" {...field} />
@@ -144,7 +144,7 @@ export default function addDetails() {
                     control={form.control}
                     name="confirmPassword"
                     render={({ field }) => (
-                      <FormItem className="space-y-0">
+                      <FormItem className="space-y-0 flex-1">
                         <FormLabel className="font-medium text-base text-[#111827]">Confirm Password <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
                           <Input className="border-[#27A376]" type="password" placeholder="Enter your password" {...field} />
