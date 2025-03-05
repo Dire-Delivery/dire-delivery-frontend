@@ -69,32 +69,32 @@ export default function addDetails() {
   }
 
   return (
-    <div className="flex flex-col  h-screen w-screen md:flex-row">
-      <div className="h-[calc(100vh/2.5)] w-full md:h-screen md:w-[calc(100vw/2)]">
+    <div className="flex flex-col h-screen w-screen md:flex-row-reverse">
+      <div className="h-[calc(100vh/2.5)] w-full md:w-[calc(100vw/2)] md:h-auto lg:h-screen lg:w-auto">
         <Image src={AddDetails} alt="login image" className=" w-full h-full object-cover hidden md:block" />
         <Image src={AddDetailsMobile} alt="login image" className=" w-full h-full object-cover md:hidden" />
       </div>
-      <Card className="w-full my-auto border-none shadow-none py-0">
-        <CardHeader className="pt-3">
-          <CardTitle className="font-bold text-2xl text-[#060A87] text-center">Welcome To Dire Family</CardTitle>
-          <CardDescription className="font-normal text-sm text-[#060A87] text-center">
+      <Card className="w-full my-auto border-none shadow-none py-0 md:flex-none md:w-[370px] md:p-0 md:mx-auto md:border-none md:shadow-none lg:w-[450px] xl:w-[550px] 2xl:w-[650px]">
+        <CardHeader className="pt-3 md:flex md:gap-1">
+          <CardTitle className="font-bold text-2xl text-[#060A87] text-center md:text-4xl">Welcome To Dire Family</CardTitle>
+          <CardDescription className="font-normal text-sm text-[#060A87] text-center md:text-lg">
             Please Fill the Form Below
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="pb-3">
+        <CardContent className="pb-3 md:pt-4">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="">
-              <div className="space-y-4">
-                <div className="flex gap-2">
+              <div className="space-y-4 md:space-y-6">
+                <div className="flex gap-2 md:gap-6">
                   <FormField
                     control={form.control}
                     name="fName"
                     render={({ field }) => (
-                      <FormItem className="space-y-0 flex-1">
-                        <FormLabel className="font-medium text-base text-[#111827]">First Name <span className="text-[#E03137]">*</span></FormLabel>
+                      <FormItem className="space-y-0 flex-1 md:space-y-2">
+                        <FormLabel className="font-medium text-base text-[#111827] md:text-lg">First Name <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
-                          <Input className="border-[#27A376]" {...field} />
+                          <Input className="border-[#27A376] md:h-12 md:text-base" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -104,10 +104,10 @@ export default function addDetails() {
                     control={form.control}
                     name="lName"
                     render={({ field }) => (
-                      <FormItem className="space-y-0 flex-1">
-                        <FormLabel className="font-medium text-base text-[#111827]" >Last Name <span className="text-[#E03137]">*</span></FormLabel>
+                      <FormItem className="space-y-0 flex-1 md:space-y-2">
+                        <FormLabel className="font-medium text-base text-[#111827] md:text-lg" >Last Name <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
-                          <Input className="border-[#27A376]"  {...field} />
+                          <Input className="border-[#27A376] md:h-12 md:text-base"  {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -118,22 +118,22 @@ export default function addDetails() {
                   control={form.control}
                   name="location"
                   render={({ field }) => (
-                    <FormItem className="space-y-0">
-                      <FormLabel className="font-medium text-base text-[#111827]">Location <span className="text-[#E03137]">*</span></FormLabel>
+                    <FormItem className="space-y-0 md:space-y-2">
+                      <FormLabel className="font-medium text-base text-[#111827] md:text-lg">Location <span className="text-[#E03137]">*</span></FormLabel>
                       <FormControl>
-                        <Input className="border-[#27A376]" {...field} />
+                        <Input className="border-[#27A376] md:h-12 md:text-base" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <div className="flex gap-2">
+                <div className="flex gap-2 md:gap-6">
                   <FormField
                     control={form.control}
                     name="newPassword"
                     render={({ field }) => (
-                      <FormItem className="space-y-0 flex-1">
-                        <FormLabel className="font-medium text-base text-[#111827]">New Password <span className="text-[#E03137]">*</span></FormLabel>
+                      <FormItem className="space-y-0 flex-1 md:space-y-2">
+                        <FormLabel className="font-medium text-base text-[#111827] md:text-lg">New Password <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
                           <PasswordInput placeholder="new password" className="h-10 border-[#27A376] md:h-12 md:text-base" {...field}/>
                         </FormControl>
@@ -145,7 +145,7 @@ export default function addDetails() {
                     control={form.control}
                     name="confirmPassword"
                     render={({ field }) => (
-                      <FormItem className="space-y-0 flex-1">
+                      <FormItem className="space-y-0 flex-1 md:text-lg md:space-y-2">
                         <FormLabel className="font-medium text-base text-[#111827]">Confirm Password <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
                         <PasswordInput placeholder="confirm password" className="h-10 border-[#27A376] md:h-12 md:text-base" {...field}/>
@@ -158,7 +158,7 @@ export default function addDetails() {
               </div>
 
 
-              <Button className="w-full h-12 mt-6" type="submit" variant="login">Submit</Button>
+              <Button className="w-full h-12 mt-6 md:mt-9 md:h-14" type="submit" variant="login">Submit</Button>
             </form>
           </Form>
         </CardContent>
