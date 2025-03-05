@@ -94,7 +94,7 @@ export default function addDetails() {
                       <FormItem className="space-y-0 flex-1 md:space-y-2">
                         <FormLabel className="font-medium text-base text-[#111827] md:text-lg">First Name <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
-                          <Input className="border-[#27A376] md:h-12 md:text-base" {...field} />
+                          <Input placeholder="Input your First Name" className="border-[#27A376] text-sm md:h-12 md:text-base placeholder-[#A0AEC0]" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -107,7 +107,7 @@ export default function addDetails() {
                       <FormItem className="space-y-0 flex-1 md:space-y-2">
                         <FormLabel className="font-medium text-base text-[#111827] md:text-lg" >Last Name <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
-                          <Input className="border-[#27A376] md:h-12 md:text-base"  {...field} />
+                          <Input placeholder="Input your Last Name" className="border-[#27A376] text-sm md:h-12 md:text-base placeholder-[#A0AEC0]"  {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -121,7 +121,7 @@ export default function addDetails() {
                     <FormItem className="space-y-0 md:space-y-2">
                       <FormLabel className="font-medium text-base text-[#111827] md:text-lg">Location <span className="text-[#E03137]">*</span></FormLabel>
                       <FormControl>
-                        <Input className="border-[#27A376] md:h-12 md:text-base" {...field} />
+                        <Input placeholder="Addis Ababa" className="border-[#27A376] text-sm md:h-12 md:text-base placeholder-[#A0AEC0]" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -135,7 +135,7 @@ export default function addDetails() {
                       <FormItem className="space-y-0 flex-1 md:space-y-2">
                         <FormLabel className="font-medium text-base text-[#111827] md:text-lg">New Password <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
-                          <PasswordInput placeholder="new password" className="h-10 border-[#27A376] md:h-12 md:text-base" {...field}/>
+                          <PasswordInput placeholder="new password" className="h-10 border-[#27A376] text-sm md:h-12 md:text-base placeholder-[#A0AEC0]" {...field}/>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -148,7 +148,7 @@ export default function addDetails() {
                       <FormItem className="space-y-0 flex-1 md:text-lg md:space-y-2">
                         <FormLabel className="font-medium text-base text-[#111827]">Confirm Password <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
-                        <PasswordInput placeholder="confirm password" className="h-10 border-[#27A376] md:h-12 md:text-base" {...field}/>
+                        <PasswordInput placeholder="confirm password" className="h-10 border-[#27A376] text-sm placeholder-[#A0AEC0] md:h-12 md:text-base" {...field}/>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
