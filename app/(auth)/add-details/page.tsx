@@ -68,93 +68,96 @@ export default function addDetails() {
   }
 
   return (
-    <div className="flex flex-col justify-between h-screen w-screen md:flex-row">
+    <div className="flex flex-col  h-screen w-screen md:flex-row">
       <div className="h-[calc(100vh/2.5)] w-full md:h-screen md:w-[calc(100vw/2)]">
         <Image src={AddDetails} alt="login image" className=" w-full h-full object-cover hidden md:block" />
         <Image src={AddDetailsMobile} alt="login image" className=" w-full h-full object-cover md:hidden" />
       </div>
-      <Card className="w-full">
-        <CardHeader>
+      <Card className="w-full my-auto border-none shadow-none py-0">
+        <CardHeader className="pt-1.5">
           <CardTitle className="font-bold text-2xl text-[#060A87] text-center">Welcome To Dire Family</CardTitle>
           <CardDescription className="font-normal text-sm text-[#060A87] text-center">
             Please Fill the Form Below
           </CardDescription>
         </CardHeader>
 
-        <CardContent>
+        <CardContent className="pb-1.5">
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-              <div className="flex gap-2">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="">
+              <div className="space-y-4">
+                <div className="flex gap-2">
+                  <FormField
+                    control={form.control}
+                    name="fName"
+                    render={({ field }) => (
+                      <FormItem className="space-y-0">
+                        <FormLabel className="font-medium text-base text-[#111827]">First Name <span className="text-[#E03137]">*</span></FormLabel>
+                        <FormControl>
+                          <Input className="border-[#27A376]" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="lName"
+                    render={({ field }) => (
+                      <FormItem className="space-y-0">
+                        <FormLabel className="font-medium text-base text-[#111827]" >Last Name <span className="text-[#E03137]">*</span></FormLabel>
+                        <FormControl>
+                          <Input className="border-[#27A376]"  {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
                 <FormField
                   control={form.control}
-                  name="fName"
+                  name="location"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>First Name</FormLabel>
+                    <FormItem className="space-y-0">
+                      <FormLabel className="font-medium text-base text-[#111827]">Location <span className="text-[#E03137]">*</span></FormLabel>
                       <FormControl>
-                        <Input  {...field} />
+                        <Input className="border-[#27A376]" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <FormField
-                  control={form.control}
-                  name="lName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Last Name</FormLabel>
-                      <FormControl>
-                        <Input  {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Location</FormLabel>
-                    <FormControl>
-                      <Input  {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex gap-2">
-                <FormField
-                  control={form.control}
-                  name="newPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>New Password</FormLabel>
-                      <FormControl>
-                        <Input type="password" placeholder="Enter your password" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="confirmPassword"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
-                      <FormControl>
-                        <Input type="password" placeholder="Enter your password" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                <div className="flex gap-2">
+                  <FormField
+                    control={form.control}
+                    name="newPassword"
+                    render={({ field }) => (
+                      <FormItem className="space-y-0">
+                        <FormLabel className="font-medium text-base text-[#111827]">New Password <span className="text-[#E03137]">*</span></FormLabel>
+                        <FormControl>
+                          <Input className="border-[#27A376]" type="password" placeholder="Enter your password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="confirmPassword"
+                    render={({ field }) => (
+                      <FormItem className="space-y-0">
+                        <FormLabel className="font-medium text-base text-[#111827]">Confirm Password <span className="text-[#E03137]">*</span></FormLabel>
+                        <FormControl>
+                          <Input className="border-[#27A376]" type="password" placeholder="Enter your password" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
 
-              <Button className="w-full" type="submit">Submit</Button>
+
+              <Button className="w-full h-12 mt-6" type="submit" variant="login">Submit</Button>
             </form>
           </Form>
         </CardContent>
