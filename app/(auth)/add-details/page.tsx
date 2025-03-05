@@ -15,6 +15,7 @@ import { addDetailsSchema } from "@/lib/auth-schema";
 import Image from "next/image";
 import AddDetails from "@/public/images/add-details.png"
 import AddDetailsMobile from "@/public/images/details-mobile-version.svg"
+import { PasswordInput } from "@/components/sign-in/password-input";
 
 const BaseUrl = process.env.API_URL
 
@@ -74,14 +75,14 @@ export default function addDetails() {
         <Image src={AddDetailsMobile} alt="login image" className=" w-full h-full object-cover md:hidden" />
       </div>
       <Card className="w-full my-auto border-none shadow-none py-0">
-        <CardHeader className="pt-1.5">
+        <CardHeader className="pt-3">
           <CardTitle className="font-bold text-2xl text-[#060A87] text-center">Welcome To Dire Family</CardTitle>
           <CardDescription className="font-normal text-sm text-[#060A87] text-center">
             Please Fill the Form Below
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="pb-1.5">
+        <CardContent className="pb-3">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="">
               <div className="space-y-4">
@@ -134,7 +135,7 @@ export default function addDetails() {
                       <FormItem className="space-y-0 flex-1">
                         <FormLabel className="font-medium text-base text-[#111827]">New Password <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
-                          <Input className="border-[#27A376]" type="password" placeholder="Enter your password" {...field} />
+                          <PasswordInput placeholder="new password" className="h-10 border-[#27A376] md:h-12 md:text-base" {...field}/>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -147,7 +148,7 @@ export default function addDetails() {
                       <FormItem className="space-y-0 flex-1">
                         <FormLabel className="font-medium text-base text-[#111827]">Confirm Password <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
-                          <Input className="border-[#27A376]" type="password" placeholder="Enter your password" {...field} />
+                        <PasswordInput placeholder="confirm password" className="h-10 border-[#27A376] md:h-12 md:text-base" {...field}/>
                         </FormControl>
                         <FormMessage />
                       </FormItem>
