@@ -49,7 +49,7 @@ import Link from 'next/link';
 import { LuEye } from 'react-icons/lu';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 
-interface DataTableProps<TData extends { id: string }, TValue> {
+interface EmployeeDataTableProps<TData extends { id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   totalEntries: number;
@@ -66,7 +66,7 @@ export function EmployeeDataTable<
   data,
   totalEntries,
   handleDelete,
-}: DataTableProps<TData, TValue>) {
+}: EmployeeDataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
     null
@@ -165,7 +165,7 @@ export function EmployeeDataTable<
 
                       <DropdownMenuContent align="end" className="w-40">
                         <Link
-                          href={`/owner/orders/${row.original.transactionId}`}
+                          href={`/owner/orders/${row.original.id}`}
                           passHref
                         >
                           <DropdownMenuItem className="cursor-pointer">
@@ -178,7 +178,7 @@ export function EmployeeDataTable<
                           className="cursor-pointer text-red-600 hover:bg-red-100"
                           onSelect={(e) => {
                             e.preventDefault(); // Prevent the dropdown from closing
-                            setOpenAlertDialogId(row.original.transactionId); // Open the AlertDialog for this row
+                            setOpenAlertDialogId(row.original.id); // Open the AlertDialog for this row
                           }}
                         >
                           <RiDeleteBin5Line className="mr-2 h-4 w-4" />
@@ -189,7 +189,7 @@ export function EmployeeDataTable<
 
                     {/* AlertDialog for the row */}
                     <AlertDialog
-                      open={openAlertDialogId === row.original.transactionId}
+                      open={openAlertDialogId === row.original.id}
                       onOpenChange={(open) => {
                         if (!open) setOpenAlertDialogId(null); // Close the AlertDialog
                       }}

@@ -3,8 +3,8 @@ import { orderTrack } from '@/types/orderTrack';
 import { endPoints } from '@/data/endPoints';
 import { Order } from '@/types/orderType';
 
-const BaseURL = 'http://localhost:3001';
-const url = `${BaseURL}/${endPoints.anOrder}`;
+const BaseURL = 'http://localhost:3002';
+const url = `${BaseURL}/${endPoints.employees}`;
 export const TrackOrder = async ({ id }: orderTrack) => {
 //   console.log('id:', id);
   const fetchURl = `${url}?transactionId=${id}`;
@@ -13,7 +13,7 @@ export const TrackOrder = async ({ id }: orderTrack) => {
   return response;
 };
 
-export const FetchOrders = async () => {
+export const FetchEmployees = async () => {
   const fetchURl = `${url}`;
 //   console.log(`fetchUrl`, fetchURl);
   const response = await apiCall({ url: fetchURl });

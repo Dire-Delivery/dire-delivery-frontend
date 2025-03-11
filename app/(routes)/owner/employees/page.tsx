@@ -1,18 +1,19 @@
 'use client';
 import { fetchCity } from '@/actions/cities';
-import { DeleteOrder, FetchOrders } from '@/actions/employee';
+import { DeleteOrder, FetchEmployees, } from '@/actions/employee';
 import AddOrderDialogue from '@/components/order/addOrderDialogue';
 import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
-import { columns } from '@/components/order/owner/column';
+import { employeeColumns } from '@/components/order/owner/employeeColumn';
 import { EmployeeDataTable } from '@/components/order/owner/employeeTable';
 import { city } from '@/types/cities';
+import { Employee } from '@/types/employeeType';
 import { Order } from '@/types/orderType';
 import { ColumnDef } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function Page() {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [employees, setEmployees] = useState<Employee[]>([]);
   const [cities, setCities] = useState<city[]>([]);
   const [showNewOrderModal, setShowNewOrderModal] = useState<boolean>(false);
   const [showConfirmationModal, setShowConfirmationModal] =
@@ -21,9 +22,9 @@ export default function Page() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await FetchOrders();
+        const response = await FetchEmployees();
         console.log({response});
-        setOrders(response);
+        setEmployees(response);
       } catch (error) {
         console.log(error);
       }
@@ -31,18 +32,18 @@ export default function Page() {
     fetchOrders();
   }, []);
 
-  useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const response = await fetchCity();
-        // console.log('cities:', response);
-        setCities(response);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchCities();
-  }, []);
+  // useEffect(() => {
+  //   const fetchCities = async () => {
+  //     try {
+  //       const response = await fetchCity();
+  //       // console.log('cities:', response);
+  //       setCities(response);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetchCities();
+  // }, []);
 
   const handleDelete = async (id: string) => {
     // console.log('about to delete:', id);
@@ -78,7 +79,7 @@ export default function Page() {
             Add New
           </button>
         </div>
-        <AddEmployeeDialogue
+        {/* <AddEmployeeDialogue
           showNewOrderModal={showNewOrderModal}
           setShowNewOrderModal={setShowNewOrderModal}
           showConfirmationModal={showConfirmationModal}
@@ -86,16 +87,16 @@ export default function Page() {
           cities={cities}
           showRecipet={showRecipet}
           setShowRecipt={setShowRecipt}
-        />
+        /> */}
         <EmployeeDataTable
           columns={
-            columns as ColumnDef<
+            employeeColumns as ColumnDef<
               { id: string },
               unknown
             >[]
           }
-          data={orders}
-          totalEntries={orders.length}
+          data={employees}
+          totalEntries={employees.length}
           handleDelete={handleDelete}
         />
       </section>
