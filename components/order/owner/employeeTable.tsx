@@ -2,92 +2,94 @@
 
 import { useState } from 'react';
 import {
-  type ColumnDef,
-  type ColumnFiltersState,
-  flexRender,
-  getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  useReactTable,
+    type ColumnDef,
+    type ColumnFiltersState,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    useReactTable,
 } from '@tanstack/react-table';
 
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
 } from '@/components/ui/table';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from '@/components/ui/select';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-  AlertDialog,  
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
 import Link from 'next/link';
 import { LuEye } from 'react-icons/lu';
 import { RiDeleteBin5Line } from 'react-icons/ri';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { cn } from '@/lib/utils';
 
 interface EmployeeDataTableProps<TData extends { id: string }, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  totalEntries: number;
-  handleDelete: (id: string) => void;
+    columns: ColumnDef<TData, TValue>[];
+    data: TData[];
+    totalEntries: number;
+    handleDelete: (id: string) => void;
 }
 
 export function EmployeeDataTable<
-  TData extends {
-    id: string;
-  },
-  TValue,
->({
-  columns,
-  data,
-  totalEntries,
-  handleDelete,
-}: EmployeeDataTableProps<TData, TValue>) {
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
-    null
-  ); // Track which row's AlertDialog is open
-
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    state: {
-      columnFilters,
+    TData extends {
+        id: string;
     },
-  });
+    TValue,
+>({
+    columns,
+    data,
+    totalEntries,
+    handleDelete,
+}: EmployeeDataTableProps<TData, TValue>) {
+    const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+    const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
+        null
+    ); // Track which row's AlertDialog is open
 
-  return (
-    <div className="w-full">
-      <div className="flex items-center py-4 gap-4">
-        {/* <Input
+    const table = useReactTable({
+        data,
+        columns,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        onColumnFiltersChange: setColumnFilters,
+        getFilteredRowModel: getFilteredRowModel(),
+        state: {
+            columnFilters,
+        },
+    });
+
+    return (
+        <div className="w-full">
+            <div className="flex items-center py-4 gap-4">
+                {/* <Input
           placeholder="Search by name"
           value={
             (table.getColumn('senderName')?.getFilterValue() as string) ?? ''
@@ -99,7 +101,7 @@ export function EmployeeDataTable<
           }}
           className="max-w-sm"
         /> */}
-        {/* <Select
+                {/* <Select
           value={(table.getColumn('status')?.getFilterValue() as string) ?? ''}
           onValueChange={(value) =>
             table
@@ -117,54 +119,59 @@ export function EmployeeDataTable<
             <SelectItem value="Picked Up">Picked Up</SelectItem>
           </SelectContent>
         </Select> */}
-      </div>
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && 'selected'}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <span className="text-lg">⋮</span>{' '}
-                          {/* Three-dot button */}
-                        </Button>
-                      </DropdownMenuTrigger>
+            </div>
+            <div className="rounded-md border">
+                <Table>
+                    <TableHeader>
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <TableHead key={header.id}>
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                        </TableHead>
+                                    );
+                                })}
+                                <TableHead>Actions</TableHead>
+                            </TableRow>
+                        ))}
+                    </TableHeader>
+                    <TableBody>
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && 'selected'}
+                                >
+                                    {row.getVisibleCells().map((cell, index) => (
+                                        <TableCell key={cell.id} className={cn('relative', index == 0 && "pl-12")}>
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )}
+                                        {index == 0 && 
+                                        <Avatar className='absolute top-2 left-2 w-8 h-auto'>
+                                            <AvatarImage src="https://github.com/shadcn.png" />
+                                            <AvatarFallback>CN</AvatarFallback>
+                                        </Avatar>}
+                                        </TableCell>
+                                    ))}
+                                    <TableCell>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                                    <span className="text-lg">⋮</span>{' '}
+                                                    {/* Three-dot button */}
+                                                </Button>
+                                            </DropdownMenuTrigger>
 
-                      <DropdownMenuContent align="end" className="w-40">
-                        {/* <Link
+                                            <DropdownMenuContent align="end" className="w-40">
+                                                {/* <Link
                           href={`/owner/orders/${row.original.id}`}
                           passHref
                         >
@@ -184,11 +191,11 @@ export function EmployeeDataTable<
                           <RiDeleteBin5Line className="mr-2 h-4 w-4" />
                           Delete
                         </DropdownMenuItem> */}
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
 
-                    {/* AlertDialog for the row */}
-                    {/* <AlertDialog
+                                        {/* AlertDialog for the row */}
+                                        {/* <AlertDialog
                       open={openAlertDialogId === row.original.id}
                       onOpenChange={(open) => {
                         if (!open) setOpenAlertDialogId(null); // Close the AlertDialog
@@ -219,75 +226,75 @@ export function EmployeeDataTable<
                         </AlertDialogFooter>
                       </AlertDialogContent>
                     </AlertDialog> */}
-                  </TableCell>
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
-      <div className="flex items-center justify-between space-x-2 py-4">
-        <div className=" hidden md:block text-sm text-muted-foreground">
-          Showing {table.getRowModel().rows.length} of {totalEntries} entries
+                                    </TableCell>
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell
+                                    colSpan={columns.length}
+                                    className="h-24 text-center"
+                                >
+                                    No results.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
+            <div className="flex items-center justify-between space-x-2 py-4">
+                <div className=" hidden md:block text-sm text-muted-foreground">
+                    Showing {table.getRowModel().rows.length} of {totalEntries} entries
+                </div>
+                <div className="flex items-center space-x-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => table.previousPage()}
+                        disabled={!table.getCanPreviousPage()}
+                    >
+                        Previous
+                    </Button>
+                    <div className="flex items-center space-x-1">
+                        {Array.from({ length: Math.min(5, table.getPageCount()) }).map(
+                            (_, i) => (
+                                <Button
+                                    key={i}
+                                    variant={
+                                        table.getState().pagination.pageIndex === i
+                                            ? 'default'
+                                            : 'outline'
+                                    }
+                                    size="sm"
+                                    onClick={() => table.setPageIndex(i)}
+                                >
+                                    {i + 1}
+                                </Button>
+                            )
+                        )}
+                        {table.getPageCount() > 5 && (
+                            <>
+                                <span>...</span>
+                                <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                                >
+                                    {table.getPageCount()}
+                                </Button>
+                            </>
+                        )}
+                    </div>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => table.nextPage()}
+                        disabled={!table.getCanNextPage()}
+                    >
+                        Next
+                    </Button>
+                </div>
+            </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <div className="flex items-center space-x-1">
-            {Array.from({ length: Math.min(5, table.getPageCount()) }).map(
-              (_, i) => (
-                <Button
-                  key={i}
-                  variant={
-                    table.getState().pagination.pageIndex === i
-                      ? 'default'
-                      : 'outline'
-                  }
-                  size="sm"
-                  onClick={() => table.setPageIndex(i)}
-                >
-                  {i + 1}
-                </Button>
-              )
-            )}
-            {table.getPageCount() > 5 && (
-              <>
-                <span>...</span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                >
-                  {table.getPageCount()}
-                </Button>
-              </>
-            )}
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
-        </div>
-      </div>
-    </div>
-  );
+    );
 }
