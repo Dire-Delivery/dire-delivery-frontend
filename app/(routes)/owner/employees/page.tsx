@@ -1,14 +1,14 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { Order } from '@/types/orderType';
-import { DeleteOrder, FetchOrders } from '@/actions/order';
-import { columns } from '@/components/order/owner/column';
-import { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from '@/components/order/owner/orderTable';
-import AddOrderDialogue from '@/components/order/addOrderDialogue';
-import { city } from '@/types/cities';
 import { fetchCity } from '@/actions/cities';
+import { DeleteOrder, FetchOrders } from '@/actions/order';
+import AddOrderDialogue from '@/components/order/addOrderDialogue';
+import { columns } from '@/components/order/owner/column';
+import { EmployeeDataTable } from '@/components/order/owner/employeeTable';
+import { city } from '@/types/cities';
+import { Order } from '@/types/orderType';
+import { ColumnDef } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 export default function Page() {
   const [orders, setOrders] = useState<Order[]>([]);
@@ -62,19 +62,19 @@ export default function Page() {
             Welcome Back, Owner!
           </div>
           <div className="self-stretch text-[#495d85] text-sm md:text-base font-extrabold font-['Manrope'] leading-tight">
-            Here’s your Orders Report
+            Here’s your Employees Report
           </div>
         </div>
       </div>
       <section className=" w-full border px-6 py-2 mt-3 bg-white rounded-2xl flex-col justify-between items-start inline-flex overflow-hidden">
         <div className="w-full flex justify-between items-center mt-4 ">
-          <h1 className="text-2xl font-bold">Orders</h1>
+          <h1 className="text-2xl font-bold">Employees</h1>
           <button
             onClick={() => setShowNewOrderModal(true)}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
           >
             <Plus className="h-5 w-5" />
-            Add New Order
+            Add New
           </button>
         </div>
         <AddOrderDialogue
@@ -86,7 +86,7 @@ export default function Page() {
           showRecipet={showRecipet}
           setShowRecipt={setShowRecipt}
         />
-        <DataTable
+        <EmployeeDataTable
           columns={
             columns as ColumnDef<
               { transactionId: string; id: string },
