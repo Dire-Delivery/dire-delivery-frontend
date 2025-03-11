@@ -17,7 +17,7 @@ import Login from "@/public/images/log-in.png"
 import { Checkbox } from "@/components/ui/checkbox";
 import { PasswordInput } from "@/components/sign-in/password-input";
 
-const BaseUrl = process.env.API_URL
+const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
 export default function SignIn() {
   const form = useForm<z.infer<typeof signInFormSchema>>({
@@ -36,7 +36,7 @@ export default function SignIn() {
       password: password
     }
 
-    const response = await fetch(`https://1clr2kph-4000.uks1.devtunnels.ms/auth/log-in`, {
+    const response = await fetch(`${BaseUrl}/auth/log-in`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -45,7 +45,7 @@ export default function SignIn() {
     })
 
 
-    console.log('response', response)
+    console.log({response, url: `${BaseUrl}/auth/log-in`})
 
     const data = await response.json()
 
