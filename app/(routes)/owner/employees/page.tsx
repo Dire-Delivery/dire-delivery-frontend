@@ -1,7 +1,8 @@
 'use client';
 import { fetchCity } from '@/actions/cities';
-import { DeleteOrder, FetchOrders } from '@/actions/order';
+import { DeleteOrder, FetchOrders } from '@/actions/employee';
 import AddOrderDialogue from '@/components/order/addOrderDialogue';
+import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
 import { columns } from '@/components/order/owner/column';
 import { EmployeeDataTable } from '@/components/order/owner/employeeTable';
 import { city } from '@/types/cities';
@@ -21,7 +22,7 @@ export default function Page() {
     const fetchOrders = async () => {
       try {
         const response = await FetchOrders();
-        console.log(response);
+        console.log({response});
         setOrders(response);
       } catch (error) {
         console.log(error);
@@ -34,7 +35,7 @@ export default function Page() {
     const fetchCities = async () => {
       try {
         const response = await fetchCity();
-        console.log('cities:', response);
+        // console.log('cities:', response);
         setCities(response);
       } catch (error) {
         console.log(error);
@@ -44,14 +45,14 @@ export default function Page() {
   }, []);
 
   const handleDelete = async (id: string) => {
-    console.log('about to delete:', id);
+    // console.log('about to delete:', id);
     const response = await DeleteOrder(id);
     console.log(response);
   };
 
-  console.log('city:', cities);
+  // console.log('city:', cities);
 
-  console.log(`orders:`, orders);
+  // console.log(`orders:`, orders);
 
   return (
     <section className="w-full px-4 md:px-8 py-4 bg-[#F1F2F8]">
@@ -77,7 +78,7 @@ export default function Page() {
             Add New
           </button>
         </div>
-        <AddOrderDialogue
+        <AddEmployeeDialogue
           showNewOrderModal={showNewOrderModal}
           setShowNewOrderModal={setShowNewOrderModal}
           showConfirmationModal={showConfirmationModal}
@@ -89,7 +90,7 @@ export default function Page() {
         <EmployeeDataTable
           columns={
             columns as ColumnDef<
-              { transactionId: string; id: string },
+              { id: string },
               unknown
             >[]
           }

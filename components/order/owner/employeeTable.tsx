@@ -58,7 +58,6 @@ interface DataTableProps<TData extends { id: string }, TValue> {
 
 export function EmployeeDataTable<
   TData extends {
-    transactionId: string;
     id: string;
   },
   TValue,
