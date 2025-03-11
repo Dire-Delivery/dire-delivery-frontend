@@ -91,7 +91,7 @@ export default function Page() {
         <EmployeeDataTable
           columns={
             employeeColumns as ColumnDef<
-              { id: string },
+              { id: string, imgUrl: string },
               unknown
             >[]
           }

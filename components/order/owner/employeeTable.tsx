@@ -51,7 +51,7 @@ import { RiDeleteBin5Line } from 'react-icons/ri';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 
-interface EmployeeDataTableProps<TData extends { id: string }, TValue> {
+interface EmployeeDataTableProps<TData extends { id: string, imgUrl: string }, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     totalEntries: number;
@@ -61,6 +61,7 @@ interface EmployeeDataTableProps<TData extends { id: string }, TValue> {
 export function EmployeeDataTable<
     TData extends {
         id: string;
+        imgUrl: string;
     },
     TValue,
 >({
@@ -156,9 +157,10 @@ export function EmployeeDataTable<
                                             )}
                                         {index == 0 && 
                                         <Avatar className='absolute top-2 left-2 w-8 h-auto'>
-                                            <AvatarImage src="https://github.com/shadcn.png" />
+                                            <AvatarImage src={row.original.imgUrl} />
                                             <AvatarFallback>CN</AvatarFallback>
-                                        </Avatar>}
+                                        </Avatar>
+                                        }
                                         </TableCell>
                                     ))}
                                     <TableCell>
