@@ -87,7 +87,7 @@ export function EmployeeDataTable<
   return (
     <div className="w-full">
       <div className="flex items-center py-4 gap-4">
-        <Input
+        {/* <Input
           placeholder="Search by name"
           value={
             (table.getColumn('senderName')?.getFilterValue() as string) ?? ''
@@ -98,8 +98,8 @@ export function EmployeeDataTable<
             table.getColumn('reciverName')?.setFilterValue(value);
           }}
           className="max-w-sm"
-        />
-        <Select
+        /> */}
+        {/* <Select
           value={(table.getColumn('status')?.getFilterValue() as string) ?? ''}
           onValueChange={(value) =>
             table
@@ -116,7 +116,7 @@ export function EmployeeDataTable<
             <SelectItem value="Pending">Pending</SelectItem>
             <SelectItem value="Picked Up">Picked Up</SelectItem>
           </SelectContent>
-        </Select>
+        </Select> */}
       </div>
       <div className="rounded-md border">
         <Table>
@@ -164,7 +164,7 @@ export function EmployeeDataTable<
                       </DropdownMenuTrigger>
 
                       <DropdownMenuContent align="end" className="w-40">
-                        <Link
+                        {/* <Link
                           href={`/owner/orders/${row.original.id}`}
                           passHref
                         >
@@ -183,12 +183,12 @@ export function EmployeeDataTable<
                         >
                           <RiDeleteBin5Line className="mr-2 h-4 w-4" />
                           Delete
-                        </DropdownMenuItem>
+                        </DropdownMenuItem> */}
                       </DropdownMenuContent>
                     </DropdownMenu>
 
                     {/* AlertDialog for the row */}
-                    <AlertDialog
+                    {/* <AlertDialog
                       open={openAlertDialogId === row.original.id}
                       onOpenChange={(open) => {
                         if (!open) setOpenAlertDialogId(null); // Close the AlertDialog
@@ -218,7 +218,7 @@ export function EmployeeDataTable<
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>
-                    </AlertDialog>
+                    </AlertDialog> */}
                   </TableCell>
                 </TableRow>
               ))
