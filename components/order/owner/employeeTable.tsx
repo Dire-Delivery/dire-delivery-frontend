@@ -127,9 +127,9 @@ export function EmployeeDataTable<
                     <TableHeader>
                         {table.getHeaderGroups().map((headerGroup) => (
                             <TableRow key={headerGroup.id}>
-                                {headerGroup.headers.map((header) => {
+                                {headerGroup.headers.map((header, index) => {
                                     return (
-                                        <TableHead key={header.id} className='text-center'>
+                                    <TableHead key={header.id} className={cn('text-center', index == 0 && "text-start pl-12")}>
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -152,17 +152,18 @@ export function EmployeeDataTable<
                                     data-state={row.getIsSelected() && 'selected'}
                                 >
                                     {row.getVisibleCells().map((cell, index) => (
-                                        <TableCell key={cell.id} className={cn('relative mx-auto text-center', index == 0 && "")}>
-                                            {flexRender(
-                                                cell.column.columnDef.cell,
-                                                cell.getContext()
-                                            )}
+                                        <TableCell key={cell.id} className={cn('relative mx-auto text-center', index == 0 && "flex items-center gap-3 pl-8")}>
                                             {index == 0 &&
-                                                <Avatar className='absolute top-2 left-2 w-8 h-auto'>
+                                                <Avatar className='w-8 h-auto'>
                                                     <AvatarImage src={row.original.imgUrl} />
                                                     <AvatarFallback>CN</AvatarFallback>
                                                 </Avatar>
                                             }
+                                            {flexRender(
+                                                cell.column.columnDef.cell,
+                                                cell.getContext()
+                                            )}
+                                            
                                         </TableCell>
                                     ))}
                                     <TableCell>
