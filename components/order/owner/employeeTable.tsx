@@ -50,6 +50,7 @@ import { LuEye } from 'react-icons/lu';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { FaUserLarge } from "react-icons/fa6";
 
 interface EmployeeDataTableProps<TData extends { id: string, imgUrl: string }, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -128,7 +129,7 @@ export function EmployeeDataTable<
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header) => {
                                     return (
-                                        <TableHead key={header.id}>
+                                        <TableHead key={header.id} className='text-center'>
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -138,7 +139,8 @@ export function EmployeeDataTable<
                                         </TableHead>
                                     );
                                 })}
-                                <TableHead>Actions</TableHead>
+                                <TableHead className='text-center'>Promote to Admin</TableHead>
+                                <TableHead className='text-center'>Actions</TableHead>
                             </TableRow>
                         ))}
                     </TableHeader>
@@ -150,20 +152,27 @@ export function EmployeeDataTable<
                                     data-state={row.getIsSelected() && 'selected'}
                                 >
                                     {row.getVisibleCells().map((cell, index) => (
-                                        <TableCell key={cell.id} className={cn('relative', index == 0 && "pl-12")}>
+                                        <TableCell key={cell.id} className={cn('relative mx-auto text-center', index == 0 && "")}>
                                             {flexRender(
                                                 cell.column.columnDef.cell,
                                                 cell.getContext()
                                             )}
-                                        {index == 0 && 
-                                        <Avatar className='absolute top-2 left-2 w-8 h-auto'>
-                                            <AvatarImage src={row.original.imgUrl} />
-                                            <AvatarFallback>CN</AvatarFallback>
-                                        </Avatar>
-                                        }
+                                            {index == 0 &&
+                                                <Avatar className='absolute top-2 left-2 w-8 h-auto'>
+                                                    <AvatarImage src={row.original.imgUrl} />
+                                                    <AvatarFallback>CN</AvatarFallback>
+                                                </Avatar>
+                                            }
                                         </TableCell>
                                     ))}
                                     <TableCell>
+                                        <Button className='mx-auto bg-[#060A87] rounded-[10px] py-2 px-3 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5'>
+                                            <FaUserLarge />
+                                            <div className='text-sm font-bold mb-[-3px]'>Promote</div>
+                                            <div className='text-3xl font-normal text-center mt-[-3px]'>+</div>
+                                        </Button>
+                                    </TableCell>
+                                    <TableCell className='flex justify-center'>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
                                                 <Button variant="ghost" size="icon" className="h-8 w-8">
