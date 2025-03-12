@@ -1,7 +1,7 @@
 import { cn } from "@/lib/utils";
 import { Eye, EyeOff } from "lucide-react";
+import React, { useState } from "react";
 import { Input } from "../ui/input";
-import React, { useEffect, useState } from "react";
 
 export const PasswordInput = React.forwardRef<
   HTMLInputElement,

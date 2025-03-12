@@ -5,7 +5,7 @@ import { cookies } from 'next/headers';
 
 export async function setUserCookie(userData: User_Info) {
   const cookieStore = await cookies();
-  console.log("the userData is", userData)
+  console.log('the userData is', userData);
   // Set non-sensitive user data in separate cookie
   cookieStore.set({
     name: 'user',
@@ -38,14 +38,14 @@ export async function removeUserProfile() {
 }
 
 export const userProfile = async () => {
-    const cookieStore = await cookies();
-    const userProfile = cookieStore.get('user')?.value;
-    console.log("the found userProfile", userProfile)
-    const user: User_Info = userProfile && JSON.parse(userProfile);
-    return user;
-  };
-  export const userToken = async () => {
-    const cookieStore = await cookies();
-    const token = cookieStore.get('token')?.value;
-    return token;
-  };
+  const cookieStore = await cookies();
+  const userProfile = cookieStore.get('user')?.value;
+  console.log('the found userProfile', userProfile);
+  const user: User_Info = userProfile && JSON.parse(userProfile);
+  return user;
+};
+export const userToken = async () => {
+  const cookieStore = await cookies();
+  const token = cookieStore.get('token')?.value;
+  return token;
+};

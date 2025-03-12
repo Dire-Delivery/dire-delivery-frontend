@@ -14,7 +14,7 @@ import { z } from "zod";
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
-export default function addDetails() {
+export default function AddUsers() {
   const form = useForm<z.infer<typeof addUserSchema>>({
     resolver: zodResolver(addUserSchema),
     defaultValues: {
@@ -45,7 +45,11 @@ export default function addDetails() {
         },
         body: JSON.stringify(addDetails),
       })
-      const data = await response.json()
+
+      if (!response.ok) {
+        console.error("error while adding")
+        // add toast
+      }
     }
   }
 

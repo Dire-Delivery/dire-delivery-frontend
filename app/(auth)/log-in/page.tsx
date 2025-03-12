@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { setTokenCookie, setUserCookie, userProfile } from "@/actions/auth";
+import { setTokenCookie, setUserCookie } from "@/actions/auth";
 import { PasswordInput } from "@/components/log-in/password-input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -13,9 +13,9 @@ import { signInFormSchema } from "@/lib/auth-schema";
 import Login from "@/public/images/log-in.png";
 import Image from "next/image";
 import { redirect } from "next/navigation";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useState } from "react";
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -54,7 +54,6 @@ export default function SignIn() {
           id: data.payload
         }
         setUserCookie(user)
-        const userData = await userProfile();
         redirect("/add-details")
       } else {
         setUserCookie(data.payload)

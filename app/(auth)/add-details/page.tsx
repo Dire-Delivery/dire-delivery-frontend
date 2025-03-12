@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { addDetailsSchema } from "@/lib/auth-schema";
-import AddDetails from "@/public/images/add-details.png";
+import addDetails from "@/public/images/add-details.png";
 import AddDetailsMobile from "@/public/images/details-mobile-version.svg";
 import Image from "next/image";
 import { redirect } from "next/navigation";
@@ -18,7 +18,7 @@ import { z } from "zod";
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
-export default function addDetails() {
+export default function AddDetails() {
   const form = useForm<z.infer<typeof addDetailsSchema>>({
     resolver: zodResolver(addDetailsSchema),
     defaultValues: {
@@ -31,7 +31,7 @@ export default function addDetails() {
   })
 
   async function onSubmit(values: z.infer<typeof addDetailsSchema>) {
-    const { fName, lName, location, newPassword, confirmPassword } = values;
+    const { fName, lName, location, newPassword } = values;
     const addDetails = {
       name: `${fName} ${lName}`,
       location,
@@ -69,7 +69,7 @@ export default function addDetails() {
   return (
     <div className="flex flex-col h-screen w-screen md:flex-row-reverse">
       <div className="h-[calc(100vh/2.5)] w-full md:w-[calc(100vw/2)] md:h-auto lg:h-screen lg:w-auto">
-        <Image src={AddDetails} alt="login image" className=" w-full h-full object-cover hidden md:block" />
+        <Image src={addDetails} alt="login image" className=" w-full h-full object-cover hidden md:block" />
         <Image src={AddDetailsMobile} alt="login image" className=" w-full h-full object-cover md:hidden" />
       </div>
       <Card className="w-full my-auto border-none shadow-none py-0 md:flex-none md:w-[370px] md:p-0 md:mx-auto md:border-none md:shadow-none lg:w-[450px] xl:w-[550px] 2xl:w-[650px]">
