@@ -17,6 +17,7 @@ import AddDetails from "@/public/images/add-details.png"
 import AddDetailsMobile from "@/public/images/details-mobile-version.svg"
 import { PasswordInput } from "@/components/log-in/password-input";
 import { redirect } from "next/navigation";
+import { setUserCookie, userProfile, userToken } from "@/actions/auth";
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -41,12 +42,12 @@ export default function addDetails() {
       password: newPassword
     }
 
-    const user = localStorage.getItem('user')
-    const token = localStorage.getItem('token')
-    console.log("token", token)
+    const userData = await userProfile();
+    const token = await userToken();
 
-    if (user && token) {
-      const userData = JSON.parse(user)
+    console.log("userData", userData)
+
+    if (userData && token) {
 
       const response = await fetch(`${BaseUrl}/auth/${userData.id}/sign-up`, {
         method: "POST",
@@ -63,8 +64,15 @@ export default function addDetails() {
       const data = await response.json()
 
       if (data) {
-        localStorage.setItem("user", JSON.stringify(data.payload))
-        redirect('/log-in');
+        setUserCookie(data.payload)
+        if (data.payload.role == "ADMIN") {
+          redirect("/admin")
+        } else if (data.payload.role == "EMPLOYEE") {
+          redirect("/employee")
+        } else {
+          console.error("unknown role error")
+          // add toast for unknown role error
+        }
       }
 
       console.log("data", data)

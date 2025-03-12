@@ -6,17 +6,17 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { removeUserProfile, userProfile, userToken } from "@/actions/auth";
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
 export default function SignIn() {
   const logout = async () => {
-    const user = localStorage.getItem('user')
-    const token = localStorage.getItem('token')
+    const userData = await userProfile();
+    const token = await userToken();
     console.log("token", token)
 
-    if (user && token) {
-      const userData = JSON.parse(user)
+    if (userData && token) {
 
       const response = await fetch(`${BaseUrl}/auth/${userData.id}/log-out`, {
         method: "GET",
@@ -27,8 +27,7 @@ export default function SignIn() {
       })
 
       if (response.ok) {
-        localStorage.setItem("user", '')
-        localStorage.setItem("token", '');
+        removeUserProfile()
       }
 
 

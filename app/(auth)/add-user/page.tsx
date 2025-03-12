@@ -12,6 +12,7 @@ import { useForm } from "react-hook-form";
 import { addUserSchema, formSchema } from "@/lib/auth-schema";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner"
+import { userProfile, userToken } from "@/actions/auth";
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -34,12 +35,12 @@ export default function addDetails() {
       phoneNumber
     }
 
-    const user = localStorage.getItem('user')
-    const token = localStorage.getItem('token')
+    const userData = await userProfile();
+    const token = await userToken();
     console.log("token", token)
+    console.log("userData", userData)
 
-    if (user && token) {
-      const userData = JSON.parse(user)
+    if (userData && token) {
 
       const response = await fetch(`${BaseUrl}/auth/${userData.id}/add-user`, {
         method: "POST",
