@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-const BaseUrl = process.env.API_URL
+const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
 export default function SignIn() {
   const logout = async () => {
@@ -18,13 +18,18 @@ export default function SignIn() {
     if (user && token) {
       const userData = JSON.parse(user)
 
-      const response = await fetch(`https://1clr2kph-4000.uks1.devtunnels.ms/auth/${userData.id}/log-out`, {
+      const response = await fetch(`${BaseUrl}/auth/${userData.id}/log-out`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${token}`
         }
       })
+
+      if (response.ok) {
+        localStorage.setItem("user", '')
+        localStorage.setItem("token", '');
+      }
 
 
       console.log('response', response)

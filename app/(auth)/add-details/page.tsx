@@ -15,9 +15,9 @@ import { addDetailsSchema } from "@/lib/auth-schema";
 import Image from "next/image";
 import AddDetails from "@/public/images/add-details.png"
 import AddDetailsMobile from "@/public/images/details-mobile-version.svg"
-import { PasswordInput } from "@/components/sign-in/password-input";
+import { PasswordInput } from "@/components/log-in/password-input";
 
-const BaseUrl = process.env.API_URL
+const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
 export default function addDetails() {
   const form = useForm<z.infer<typeof addDetailsSchema>>({
@@ -36,7 +36,8 @@ export default function addDetails() {
     console.log("the values", values)
     const addDetails = {
       name: `${fName} ${lName}`,
-      location, newPassword
+      location,
+      password: newPassword
     }
 
     const user = localStorage.getItem('user')
@@ -46,7 +47,7 @@ export default function addDetails() {
     if (user && token) {
       const userData = JSON.parse(user)
 
-      const response = await fetch(`https://1clr2kph-4000.uks1.devtunnels.ms/auth/${userData.id}/sign-up`, {
+      const response = await fetch(`${BaseUrl}/auth/${userData.id}/sign-up`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

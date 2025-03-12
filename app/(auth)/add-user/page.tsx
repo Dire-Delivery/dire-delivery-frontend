@@ -13,6 +13,8 @@ import { addUserSchema, formSchema } from "@/lib/auth-schema";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "sonner"
 
+const BaseUrl = process.env.NEXT_PUBLIC_API_URL
+
 export default function addDetails() {
   const form = useForm<z.infer<typeof addUserSchema>>({
     resolver: zodResolver(addUserSchema),
@@ -39,7 +41,7 @@ export default function addDetails() {
     if (user && token) {
       const userData = JSON.parse(user)
 
-      const response = await fetch(`https://1clr2kph-4000.uks1.devtunnels.ms/auth/${userData.sub}/add-user`, {
+      const response = await fetch(`${BaseUrl}/auth/${userData.id}/add-user`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -114,7 +116,7 @@ export default function addDetails() {
       <CardFooter className='flex justify-center'>
         <p className='text-sm text-muted-foreground'>
           Already have an account?{' '}
-          <Link href='/sign-in' className='text-primary hover:underline'>
+          <Link href='/log-in' className='text-primary hover:underline'>
             Sign in
           </Link>
         </p>

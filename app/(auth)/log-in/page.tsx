@@ -15,7 +15,7 @@ import { signInFormSchema } from "@/lib/auth-schema";
 import Image from "next/image";
 import Login from "@/public/images/log-in.png"
 import { Checkbox } from "@/components/ui/checkbox";
-import { PasswordInput } from "@/components/sign-in/password-input";
+import { PasswordInput } from "@/components/log-in/password-input";
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -51,7 +51,7 @@ export default function SignIn() {
 
     if (data && !data.error) {
       console.log("data", data)
-      if (data.mesage) {
+      if (typeof data.payload === "string") {
         const user = {
           id: data.payload
         }
