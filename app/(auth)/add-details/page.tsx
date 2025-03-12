@@ -16,6 +16,7 @@ import Image from "next/image";
 import AddDetails from "@/public/images/add-details.png"
 import AddDetailsMobile from "@/public/images/details-mobile-version.svg"
 import { PasswordInput } from "@/components/log-in/password-input";
+import { redirect } from "next/navigation";
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -63,6 +64,7 @@ export default function addDetails() {
 
       if (data) {
         localStorage.setItem("user", JSON.stringify(data.payload))
+        redirect('/log-in');
       }
 
       console.log("data", data)
