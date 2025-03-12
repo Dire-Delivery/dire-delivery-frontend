@@ -16,6 +16,7 @@ import Image from "next/image";
 import Login from "@/public/images/log-in.png"
 import { Checkbox } from "@/components/ui/checkbox";
 import { PasswordInput } from "@/components/log-in/password-input";
+import { redirect } from "next/navigation";
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -51,15 +52,27 @@ export default function SignIn() {
 
     if (data && !data.error) {
       console.log("data", data)
+      localStorage.setItem("token", data.token)
       if (typeof data.payload === "string") {
         const user = {
           id: data.payload
         }
         localStorage.setItem("user", JSON.stringify(user))
+        redirect("/add-details")
       } else {
         localStorage.setItem("user", JSON.stringify(data.payload))
+        if (data.payload.role == "OWNER") {
+          redirect("/owner")
+        } else if (data.payload.role == "ADMIN") {
+          redirect("/admin")
+        } else if (data.payload.role == "EMPLOYEE") {
+          redirect("/employee")
+        } else {
+          console.error("unknown role error")
+          // add toast for unknown role error
+        }
       }
-      localStorage.setItem("token", data.token)
+      
     } else {
       console.log("data not found")
     }
