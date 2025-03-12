@@ -1,18 +1,16 @@
 'use client'
 
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { zodResolver } from "@hookform/resolvers/zod"
 
-import { z } from "zod"
+import { userProfile, userToken } from "@/actions/auth";
+import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { addUserSchema } from "@/lib/auth-schema";
 import { useForm } from "react-hook-form";
-import { addUserSchema, formSchema } from "@/lib/auth-schema";
-import { authClient } from "@/lib/auth-client";
-import { toast } from "sonner"
-import { userProfile, userToken } from "@/actions/auth";
+import { z } from "zod";
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -37,11 +35,8 @@ export default function addDetails() {
 
     const userData = await userProfile();
     const token = await userToken();
-    console.log("token", token)
-    console.log("userData", userData)
 
     if (userData && token) {
-
       const response = await fetch(`${BaseUrl}/auth/${userData.id}/add-user`, {
         method: "POST",
         headers: {
@@ -50,13 +45,7 @@ export default function addDetails() {
         },
         body: JSON.stringify(addDetails),
       })
-
-
-      console.log('response', response)
-
       const data = await response.json()
-
-      console.log("data", data)
     }
   }
 

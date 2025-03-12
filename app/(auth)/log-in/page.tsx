@@ -1,23 +1,20 @@
 'use client'
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
-import { zodResolver } from "@hookform/resolvers/zod"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { z } from "zod"
+import { setTokenCookie, setUserCookie, userProfile } from "@/actions/auth";
+import { PasswordInput } from "@/components/log-in/password-input";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner"
-import { authClient } from "@/lib/auth-client";
 import { signInFormSchema } from "@/lib/auth-schema";
+import Login from "@/public/images/log-in.png";
 import Image from "next/image";
-import Login from "@/public/images/log-in.png"
-import { Checkbox } from "@/components/ui/checkbox";
-import { PasswordInput } from "@/components/log-in/password-input";
 import { redirect } from "next/navigation";
-import { setTokenCookie, setUserCookie, userProfile } from "@/actions/auth";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -32,7 +29,6 @@ export default function SignIn() {
 
   async function onSubmit(values: z.infer<typeof signInFormSchema>) {
     const { email, password } = values;
-    console.log("the values", values)
     const loginDetails = {
       email: email,
       password: password
@@ -45,27 +41,20 @@ export default function SignIn() {
       },
       body: JSON.stringify(loginDetails),
     })
-
-
-    console.log({response, url: `${BaseUrl}/auth/log-in`})
-
     const data = await response.json()
 
     if (data && !data.error) {
-      console.log("data", data)
       setTokenCookie(data.token)
       if (typeof data.payload === "string") {
         const user = {
           id: data.payload
         }
-        console.log("before", user)
         setUserCookie(user)
         const userData = await userProfile();
-        console.log('after', userData)
         redirect("/add-details")
       } else {
         setUserCookie(data.payload)
-        
+
         if (data.payload.role == "OWNER") {
           redirect("/owner")
         } else if (data.payload.role == "ADMIN") {
@@ -77,12 +66,9 @@ export default function SignIn() {
           // add toast for unknown role error
         }
       }
-      
     } else {
       console.log("data not found")
     }
-
-
   }
 
   return (

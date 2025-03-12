@@ -1,12 +1,9 @@
 'use client'
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { removeUserProfile, userProfile, userToken } from "@/actions/auth";
+import { Button } from "@/components/ui/button";
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -29,13 +26,6 @@ export default function SignIn() {
       if (response.ok) {
         removeUserProfile()
       }
-
-
-      console.log('response', response)
-
-      const data = await response.json()
-
-      console.log("data", data)
     }
   }
 

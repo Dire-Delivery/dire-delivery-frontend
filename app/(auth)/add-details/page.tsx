@@ -1,23 +1,20 @@
 'use client'
 
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import Link from "next/link";
-import { zodResolver } from "@hookform/resolvers/zod"
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { zodResolver } from "@hookform/resolvers/zod";
 
-import { z } from "zod"
+import { setUserCookie, userProfile, userToken } from "@/actions/auth";
+import { PasswordInput } from "@/components/log-in/password-input";
+import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner"
-import { authClient } from "@/lib/auth-client";
 import { addDetailsSchema } from "@/lib/auth-schema";
+import AddDetails from "@/public/images/add-details.png";
+import AddDetailsMobile from "@/public/images/details-mobile-version.svg";
 import Image from "next/image";
-import AddDetails from "@/public/images/add-details.png"
-import AddDetailsMobile from "@/public/images/details-mobile-version.svg"
-import { PasswordInput } from "@/components/log-in/password-input";
 import { redirect } from "next/navigation";
-import { setUserCookie, userProfile, userToken } from "@/actions/auth";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -35,7 +32,6 @@ export default function addDetails() {
 
   async function onSubmit(values: z.infer<typeof addDetailsSchema>) {
     const { fName, lName, location, newPassword, confirmPassword } = values;
-    console.log("the values", values)
     const addDetails = {
       name: `${fName} ${lName}`,
       location,
@@ -45,10 +41,7 @@ export default function addDetails() {
     const userData = await userProfile();
     const token = await userToken();
 
-    console.log("userData", userData)
-
     if (userData && token) {
-
       const response = await fetch(`${BaseUrl}/auth/${userData.id}/sign-up`, {
         method: "POST",
         headers: {
@@ -57,10 +50,6 @@ export default function addDetails() {
         },
         body: JSON.stringify(addDetails),
       })
-
-
-      console.log('response', response)
-
       const data = await response.json()
 
       if (data) {
@@ -74,8 +63,6 @@ export default function addDetails() {
           // add toast for unknown role error
         }
       }
-
-      console.log("data", data)
     }
   }
 
