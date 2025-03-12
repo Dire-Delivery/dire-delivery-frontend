@@ -15,10 +15,13 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { useState } from "react";
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
 export default function SignIn() {
+  const [rememberMe, setRememberMe] = useState(false); // ✅ Add state for Remember Me
+
   const form = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
     defaultValues: {
@@ -44,7 +47,8 @@ export default function SignIn() {
     const data = await response.json()
 
     if (data && !data.error) {
-      setTokenCookie(data.token)
+      const maxAge = rememberMe ? 60 * 60 * 24 * 7 : 60 * 60 * 24; // 1 week vs 1 day
+      setTokenCookie(data.token, maxAge);
       if (typeof data.payload === "string") {
         const user = {
           id: data.payload
@@ -104,17 +108,17 @@ export default function SignIn() {
                   <FormItem>
                     <FormLabel className="text-s font-medium text-[#111827] md:text-lg">Password <span className="text-[#E03137]">*</span></FormLabel>
                     <FormControl>
-                      <PasswordInput placeholder="Enter your password" className="h-10 md:h-12 md:text-base" {...field}/>
+                      <PasswordInput placeholder="Enter your password" className="h-10 md:h-12 md:text-base" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
               <div className="flex justify-between ml-[-5px] mr-[-5px] items-center">
-                <div className="flex gap-1.5 items-center">
-                  <Checkbox className="data-[state=checked]:bg-[#27A376] data-[state=checked]:border-[#27A376]" />
-                  <div className="text-[#687588] font-medium text-s mb-[-3px] cursor-pointer">Remember Me</div>
-                </div>
+                <label className="flex gap-1.5 items-center cursor-pointer" onClick={() => setRememberMe(!rememberMe)}>
+                  <Checkbox checked={rememberMe} className="data-[state=checked]:bg-[#27A376]" />
+                  <span className="text-[#687588] font-medium">Remember Me</span>
+                </label>
                 <div className="text-[#687588] font-medium text-s items-center cursor-pointer">Forgot Password</div>
               </div>
               <Button className="w-full h-12" type="submit" variant="login">Login</Button>
