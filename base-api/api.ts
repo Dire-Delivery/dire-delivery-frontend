@@ -21,22 +21,33 @@ export default async function apiCall({
       method: method,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: '', //once we have a token we can add it here `Bearer ${token || ''}`
+        Authorization: '', // Add token here if needed
       },
       body: method !== 'GET' ? JSON.stringify(data) : undefined,
     });
-    const responseData = await response.json();
-    if (!response.ok) {
-      throw new Error(responseData?.error.message || 'Something went wrong');
+
+    // Check if the response is JSON
+    const contentType = response.headers.get('Content-Type');
+    if (contentType && contentType.includes('application/json')) {
+      const responseData = await response.json();
+      if (!response.ok) {
+        throw new Error(responseData?.error?.message || 'Something went wrong');
+      }
+      return responseData;
+    } else {
+      // Handle non-JSON responses (e.g., plain text)
+      const text = await response.text();
+      if (!response.ok) {
+        throw new Error(text || 'Something went wrong');
+      }
+      return text;
     }
-    return responseData;
   } catch (error: unknown) {
     const errorMessage =
       (error as CustomError)?.message || 'An unexpected error occurred';
-    // Call onError callback if provided
-    //if (onError) onError(errorMessage);
     if (errorMessage === 'Invalid or expired token') {
-      //logoutAction();
+      // Handle token expiration (e.g., logout)
+      // logoutAction();
     }
     return {
       error: {

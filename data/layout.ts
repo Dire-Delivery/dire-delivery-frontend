@@ -4,27 +4,27 @@ import { ClipboardList, Settings, UserCog, Users } from 'lucide-react';
 export const menuItems = [
   {
     title: 'Employees',
-    url: '/admin/employees',
+    url: '/owner/employees',
     icon: Users,
   },
   {
-    title: 'Admins',
-    url: '/admin/admins',
+    title: 'owners',
+    url: '/owner/owners',
     icon: UserCog,
   },
   {
     title: 'Orders',
-    url: '/admin/orders',
+    url: '/owner/orders',
     icon: ClipboardList,
   },
   {
     title: 'Settings',
-    url: '/admin/settings',
+    url: '/owner/settings',
     icon: Settings,
   },
   {
     title: 'Dashboard',
-    url: '/admin',
+    url: '/owner',
     icon: '',
   },
 ];

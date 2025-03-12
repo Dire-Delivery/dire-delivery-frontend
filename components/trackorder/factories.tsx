@@ -29,3 +29,16 @@ export function getStatusColor(status: string): string {
       return 'bg-gray-100 text-gray-600';
   }
 }
+
+export function getStatusIconTable(status: string) {
+  switch (status) {
+    case 'pending':
+      return <FaPlaneDeparture className="h-4 w-4" />;
+    case 'delivered':
+      return <PiBoxArrowDownBold className="h-4 w-4" />;
+    case 'picked up':
+      return <TbCircleCheckFilled className="h-6 w-6" />;
+    default:
+      return <Circle className="h-4 w-4" />;
+  }
+}

@@ -1,19 +1,19 @@
 export type Order = {
-  id: number;
+  id: string;
   transactionId: string;
   senderName: string;
   reciverName: string;
   description: string;
   weight: number;
   quantity: number;
-  Price: number; //must be changed based on schema
+  Price?: number; //must be changed based on schema
   senderAddress: string;
   reciverAddress: string;
   status: string;
   createdAt: string;
-  updatedAt: string;
-  paymentMethod: string;
-  statuses: {
+  updatedAt?: string;
+  paymentMethod?: string;
+  statuses?: {
     pending?: {
       type: string;
       location: string;
@@ -34,4 +34,5 @@ export type Order = {
   reciverPhoneNumber: string;
   senderEmail: string;
   reciverEmail: string;
+  addedBy?: string;
 };
