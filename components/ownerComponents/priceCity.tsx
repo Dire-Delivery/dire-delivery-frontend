@@ -16,7 +16,6 @@ type Props = {
   setTriggerState: React.Dispatch<React.SetStateAction<boolean>>;
   triggerState: boolean;
 };
-// import { DataTablePagination } from './pagination';
 export default function PriceCitySettings({
   setActiveTab,
   setTriggerState,
@@ -64,16 +63,6 @@ export default function PriceCitySettings({
     setCalculatedPrice(`${(weightNum * 5).toFixed(2)} birr`);
   };
 
-  //   const handleAddCity = () => {
-  //     if (newCity.trim()) {
-  //       setCities([...cities, { id: Date.now(), name: newCity }]);
-  //       setNewCity('');
-  //     }
-  //   };
-
-  // const handleDeleteCity = (id: string) => {
-  //   setCities(cities.filter((city) => city.id !== id));
-  // };
   const handleDelete = async (id: string) => {
     console.log('id:', id);
     try {
