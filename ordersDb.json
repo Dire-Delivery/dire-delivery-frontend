@@ -677,5 +677,8 @@
       "phone": "+251 97 272 9423",
       "location": "5kilo AddisAbaba"
     }
+  },
+  "price": {
+    "basePrice": 200
   }
 }

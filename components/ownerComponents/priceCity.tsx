@@ -8,8 +8,11 @@ import { addCity, deleteCity, fetchCity } from '@/actions/cities';
 import { city } from '@/types/cities';
 import { DataTable } from './cityTable';
 import { v4 as uuidv4 } from 'uuid';
+import { fetchPrice } from '@/actions/price';
+import { price } from '@/types/price';
 
 import { columns } from '@/components/ownerComponents/cityColumn';
+import { Button } from '../ui/button';
 
 type Props = {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
@@ -25,6 +28,8 @@ export default function PriceCitySettings({
   const [calculatedPrice, setCalculatedPrice] = useState('0.00 birr');
   const [newCity, setNewCity] = useState('');
   const [cities, setCities] = useState<city[]>([]);
+  const [price, setPrice] = useState<number>();
+  const [editPrice, setEditPrice] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -36,15 +41,31 @@ export default function PriceCitySettings({
         console.log(error);
       }
     };
+
     fetchCities();
   }, [triggerState]);
 
+  useEffect(() => {
+    const fetchaPrice = async () => {
+      try {
+        const response = await fetchPrice();
+        console.log('price:', response);
+        setPrice(response.basePrice);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchaPrice();
+  }, [triggerState]);
+
+  console.log('priceState:', price);
+
   const priceCalculator = (weight: number) => {
-    const basePrice = 200;
+    const basePrice = price;
     if (weight <= 1 && weight > 0) {
-      return basePrice;
+      return basePrice!;
     } else {
-      return basePrice * weight;
+      return basePrice! * weight;
     }
   };
   const handleAddCity = async (city: string) => {
@@ -68,6 +89,7 @@ export default function PriceCitySettings({
     setWeight(e.target.value);
     // Simple calculation for demo purposes
     const weightNum = Number.parseFloat(e.target.value) || 0;
+
     setCalculatedPrice(`${priceCalculator(weightNum).toFixed(2)} birr`);
   };
 
@@ -90,29 +112,40 @@ export default function PriceCitySettings({
 
       <div className="grid md:grid-cols-2 gap-12 md:gap-24 px-4 mb-12">
         {/* Base Price */}
-        <div>
-          <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
-            Base Price
-          </h3>
+        {editPrice ? (
+          <div>
+            <h1>editprice</h1>{' '}
+            <Button onClick={() => setEditPrice(false)}>confirm</Button>
+          </div>
+        ) : (
+          <div>
+            <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
+              Base Price
+            </h3>
 
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <p className="text-sm mb-1">Base Price(birr)</p>
-              <p className="font-semibold">10.00 birr</p>
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <p className="text-sm mb-1">Base Price(birr)</p>
+                <p className="font-semibold">{price} birr</p>
+              </div>
+              <div>
+                <p className="text-sm mb-1">Price Per Kilogram(birr)</p>
+                <p className="font-semibold">{price} birr</p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm mb-1">Price Per Kilogram(birr)</p>
-              <p className="font-semibold">5.00 birr</p>
+
+            <div className="flex justify-end">
+              <button
+                className="primary-button bg-[#0a1172] flex items-center gap-2 p-2 rounded-sm px-4 text-white"
+                onClick={() => setEditPrice(true)}
+              >
+                <Pencil size={16} />
+                Edit Price
+              </button>
             </div>
           </div>
+        )}
 
-          <div className="flex justify-end">
-            <button className="primary-button bg-[#0a1172] flex items-center gap-2 p-2 rounded-sm px-4 text-white">
-              <Pencil size={16} />
-              Edit Price
-            </button>
-          </div>
-        </div>
         {/* Price Calculator */}
         <div>
           <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
