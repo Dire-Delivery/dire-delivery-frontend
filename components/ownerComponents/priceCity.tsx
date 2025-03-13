@@ -9,7 +9,7 @@ import { city } from '@/types/cities';
 import { DataTable } from './cityTable';
 import { v4 as uuidv4 } from 'uuid';
 import { fetchPrice } from '@/actions/price';
-import { price } from '@/types/price';
+// import { price } from '@/types/price';
 
 import { columns } from '@/components/ownerComponents/cityColumn';
 import { Button } from '../ui/button';
@@ -118,7 +118,7 @@ export default function PriceCitySettings({
     }
   };
   const handlePriceChange = () => {
-    setConfirmModal(true);
+    setConfirmModal(false);
 
     setEditPrice(false);
     console.log('newPrice:', newPrice);
@@ -161,11 +161,11 @@ export default function PriceCitySettings({
                   </div>
                 </div>
 
-                <AlertDialog>
+                <AlertDialog open={confirmModal} onOpenChange={setConfirmModal}>
                   <AlertDialogTrigger asChild>
                     <Button
                       className="h-10 px-3 bg-violet-950 rounded-lg outline outline-1 outline-offset-[-1px] outline-violet-950 inline-flex justify-center items-center gap-2.5 text-base"
-                      onClick={() => handlePriceChange()}
+                      onClick={() => setConfirmModal(true)}
                     >
                       Confirm
                     </Button>
@@ -182,8 +182,17 @@ export default function PriceCitySettings({
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction>Continue</AlertDialogAction>
+                      <AlertDialogCancel onClick={() => setConfirmModal(false)}>
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        onClick={() => {
+                          // Add your action here
+                          handlePriceChange();
+                        }}
+                      >
+                        Continue
+                      </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
