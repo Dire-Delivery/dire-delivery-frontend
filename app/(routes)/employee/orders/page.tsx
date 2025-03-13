@@ -1,15 +1,17 @@
 'use client';
-import { DeleteOrder, FetchEmployees, } from '@/actions/employee';
-import { adminsColumns } from '@/components/order/owner/peopleColumn';
-import { PeopleDataTable } from '@/components/order/owner/peopleTable';
-import { city } from '@/types/cities';
-import { Employee } from '@/types/employeeType';
+import { useState, useEffect } from 'react';
+import { Order } from '@/types/orderType';
+import { DeleteOrder, FetchOrders } from '@/actions/order';
+import { columns } from '@/components/order/owner/column';
 import { ColumnDef } from '@tanstack/react-table';
+import { DataTable } from '@/components/order/owner/orderTable';
+import AddOrderDialogue from '@/components/order/addOrderDialogue';
+import { city } from '@/types/cities';
+import { fetchCity } from '@/actions/cities';
 import { Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
 
 export default function Page() {
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [cities, setCities] = useState<city[]>([]);
   const [showNewOrderModal, setShowNewOrderModal] = useState<boolean>(false);
   const [showConfirmationModal, setShowConfirmationModal] =
@@ -18,9 +20,9 @@ export default function Page() {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await FetchEmployees();
-        console.log({response});
-        setEmployees(response);
+        const response = await FetchOrders();
+        console.log(response);
+        setOrders(response);
       } catch (error) {
         console.log(error);
       }
@@ -28,28 +30,28 @@ export default function Page() {
     fetchOrders();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchCities = async () => {
-  //     try {
-  //       const response = await fetchCity();
-  //       // console.log('cities:', response);
-  //       setCities(response);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchCities();
-  // }, []);
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const response = await fetchCity();
+        console.log('cities:', response);
+        setCities(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchCities();
+  }, []);
 
   const handleDelete = async (id: string) => {
-    // console.log('about to delete:', id);
+    console.log('about to delete:', id);
     const response = await DeleteOrder(id);
     console.log(response);
   };
 
-  // console.log('city:', cities);
+  console.log('city:', cities);
 
-  // console.log(`orders:`, orders);
+  console.log(`orders:`, orders);
 
   return (
     <section className="w-full px-4 md:px-8 py-4 bg-[#F1F2F8]">
@@ -60,22 +62,22 @@ export default function Page() {
             Welcome Back, Owner!
           </div>
           <div className="self-stretch text-[#495d85] text-sm md:text-base font-extrabold font-['Manrope'] leading-tight">
-            Here’s your Admins Report
+            Here’s your Orders Report
           </div>
         </div>
       </div>
       <section className=" w-full border px-6 py-2 mt-3 bg-white rounded-2xl flex-col justify-between items-start inline-flex overflow-hidden">
         <div className="w-full flex justify-between items-center mt-4 ">
-          <h1 className="text-2xl font-bold">Admins</h1>
+          <h1 className="text-2xl font-bold">Orders</h1>
           <button
             onClick={() => setShowNewOrderModal(true)}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
           >
             <Plus className="h-5 w-5" />
-            Add New
+            Add New Order
           </button>
         </div>
-        {/* <AddEmployeeDialogue
+        <AddOrderDialogue
           showNewOrderModal={showNewOrderModal}
           setShowNewOrderModal={setShowNewOrderModal}
           showConfirmationModal={showConfirmationModal}
@@ -83,18 +85,17 @@ export default function Page() {
           cities={cities}
           showRecipet={showRecipet}
           setShowRecipt={setShowRecipt}
-        /> */}
-        <PeopleDataTable
+        />
+        <DataTable
           columns={
-            adminsColumns as ColumnDef<
-              { id: string, imgUrl: string },
+            columns as ColumnDef<
+              { transactionId: string; id: string },
               unknown
             >[]
           }
-          data={employees}
-          totalEntries={employees.length}
+          data={orders}
+          totalEntries={orders.length}
           handleDelete={handleDelete}
-          type="admin"
         />
       </section>
     </section>

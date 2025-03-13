@@ -67,13 +67,6 @@ export default function Page() {
       <section className=" w-full border px-6 py-2 mt-3 bg-white rounded-2xl flex-col justify-between items-start inline-flex overflow-hidden">
         <div className="w-full flex justify-between items-center mt-4 ">
           <h1 className="text-2xl font-bold">Admins</h1>
-          <button
-            onClick={() => setShowNewOrderModal(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
-          >
-            <Plus className="h-5 w-5" />
-            Add New
-          </button>
         </div>
         {/* <AddEmployeeDialogue
           showNewOrderModal={showNewOrderModal}

@@ -1,5 +1,7 @@
 'use client';
 import { DeleteOrder, FetchEmployees, } from '@/actions/employee';
+import AddOrderDialogue from '@/components/order/addOrderDialogue';
+import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
 import { employeeColumns } from '@/components/order/owner/peopleColumn';
 import { PeopleDataTable } from '@/components/order/owner/peopleTable';
 import { city } from '@/types/cities';
@@ -11,7 +13,7 @@ import { useEffect, useState } from 'react';
 export default function Page() {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [cities, setCities] = useState<city[]>([]);
-  const [showNewOrderModal, setShowNewOrderModal] = useState<boolean>(false);
+  const [showNewEmployeeModal, setShowNewEmployeeModal] = useState<boolean>(false);
   const [showConfirmationModal, setShowConfirmationModal] =
     useState<boolean>(false);
   const [showRecipet, setShowRecipt] = useState<boolean>(false);
@@ -68,22 +70,22 @@ export default function Page() {
         <div className="w-full flex justify-between items-center mt-4 ">
           <h1 className="text-2xl font-bold">Employees</h1>
           <button
-            onClick={() => setShowNewOrderModal(true)}
+            onClick={() => setShowNewEmployeeModal(true)}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
           >
             <Plus className="h-5 w-5" />
             Add New
           </button>
         </div>
-        {/* <AddEmployeeDialogue
-          showNewOrderModal={showNewOrderModal}
-          setShowNewOrderModal={setShowNewOrderModal}
+        <AddEmployeeDialogue
+          showNewEmployeeModal={showNewEmployeeModal}
+          setShowNewEmployeeModal={setShowNewEmployeeModal}
           showConfirmationModal={showConfirmationModal}
           setShowConfirmationModal={setShowConfirmationModal}
           cities={cities}
           showRecipet={showRecipet}
           setShowRecipt={setShowRecipt}
-        /> */}
+        />
         <PeopleDataTable
           columns={
             employeeColumns as ColumnDef<

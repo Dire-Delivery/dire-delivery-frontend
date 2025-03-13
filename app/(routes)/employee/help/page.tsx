@@ -1,13 +1,37 @@
 'use client';
 
+import { Mail, Phone, MapPin, Edit } from 'lucide-react';
+import type { help } from '@/types/help';
 import { useEffect, useState } from 'react';
-import { HelpFetch } from '@/actions/help';
+import { HelpFetch, patchHelp } from '@/actions/help';
+import { Button } from '@/components/ui/button';
+import { z } from 'zod';
 
-import { help } from '@/types/help';
-import { Mail, MapPin, Phone } from 'lucide-react';
+const helpForm = z.object({
+  email: z.string().email(),
+  phone: z.string().min(10),
+  location: z.string(),
+});
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import HelpForm from '@/components/order/owner/help/helpEdit';
+import HelpConfirm from '@/components/order/owner/help/helpConfirm';
 
 export default function Page() {
   const [help, setHelp] = useState<help>();
+  const [showEditInfoModal, setShowEditInfoModal] = useState<boolean>(false);
+  const [triggerState, setStateTrigger] = useState<boolean>(false);
+
+  const [showConfirmInfo, setShowConfirmInfo] = useState<boolean>(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<z.infer<typeof helpForm>>({
+    resolver: zodResolver(helpForm),
+  });
 
   useEffect(() => {
     const fetchHelp = async () => {
@@ -20,16 +44,48 @@ export default function Page() {
       }
     };
     fetchHelp();
-  }, []);
+  }, [triggerState]);
 
-  const userName = 'employee'; //will be assigned after auth
+  const onSubmit: SubmitHandler<z.infer<typeof helpForm>> = async (data) => {
+    console.log('Form data submitted:', data); // Log form data
+    const updatedHelp = {
+      item: {
+        email: data.email,
+        phone: data.phone,
+        location: data.location,
+      },
+    };
+    setHelp(updatedHelp);
+    setShowEditInfoModal(false);
+    setShowConfirmInfo(true);
+    console.log('Updated help data:', updatedHelp); // Log updated help data
+  };
+  const handleClose = () => {
+    reset();
+    setShowConfirmInfo(false);
+    setStateTrigger(!triggerState);
+  };
+
+  const submitting = async () => {
+    try {
+      const response = await patchHelp(help!);
+      console.log('response:', response);
+      setShowEditInfoModal(false);
+      setShowConfirmInfo(false);
+      reset();
+      setStateTrigger(!triggerState);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <>
       <div className="h-screen bg-[#f0f1fa] flex p-6 md:p-10">
         <div className="w-full">
           <div className="mb-6">
             <h1 className="text-3xl font-bold text-[#0a0f8a]">
-              Welcome Back, {userName}!
+              Welcome Back, Owner!
             </h1>
             <p className="text-[#0a0f8a]/80">
               Here&apos;s your Help and Support
@@ -74,10 +130,38 @@ export default function Page() {
                   </div>
                 </div>
               </div>
+
+              <div className="mt-8  flex justify-end ">
+                <Button
+                  onClick={() => setShowEditInfoModal(true)}
+                  className="inline-flex items-center px-4 py-2 bg-[#0a0f8a] text-white rounded-md hover:bg-[#0a0f8a]/90 transition-colors"
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit Info
+                </Button>
+              </div>
             </div>
           </div>
         </div>
       </div>
+      {showEditInfoModal && (
+        <HelpForm
+          setShowEditInfoModal={setShowEditInfoModal}
+          help={help!}
+          register={register}
+          handleSubmit={handleSubmit}
+          errors={errors}
+          onSubmit={onSubmit}
+        />
+      )}
+      {showConfirmInfo && (
+        <HelpConfirm
+          setShowConfirmInfo={setShowConfirmInfo}
+          help={help!}
+          handleClose={handleClose}
+          submitting={submitting}
+        />
+      )}
     </>
   );
 }

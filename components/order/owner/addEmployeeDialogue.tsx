@@ -22,8 +22,8 @@ import * as z from 'zod';
 import { AddOrder } from '@/actions/order';
 type props = {
   cities: city[];
-  showNewOrderModal: boolean;
-  setShowNewOrderModal: React.Dispatch<React.SetStateAction<boolean>>;
+  showNewEmployeeModal: boolean;
+  setShowNewEmployeeModal: React.Dispatch<React.SetStateAction<boolean>>;
   showConfirmationModal: boolean;
   setShowConfirmationModal: React.Dispatch<React.SetStateAction<boolean>>;
   showRecipet: boolean;
@@ -32,8 +32,8 @@ type props = {
 
 export default function AddEmployeeDialogue({
   cities,
-  showNewOrderModal,
-  setShowNewOrderModal,
+  showNewEmployeeModal,
+  setShowNewEmployeeModal,
   showConfirmationModal,
   setShowConfirmationModal,
   showRecipet,
@@ -99,7 +99,7 @@ export default function AddEmployeeDialogue({
   const onSubmit: SubmitHandler<z.infer<typeof addFormSchema>> = async (
     data
   ) => {
-    // console.log('Form data submitted:', data); // Log form data
+    console.log('Form data submitted:', data); // Log form data
     const totalPrice = priceCalculator(data.weight, data.quantity);
     const date = new Date();
     const randomTransaction = generateTransactionId();
@@ -113,15 +113,15 @@ export default function AddEmployeeDialogue({
       Price: totalPrice,
       addedBy: 'Eyosi',
     };
-    // console.log('Order data:', orderData); // Log order data
+    console.log('Order data:', orderData); // Log order data
     setCurrentOrder(orderData);
-    setShowNewOrderModal(false);
+    setShowNewEmployeeModal(false);
     setShowConfirmationModal(true);
   };
   const submitting = async () => {
     try {
       const response = await AddOrder(currentOrder);
-    //   console.log('responseFromadd', response);
+      console.log('responseFromadd', response);
       setReipetOrder(currentOrder);
       setShowConfirmationModal(false);
       setShowRecipt(true);
@@ -169,308 +169,33 @@ export default function AddEmployeeDialogue({
       transactionId: '',
       status: '',
     });
-    setShowNewOrderModal(false);
+    setShowNewEmployeeModal(false);
     reset();
   };
-//   console.log('Form errors:', errors);
-//   console.log('currentOrder:', currentOrder);
+  console.log('Form errors:', errors);
+  console.log('currentOrder:', currentOrder);
 
   return (
     <>
-      {showNewOrderModal && (
+      {showNewEmployeeModal && (
         <div className="fixed inset-0 bg-[#060A87] bg-opacity-30 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full h-fit max-w-2xl">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Add New Order</h2>
+              <h2 className="text-xl font-bold text-[#060A87]">Add An Employee</h2>
               <button onClick={() => handleClose()} title="Close">
                 <X className="h-6 w-6" />
               </button>
             </div>
             <form onSubmit={handleSubmit(onSubmit)} className="px-2">
               <div className="space-y-2">
-                <div>
-                  <h1 className="text-lg  text-[#060a87] font-bold border-b pb-2">
-                    Item Information
-                  </h1>
-                  <div className="grid grid-cols-5 gap-6 mt-2 px-2">
-                    <div className="col-span-3">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Object Description
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full px-3 py-2 border rounded-lg"
-                        {...register('description')}
-                        placeholder="Enter description"
-                      />
-                      {errors.description && (
-                        <p className="text-red-500 text-sm">
-                          {errors.description.message}
-                        </p>
-                      )}
-                    </div>
-                    <div className="col-span-1">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Weight (kg)
-                      </label>
-                      <input
-                        type="number"
-                        className="w-full px-3 py-2 border rounded-lg"
-                        {...register('weight', { valueAsNumber: true })}
-                        title="Weight"
-                        placeholder="Ex: 10"
-                      />
-                      {errors.weight && (
-                        <p className="text-red-500 text-sm">
-                          {errors.weight.message}
-                        </p>
-                      )}
-                    </div>
-                    <div className="col-span-1">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Quantity
-                      </label>
-                      <input
-                        type="number"
-                        className="w-full px-3 py-2 border rounded-lg"
-                        {...register('quantity', { valueAsNumber: true })}
-                        placeholder="Ex: 10"
-                      />
-                      {errors.quantity && (
-                        <p className="text-red-500 text-sm">
-                          {errors.quantity.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Repeat similar blocks for Sender and Receiver Information */}
-                <div className="mt-2">
-                  <h3 className="text-lg text-[#060a87] font-bold border-b pb-2">
-                    Sender Information
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4 mt-2 px-2">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full px-3 py-2 border rounded-lg"
-                        {...register('senderName')}
-                        placeholder="Ex: Jhon Doe"
-                      />
-                      {errors.senderName && (
-                        <p className="text-red-500 text-sm">
-                          {errors.senderName.message}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Email Address
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full px-3 py-2 border rounded-lg"
-                        {...register('senderEmail')}
-                        placeholder="example@gmail.com"
-                      />
-                      {errors.senderEmail && (
-                        <p className="text-red-500 text-sm">
-                          {errors.senderEmail.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 mt-2 px-2">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Phone Number
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full px-3 py-2 border rounded-lg"
-                        {...register('senderPhoneNumber')}
-                        placeholder="eg: 09xxxxxxxx"
-                      />
-                      {errors.senderPhoneNumber && (
-                        <p className="text-red-500 text-sm">
-                          {errors.senderPhoneNumber.message}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        City
-                      </label>
-                      <Select
-                        value={watch('senderAddress')}
-                        onValueChange={(value) =>
-                          setValue('senderAddress', value)
-                        }
-                      >
-                        <SelectTrigger className="w-full px-3 py-2 border rounded-lg">
-                          <SelectValue placeholder="Select a city" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {cities.map((city) => (
-                            <SelectItem key={city.id} value={city.name}>
-                              {city.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {errors.senderAddress && (
-                        <p className="text-red-500 text-sm">
-                          {errors.senderAddress.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-lg  text-[#060a87] font-bold border-b pb-2 mt-2">
-                    Receiver Information
-                  </h3>
-                  <div className="grid grid-cols-2 gap-4 mt-2 px-2">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full px-3 py-2 border rounded-lg"
-                        {...register('reciverName')}
-                        placeholder="Ex: Jhon"
-                      />
-                      {errors.reciverName && (
-                        <p className="text-red-500 text-sm">
-                          {errors.reciverName.message}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Email Address
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full px-3 py-2 border rounded-lg"
-                        {...register('reciverEmail')}
-                        placeholder="example@gmail.com"
-                      />
-                      {errors.reciverEmail && (
-                        <p className="text-red-500 text-sm">
-                          {errors.reciverEmail.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 mt-2 px-2 ">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        Phone Number
-                      </label>
-                      <input
-                        type="text"
-                        className="w-full px-3 py-2 border rounded-lg"
-                        {...register('reciverPhoneNumber')}
-                        placeholder="eg: 09xxxxxxxx"
-                      />
-                      {errors.reciverPhoneNumber && (
-                        <p className="text-red-500 text-sm">
-                          {errors.reciverPhoneNumber.message}
-                        </p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
-                        City
-                      </label>
-                      <Select
-                        value={watch('reciverAddress')}
-                        onValueChange={(value) =>
-                          setValue('reciverAddress', value)
-                        }
-                      >
-                        <SelectTrigger className="w-full px-3 py-2 border rounded-lg">
-                          <SelectValue placeholder="Select a city" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {cities.map((city) => (
-                            <SelectItem key={city.id} value={city.name}>
-                              {city.name}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      {errors.reciverAddress && (
-                        <p className="text-red-500 text-sm">
-                          {errors.reciverAddress.message}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex flex-col py-2 mt-2 ">
-                    <h3 className="font-bold text-lg border-b-2 text-[#060A87]">
-                      Payment Method
-                    </h3>
-                    <div className=" py-3 px-2 gap-2 flex items-center ">
-                      <div className="flex h-full">
-                        <input
-                          type="radio"
-                          value="Now"
-                          {...register('paymentMethod')}
-                          className="mr-2"
-                        />
-                        <label>Pay Now</label>
-                      </div>
-                      <div className="flex h-full">
-                        <input
-                          type="radio"
-                          value="On Delivery"
-                          {...register('paymentMethod')}
-                          className="mr-2"
-                        />
-                        <label>Pay on Delivery</label>
-                      </div>
-                    </div>
-                    {errors.paymentMethod && (
-                      <p className="text-red-500 text-sm">
-                        {errors.paymentMethod.message}
-                      </p>
-                    )}
-                  </div>
-                </div>
-                <div className="h-12 py-1.5 justify-start items-center gap-1.5 inline-flex">
-                  <div className="text-[#060a87] text-2xl font-bold leading-tight">
-                    Total:
-                  </div>
-                  <div className="w-[280px] h-9 justify-start items-center gap-2 flex">
-                    <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
-                      <div className="self-stretch pl-3 pr-14 py-2 rounded-md border border-slate-200 justify-start items-center inline-flex">
-                        <div className="grow shrink basis-0 px-1.5 flex-col justify-end items-start gap-2.5 inline-flex">
-                          <div className="text-black text-lg font-bold leading-[18px]">
-                            {priceCalculator(
-                              watch('weight') || 0,
-                              watch('quantity') || 1
-                            ).toFixed(2)}{' '}
-                            birr
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                
+                
                 <div className="flex justify-end gap-4 mt-2">
                   <div></div>
 
                   <button
                     type="button"
-                    onClick={() => setShowNewOrderModal(false)}
+                    onClick={() => setShowNewEmployeeModal(false)}
                     className="px-4 py-2 border rounded-lg hover:bg-gray-50"
                   >
                     Cancel
