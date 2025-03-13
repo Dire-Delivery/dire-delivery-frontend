@@ -1,12 +1,170 @@
-import React from 'react';
+'use client';
 
-const PriceCitySettings: React.FC = () => {
-    return (
+import type React from 'react';
+
+import { useState } from 'react';
+import { Trash2, ChevronLeft, ChevronRight, Pencil } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
+export default function PriceCitySettings() {
+  const [weight, setWeight] = useState('');
+  const [calculatedPrice, setCalculatedPrice] = useState('0.00 birr');
+  const [newCity, setNewCity] = useState('');
+  const [cities, setCities] = useState([
+    { id: 1, name: 'Addis Ababa' },
+    { id: 2, name: 'Dire Dawa' },
+    { id: 3, name: 'Asosa' },
+    { id: 4, name: 'Hawassa' },
+  ]);
+
+  const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setWeight(e.target.value);
+    // Simple calculation for demo purposes
+    const weightNum = Number.parseFloat(e.target.value) || 0;
+    setCalculatedPrice(`${(weightNum * 5).toFixed(2)} birr`);
+  };
+
+  const handleAddCity = () => {
+    if (newCity.trim()) {
+      setCities([...cities, { id: Date.now(), name: newCity }]);
+      setNewCity('');
+    }
+  };
+
+  const handleDeleteCity = (id: number) => {
+    setCities(cities.filter((city) => city.id !== id));
+  };
+
+  return (
+    <div className="flex-1 bg-white rounded-lg p-6">
+      <h2 className="text-xl font-semibold mb-6">Price and City Setting</h2>
+
+      <div className="grid md:grid-cols-2 gap-8">
+        {/* Price Calculator */}
         <div>
-            <h1>Price City Settings</h1>
-            <p>This is a placeholder for the Price City Settings component.</p>
-        </div>
-    );
-};
+          <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
+            Price Calculator
+          </h3>
+          <p className="mb-4 text-sm">
+            Calculate the total Price for delivery based on weight
+          </p>
 
-export default PriceCitySettings;
+          <div className="mb-4">
+            <label className="block mb-2 font-medium">Weight(kg)</label>
+            <input
+              type="number"
+              className="input-field"
+              value={weight}
+              onChange={handleWeightChange}
+              placeholder="Enter weight"
+            />
+          </div>
+
+          <div className="text-xl font-semibold mt-4">{calculatedPrice}</div>
+        </div>
+
+        {/* Base Price */}
+        <div>
+          <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
+            Base Price
+          </h3>
+
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <p className="text-sm mb-1">Base Price(birr)</p>
+              <p className="font-semibold">10.00 birr</p>
+            </div>
+            <div>
+              <p className="text-sm mb-1">Price Per Kilogram(birr)</p>
+              <p className="font-semibold">5.00 birr</p>
+            </div>
+          </div>
+
+          <div className="flex justify-end">
+            <button className="primary-button bg-[#0a1172] flex items-center gap-2">
+              <Pencil size={16} />
+              Edit Price
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid md:grid-cols-2 gap-8 mt-8">
+        {/* Cities Working On */}
+        <div>
+          <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
+            Cities Working On
+          </h3>
+          <p className="mb-4 text-sm">Here are Cities that we are working on</p>
+
+          <div className="border rounded-lg overflow-hidden">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="py-3 px-4 text-left">City</th>
+                  <th className="py-3 px-4 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {cities.map((city) => (
+                  <tr key={city.id} className="border-t">
+                    <td className="py-3 px-4">{city.name}</td>
+                    <td className="py-3 px-4 text-right">
+                      <Button
+                        className="delete-button"
+                        onClick={() => handleDeleteCity(city.id)}
+                      >
+                        <Trash2 size={16} />
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="pagination">
+            <Button className="pagination-item">
+              <ChevronLeft size={16} />
+            </Button>
+            <Button className="pagination-item active">1</Button>
+            <Button className="pagination-item">2</Button>
+            <Button className="pagination-item">3</Button>
+            <span>...</span>
+            <Button className="pagination-item">10</Button>
+            <Button className="pagination-item">
+              <ChevronRight size={16} />
+            </Button>
+          </div>
+        </div>
+
+        {/* Add Cities */}
+        <div>
+          <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
+            Add Cities
+          </h3>
+
+          <div className="mb-4">
+            <label className="block mb-2 font-medium">City</label>
+            <input
+              type="text"
+              className="input-field"
+              value={newCity}
+              onChange={(e) => setNewCity(e.target.value)}
+              placeholder="(ex. Dire Dawa)"
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <button
+              className="primary-button bg-[#0a1172]"
+              onClick={handleAddCity}
+            >
+              Add city
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

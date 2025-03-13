@@ -8,8 +8,8 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState('profile');
 
   return (
-    <main className="min-h-screen p-6 bg-[#F1F2F8]">
-      <div className="max-w-6xl mx-auto">
+    <main className="min-h-screen p-6 px-8 bg-[#F1F2F8]">
+      <div className="max-w-fill mx-auto border-2">
         <h1 className="text-3xl font-bold text-[#0a1172] mb-2">
           Welcome Back, Owner!
         </h1>
@@ -19,7 +19,7 @@ export default function Home() {
             : "Here's your Pricing Report"}
         </p>
 
-        <div className="flex flex-col md:flex-row gap-6 bg-white">
+        <div className="flex flex-col md:flex-row gap-6 bg-[#F1F2F8]">
           {/* Sidebar */}
           <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 

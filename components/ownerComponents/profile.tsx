@@ -12,32 +12,24 @@ export default function ProfileSettings() {
     <div className="flex-1 bg-white rounded-lg p-6">
       <h2 className="text-xl font-semibold mb-6">Profile Setting</h2>
 
-      <div className="flex flex-col lg:flex-row gap-8">
-        {/* Profile Image */}
-        <div className="flex flex-col items-center">
-          <div className="relative">
-            <div className="w-40 h-40 rounded-full overflow-hidden border-4 border-gray-200">
-              <Image
-                src={image}
-                alt="Profile"
-                width={160}
-                height={160}
-                className="object-cover"
-              />
-            </div>
-            <Button className="absolute bottom-2 right-2 bg-[#0a1172] text-white p-2 rounded-full">
-              <Camera size={20} />
-            </Button>
-          </div>
-        </div>
-
-        <div className="flex-1">
+      <div className="flex flex-col">
+        <div className="flex gap-12 px-2">
           {/* Basic Information Card */}
-          <div className="mb-8 border rounded-lg p-4">
+          <div className="flex flex-col  h-fit pt-2">
+            <div className="relative">
+              <div className="w-56 h-56 rounded-full overflow-hidden border-4 border-gray-200">
+                <Image src={image} alt="Profile" className="object-cover" />
+              </div>
+              <Button className="absolute bottom-6 right-2 bg-[#0a1172] text-white p-2.5 rounded-full">
+                <Camera size={20} />
+              </Button>
+            </div>
+          </div>
+          <div className="mb-8 w-full border rounded-lg p-4">
             <h3 className="text-lg font-semibold mb-4 border-b pb-2">
               Basic Information
             </h3>
-            <div className="grid grid-cols-2 gap-y-4">
+            <div className="grid grid-cols-2 gap-y-2">
               <div className="font-medium">First Name:</div>
               <div>Jhon</div>
               <div className="font-medium">Last Name:</div>
@@ -46,62 +38,68 @@ export default function ProfileSettings() {
               <div>+251973246477</div>
               <div className="font-medium">Email</div>
               <div>JhonDoe22@gmail.com</div>
-              <div className="font-medium">User Name</div>
-              <div>Jhonny</div>
               <div className="font-medium">Location:</div>
               <div>AddisAbaba</div>
             </div>
           </div>
 
           {/* Form Fields */}
-          <div className="grid md:grid-cols-2 gap-6">
-            <div>
-              <label className="block mb-2 font-medium">First Name</label>
-              <input
-                type="text"
-                className="input-field"
-                defaultValue="Jhon"
-                title="First Name"
-                placeholder="First Name"
-              />
-            </div>
-            <div>
-              <label className="block mb-2 font-medium">Email</label>
-              <input
-                title="email"
-                type="email"
-                className="input-field"
-                defaultValue="abcd123@gmail.com"
-              />
-            </div>
-            <div>
-              <label className="block mb-2 font-medium">Last Name</label>
-              <input type="text" className="input-field" defaultValue="Jhon" />
-            </div>
-            <div>
-              <label className="block mb-2 font-medium">User Name</label>
-              <input
-                title="user name"
-                type="text"
-                className="input-field"
-                defaultValue="JhonDoe26"
-              />
-            </div>
-            <div>
-              <label className="block mb-2 font-medium">Phone Number</label>
-              <input
-                type="text"
-                className="input-field"
-                defaultValue="JhonDoe26"
-              />
-            </div>
-            <div>
+        </div>
+        <div className="grid md:grid-cols-2 gap-4 px-2 ">
+          <div className="w-full ">
+            <label className="block mb-2 font-medium">First Name</label>
+            <input
+              type="text"
+              className="input-field border rounded-md py-2 px-3 w-full"
+              defaultValue="Jhon"
+              title="First Name"
+              placeholder="First Name"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-medium">Email</label>
+            <input
+              title="email"
+              type="email"
+              className="input-field border rounded-md py-2 px-3 w-full"
+              defaultValue="abcd123@gmail.com"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-medium">Last Name</label>
+            <input
+              title="last name"
+              type="text"
+              className="input-field border rounded-md py-2 px-3 w-full"
+              defaultValue="Jhon"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-medium">Phone Number</label>
+            <input
+              title="phone"
+              type="text"
+              className="input-field border rounded-md py-2 px-3 w-full"
+              defaultValue="JhonDoe26"
+            />
+          </div>
+          <div>
+            <label className="block mb-2 font-medium">Location</label>
+            <input
+              title="location"
+              type="text"
+              className="input-field border rounded-md py-2 px-3 w-full"
+              defaultValue="abcd123@gmail.com"
+            />
+          </div>
+          <div className="flex gap-5 items-end">
+            <div className="w-60">
               <label className="block mb-2 font-medium">Password</label>
               <div className="relative">
                 <input
                   title="password"
                   type={showPassword ? 'text' : 'password'}
-                  className="input-field pr-10"
+                  className="input-field pr-10 border rounded-md py-2 px-3 w-full"
                   defaultValue="password"
                 />
                 <button
@@ -112,26 +110,18 @@ export default function ProfileSettings() {
                 </button>
               </div>
             </div>
-            <div>
-              <label className="block mb-2 font-medium">Location</label>
-              <input
-                type="text"
-                className="input-field"
-                defaultValue="abcd123@gmail.com"
-              />
-            </div>
-            <div className="flex items-end">
-              <button className="primary-button bg-[#0a1172]">
+            <div className="flex w-fit h-10 ">
+              <button className="primary-button bg-[#0a1172] text-white w-fit px-4 h-full rounded-md">
                 Change Password
               </button>
             </div>
           </div>
+        </div>
 
-          <div className="mt-8">
-            <button className="primary-button bg-[#0a1172]">
-              Update Profile
-            </button>
-          </div>
+        <div className="flex w-fit mt-8 h-10 ">
+          <Button className="primary-button bg-[#0a1172] text-white w-fit px-4 h-full rounded-md">
+            Update Profile
+          </Button>
         </div>
       </div>
     </div>
