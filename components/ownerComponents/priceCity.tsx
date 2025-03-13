@@ -39,6 +39,14 @@ export default function PriceCitySettings({
     fetchCities();
   }, [triggerState]);
 
+  const priceCalculator = (weight: number) => {
+    const basePrice = 200;
+    if (weight <= 1 && weight > 0) {
+      return basePrice;
+    } else {
+      return basePrice * weight;
+    }
+  };
   const handleAddCity = async (city: string) => {
     const randomId = uuidv4();
     const cityData = {
@@ -60,7 +68,7 @@ export default function PriceCitySettings({
     setWeight(e.target.value);
     // Simple calculation for demo purposes
     const weightNum = Number.parseFloat(e.target.value) || 0;
-    setCalculatedPrice(`${(weightNum * 5).toFixed(2)} birr`);
+    setCalculatedPrice(`${priceCalculator(weightNum).toFixed(2)} birr`);
   };
 
   const handleDelete = async (id: string) => {

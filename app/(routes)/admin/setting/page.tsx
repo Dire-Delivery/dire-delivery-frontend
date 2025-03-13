@@ -6,6 +6,7 @@ import ProfileSettings from '@/components/ownerComponents/profile';
 import PriceCitySettings from '@/components/ownerComponents/priceCity';
 export default function Home() {
   const [activeTab, setActiveTab] = useState('profile');
+  const [triggerState, setTriggerState] = useState<boolean>(false);
 
   return (
     <main className="min-h-screen">
@@ -27,7 +28,11 @@ export default function Home() {
           {activeTab === 'profile' ? (
             <ProfileSettings />
           ) : (
-            <PriceCitySettings />
+            <PriceCitySettings
+              setActiveTab={setActiveTab}
+              setTriggerState={setTriggerState}
+              triggerState={triggerState}
+            />
           )}
         </div>
       </div>
