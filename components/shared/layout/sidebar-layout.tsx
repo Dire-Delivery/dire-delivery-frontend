@@ -36,7 +36,7 @@ export default function SidebarLayout() {
       icon: Users,
     },
     {
-      title: 'admins',
+      title: 'Admins',
       url: '/owner/admins',
       icon: UserCog,
     },

@@ -57,9 +57,10 @@ interface EmployeeDataTableProps<TData extends { id: string, imgUrl: string }, T
     data: TData[];
     totalEntries: number;
     handleDelete: (id: string) => void;
+    type: "admin" | "employee"
 }
 
-export function EmployeeDataTable<
+export function PeopleDataTable<
     TData extends {
         id: string;
         imgUrl: string;
@@ -69,6 +70,7 @@ export function EmployeeDataTable<
     columns,
     data,
     totalEntries,
+    type,
     handleDelete,
 }: EmployeeDataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -139,7 +141,7 @@ export function EmployeeDataTable<
                                         </TableHead>
                                     );
                                 })}
-                                <TableHead className='text-center'>Promote to Admin</TableHead>
+                                <TableHead className='text-center'>{type == "employee" ? 'Promote to Admin' : 'Demote to Employee'}</TableHead>
                                 <TableHead className='text-center'>Actions</TableHead>
                             </TableRow>
                         ))}
@@ -167,10 +169,10 @@ export function EmployeeDataTable<
                                         </TableCell>
                                     ))}
                                     <TableCell>
-                                        <Button className='mx-auto bg-[#060A87] rounded-[10px] py-2 px-3 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5'>
+                                        <Button className={cn('mx-auto bg-[#060A87] rounded-[10px] py-2 px-3 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5', type == 'admin' && 'bg-[#2F78EE] hover:bg-[#2F78EE]')}>
                                             <FaUserLarge />
-                                            <div className='text-sm font-bold mb-[-3px]'>Promote</div>
-                                            <div className='text-3xl font-normal text-center mt-[-3px]'>+</div>
+                                            <div className='text-sm font-bold mb-[-3px]'>{type == "employee" ? 'Promote' : 'Demote'}</div>
+                                            {type == 'employee' && <div className='text-3xl font-normal text-center mt-[-3px]'>+</div>}
                                         </Button>
                                     </TableCell>
                                     <TableCell className='flex justify-center'>

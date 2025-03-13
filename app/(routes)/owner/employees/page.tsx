@@ -1,13 +1,9 @@
 'use client';
-import { fetchCity } from '@/actions/cities';
 import { DeleteOrder, FetchEmployees, } from '@/actions/employee';
-import AddOrderDialogue from '@/components/order/addOrderDialogue';
-import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
-import { employeeColumns } from '@/components/order/owner/employeeColumn';
-import { EmployeeDataTable } from '@/components/order/owner/employeeTable';
+import { employeeColumns } from '@/components/order/owner/peopleColumn';
+import { PeopleDataTable } from '@/components/order/owner/peopleTable';
 import { city } from '@/types/cities';
 import { Employee } from '@/types/employeeType';
-import { Order } from '@/types/orderType';
 import { ColumnDef } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -88,7 +84,7 @@ export default function Page() {
           showRecipet={showRecipet}
           setShowRecipt={setShowRecipt}
         /> */}
-        <EmployeeDataTable
+        <PeopleDataTable
           columns={
             employeeColumns as ColumnDef<
               { id: string, imgUrl: string },
@@ -98,6 +94,7 @@ export default function Page() {
           data={employees}
           totalEntries={employees.length}
           handleDelete={handleDelete}
+          type="employee"
         />
       </section>
     </section>

@@ -23,3 +23,23 @@ export const employeeColumns: ColumnDef<Order>[] = [
     header: 'Location',
   }
 ];
+
+
+export const adminsColumns: ColumnDef<Order>[] = [
+  {
+    accessorKey: 'name',
+    header: 'Admin Name',
+  },
+  {
+    accessorKey: 'email',
+    header: 'Email',
+  },
+  {
+    accessorKey: 'phoneNumber',
+    header: 'Phone Number',
+  },
+  {
+    accessorKey: 'location',
+    header: 'Location',
+  }
+];
