@@ -1,4 +1,4 @@
 export type city = {
-  id: number;
+  id: string;
   name: string;
 };

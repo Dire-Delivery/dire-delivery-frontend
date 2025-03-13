@@ -4,12 +4,24 @@ import type React from 'react';
 
 import { useState, useEffect } from 'react';
 import { Pencil } from 'lucide-react';
-import { fetchCity } from '@/actions/cities';
+import { addCity, fetchCity } from '@/actions/cities';
 import { city } from '@/types/cities';
 import { DataTable } from './cityTable';
+import { v4 as uuidv4 } from 'uuid';
+
 import { columns } from '@/components/ownerComponents/cityColumn';
+
+type Props = {
+  setActiveTab: React.Dispatch<React.SetStateAction<string>>;
+  setTriggerState: React.Dispatch<React.SetStateAction<boolean>>;
+  triggerState: boolean;
+};
 // import { DataTablePagination } from './pagination';
-export default function PriceCitySettings() {
+export default function PriceCitySettings({
+  setActiveTab,
+  setTriggerState,
+  triggerState,
+}: Props) {
   const [weight, setWeight] = useState('');
   const [calculatedPrice, setCalculatedPrice] = useState('0.00 birr');
   const [newCity, setNewCity] = useState('');
@@ -26,7 +38,24 @@ export default function PriceCitySettings() {
       }
     };
     fetchCities();
-  }, []);
+  }, [triggerState]);
+
+  const handleAddCity = async (city: string) => {
+    const randomId = uuidv4();
+    const cityData = {
+      id: randomId,
+      name: city,
+    };
+    console.log(cityData);
+    try {
+      const response = await addCity(cityData);
+      console.log(response);
+      setActiveTab('price');
+      setTriggerState((prev) => !prev);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setWeight(e.target.value);
@@ -122,7 +151,10 @@ export default function PriceCitySettings() {
           </div>
 
           <div className="flex justify-end">
-            <button className="primary-button bg-[#0a1172] p-2 rounded-sm px-4 text-white">
+            <button
+              className="primary-button bg-[#0a1172] p-2 rounded-sm px-4 text-white"
+              onClick={() => handleAddCity(newCity)}
+            >
               Add city
             </button>
           </div>
@@ -139,43 +171,6 @@ export default function PriceCitySettings() {
             data={cities}
             totalEntries={cities.length}
           />
-
-          {/* <div className="border rounded-lg overflow-hidden">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="py-3 px-4 text-left">City</th>
-                  <th className="py-3 px-4 text-right">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {cities.map((city) => (
-                  <tr key={city.id} className="border-t">
-                    <td className="py-3 px-4">{city.name}</td>
-                    <td className="py-3 px-4 text-right">
-                      <Button className="delete-button">
-                        <Trash2 size={16} />
-                      </Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-
-          <div className="pagination">
-            <Button className="pagination-item">
-              <ChevronLeft size={16} />
-            </Button>
-            <Button className="pagination-item active">1</Button>
-            <Button className="pagination-item">2</Button>
-            <Button className="pagination-item">3</Button>
-            <span>...</span>
-            <Button className="pagination-item">10</Button>
-            <Button className="pagination-item">
-              <ChevronRight size={16} />
-            </Button>
-          </div> */}
         </div>
       </div>
     </div>
