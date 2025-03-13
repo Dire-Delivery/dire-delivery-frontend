@@ -27,36 +27,72 @@ import { useEffect, useState } from 'react';
 import { LuChevronUp, LuLayoutGrid, LuLogOut } from 'react-icons/lu';
 import SidebarToggle from './sidebar-toggle';
 
-export default function SidebarLayout() {
-  const { state } = useSidebar();
-  const menuItems = [
-    {
-      title: 'Employees',
-      url: '/owner/employees',
-      icon: Users,
-    },
-    {
-      title: 'Admins',
-      url: '/owner/admins',
-      icon: UserCog,
-    },
-    {
-      title: 'Orders',
-      url: '/owner/orders',
-      icon: ClipboardList,
-    },
-    {
-      title: 'Settings',
-      url: '/owner/settings',
-      icon: Settings,
-    },
-  ];
+const ownerItems = [
+  {
+    title: 'Employees',
+    url: '/owner/employees',
+    icon: Users,
+  },
+  {
+    title: 'Admins',
+    url: '/owner/admins',
+    icon: UserCog,
+  },
+  {
+    title: 'Orders',
+    url: '/owner/orders',
+    icon: ClipboardList,
+  },
+  {
+    title: 'Settings',
+    url: '/owner/settings',
+    icon: Settings,
+  },
+];
 
+const adminItems = [
+  {
+    title: 'Employees',
+    url: '/admin/employees',
+    icon: Users,
+  },
+  {
+    title: 'Orders',
+    url: '/admin/orders',
+    icon: ClipboardList,
+  },
+  {
+    title: 'Settings',
+    url: '/admin/settings',
+    icon: Settings,
+  },
+];
+
+const employeeItems = [
+  {
+    title: 'Orders',
+    url: '/employee/orders',
+    icon: ClipboardList,
+  },
+  {
+    title: 'Settings',
+    url: '/employee/settings',
+    icon: Settings,
+  },
+];
+
+export default function SidebarLayout() {
+
+  const { state } = useSidebar();
   const pathname = usePathname();
+  const role = pathname.split('/')[1]; // Gets "owner", "admin", or "employee"
   const [selectedItem, setSelectedItem] = useState('');
 
+  const refinedMenuItems = role == "owner" ? ownerItems : role == "admin" ? adminItems : role == "employee" ? employeeItems : []
+
+
   useEffect(() => {
-    const matchedItem = menuItems.find((item) => pathname == item.url);
+    const matchedItem = refinedMenuItems.find((item) => pathname == item.url);
     setSelectedItem(matchedItem ? matchedItem.title : '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]); // Re-run when pathname changes
@@ -122,7 +158,7 @@ export default function SidebarLayout() {
           <LuLayoutGrid stroke="#060A87" size={24} />
         </Link>
         <SidebarMenu className="gap-2 p-0 m-0">
-          {menuItems.map((item, index) => (
+          {refinedMenuItems.map((item, index) => (
             <SidebarMenuItem key={index}>
               <Link
                 href={item.url}

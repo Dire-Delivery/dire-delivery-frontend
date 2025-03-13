@@ -1,6 +1,6 @@
 'use client';
 import { DeleteOrder, FetchEmployees, } from '@/actions/employee';
-import { employeeColumns } from '@/components/order/owner/peopleColumn';
+import { adminsColumns } from '@/components/order/owner/peopleColumn';
 import { PeopleDataTable } from '@/components/order/owner/peopleTable';
 import { city } from '@/types/cities';
 import { Employee } from '@/types/employeeType';
@@ -60,13 +60,13 @@ export default function Page() {
             Welcome Back, Owner!
           </div>
           <div className="self-stretch text-[#495d85] text-sm md:text-base font-extrabold font-['Manrope'] leading-tight">
-            Here’s your Employees Report
+            Here’s your Admins Report
           </div>
         </div>
       </div>
       <section className=" w-full border px-6 py-2 mt-3 bg-white rounded-2xl flex-col justify-between items-start inline-flex overflow-hidden">
         <div className="w-full flex justify-between items-center mt-4 ">
-          <h1 className="text-2xl font-bold">Employees</h1>
+          <h1 className="text-2xl font-bold">Admins</h1>
           <button
             onClick={() => setShowNewOrderModal(true)}
             className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
@@ -86,7 +86,7 @@ export default function Page() {
         /> */}
         <PeopleDataTable
           columns={
-            employeeColumns as ColumnDef<
+            adminsColumns as ColumnDef<
               { id: string, imgUrl: string },
               unknown
             >[]
@@ -94,7 +94,7 @@ export default function Page() {
           data={employees}
           totalEntries={employees.length}
           handleDelete={handleDelete}
-          type="employee"
+          type="admin"
         />
       </section>
     </section>
