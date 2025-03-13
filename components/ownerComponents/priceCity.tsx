@@ -13,6 +13,17 @@ import { price } from '@/types/price';
 
 import { columns } from '@/components/ownerComponents/cityColumn';
 import { Button } from '../ui/button';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 type Props = {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
@@ -30,7 +41,8 @@ export default function PriceCitySettings({
   const [cities, setCities] = useState<city[]>([]);
   const [price, setPrice] = useState<number>();
   const [editPrice, setEditPrice] = useState<boolean>(false);
-
+  const [newPrice, setNewPrice] = useState<number>(0);
+  const [confirmModal, setConfirmModal] = useState<boolean>(false);
   useEffect(() => {
     const fetchCities = async () => {
       try {
@@ -51,6 +63,7 @@ export default function PriceCitySettings({
         const response = await fetchPrice();
         console.log('price:', response);
         setPrice(response.basePrice);
+        setNewPrice(price!);
       } catch (error) {
         console.log(error);
       }
@@ -104,18 +117,78 @@ export default function PriceCitySettings({
       console.log(error);
     }
   };
+  const handlePriceChange = () => {
+    setConfirmModal(true);
+
+    setEditPrice(false);
+    console.log('newPrice:', newPrice);
+  };
   return (
     <div className="flex-1 bg-white rounded-lg p-6">
       <h2 className="text-xl font-semibold mb-6 pb-4 border-b">
         Price and City Setting
       </h2>
 
-      <div className="grid md:grid-cols-2 gap-12 md:gap-24 px-4 mb-12">
+      <div className="grid md:grid-cols-2 gap-12 md:gap-24 px-2 mb-12">
         {/* Base Price */}
         {editPrice ? (
           <div>
-            <h1>editprice</h1>{' '}
-            <Button onClick={() => setEditPrice(false)}>confirm</Button>
+            <div className="flex flex-col justify-start items-start gap-3 border">
+              <div className="w-full py-2 border-b border-black inline-flex justify-start items-center gap-2.5">
+                <div className="w-full justify-start text-black text-lg font-bold font-['Manrope'] leading-tight">
+                  Edit Price
+                </div>
+              </div>
+              <div className="w-full  flex flex-col justify-center items-end gap-2.5">
+                <div className="w-full h-5 justify-start text-muted-foreground text-sm font-normal font-['Manrope'] leading-tight">
+                  Set a Price for Orders based on Weight
+                </div>
+                <div className="w-full flex justify-between items-center">
+                  <div className="inline-flex flex-col justify-start items-start gap-1.5 w-full ">
+                    <div className="justify-start text-foreground text-base font-medium font-['Manrope'] leading-tight">
+                      Base Price (birr)
+                    </div>
+                    <div className="w-full h-10 inline-flex justify-start items-center gap-2">
+                      <div className="flex-1 inline-flex flex-col justify-start items-start gap-1.5">
+                        <input
+                          title="base"
+                          type="number"
+                          className=" px-2 py-2.5 rounded-md outline outline-1 outline-input justify-start text-zinc-500 text-base font-normal font-['Manrope'] leading-tight w-full h-full"
+                          onChange={(e) => setNewPrice(Number(e.target.value))}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      className="h-10 px-3 bg-violet-950 rounded-lg outline outline-1 outline-offset-[-1px] outline-violet-950 inline-flex justify-center items-center gap-2.5 text-base"
+                      onClick={() => handlePriceChange()}
+                    >
+                      Confirm
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>
+                        Are you absolutely sure?
+                      </AlertDialogTitle>
+                      <AlertDialogDescription>
+                        This action cannot be undone. This will permanently
+                        delete your account and remove your data from our
+                        servers.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <AlertDialogAction>Continue</AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
+            </div>
           </div>
         ) : (
           <div>
