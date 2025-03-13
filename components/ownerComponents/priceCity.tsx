@@ -8,7 +8,7 @@ import { addCity, deleteCity, fetchCity } from '@/actions/cities';
 import { city } from '@/types/cities';
 import { DataTable } from './cityTable';
 import { v4 as uuidv4 } from 'uuid';
-import { fetchPrice } from '@/actions/price';
+import { changePrice, fetchPrice } from '@/actions/price';
 // import { price } from '@/types/price';
 
 import { columns } from '@/components/ownerComponents/cityColumn';
@@ -24,6 +24,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
+import { price } from '@/types/price';
 
 type Props = {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
@@ -62,7 +63,7 @@ export default function PriceCitySettings({
       try {
         const response = await fetchPrice();
         console.log('price:', response);
-        setPrice(response.basePrice);
+        setPrice(response.item.basePrice);
         setNewPrice(price!);
       } catch (error) {
         console.log(error);
@@ -117,11 +118,22 @@ export default function PriceCitySettings({
       console.log(error);
     }
   };
-  const handlePriceChange = () => {
-    setConfirmModal(false);
-
-    setEditPrice(false);
+  const handlePriceChange = async () => {
     console.log('newPrice:', newPrice);
+    const newPriceSet = {
+      item: {
+        basePrice: newPrice,
+      },
+    };
+    try {
+      const response = await changePrice(newPriceSet as price);
+      console.log('response:', response);
+      setConfirmModal(false);
+      setEditPrice(false);
+      setTriggerState((prev) => !prev);
+    } catch (error) {
+      console.log(error);
+    }
   };
   return (
     <div className="flex-1 bg-white rounded-lg p-6">

@@ -1,3 +1,5 @@
 export type price = {
-  basePrice: 'number';
+  item: {
+    basePrice: number;
+  };
 };

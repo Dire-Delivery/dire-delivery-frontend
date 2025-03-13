@@ -679,6 +679,8 @@
     }
   },
   "price": {
-    "basePrice": 200
+    "item": {
+      "basePrice": 200
+    }
   }
 }
