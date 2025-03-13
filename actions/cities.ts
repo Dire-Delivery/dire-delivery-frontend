@@ -17,5 +17,11 @@ export const addCity = async (data: city) => {
     method: 'POST',
     data: data,
   });
-  return response
+  return response;
+};
+
+export const deleteCity = async (id: string) => {
+  const fetchURl = `${url}/${id}`;
+  const response = await apiCall({ url: fetchURl, method: 'DELETE' });
+  return response;
 };

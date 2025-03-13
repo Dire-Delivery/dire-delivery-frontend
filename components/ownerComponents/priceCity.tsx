@@ -4,7 +4,7 @@ import type React from 'react';
 
 import { useState, useEffect } from 'react';
 import { Pencil } from 'lucide-react';
-import { addCity, fetchCity } from '@/actions/cities';
+import { addCity, deleteCity, fetchCity } from '@/actions/cities';
 import { city } from '@/types/cities';
 import { DataTable } from './cityTable';
 import { v4 as uuidv4 } from 'uuid';
@@ -71,12 +71,20 @@ export default function PriceCitySettings({
   //     }
   //   };
 
-  //   const handleDeleteCity = (id: number) => {
-  //     setCities(cities.filter((city) => city.id !== id));
-  //   };
-  // const handleDelete = () => {
-  //   console.log('delete');
+  // const handleDeleteCity = (id: string) => {
+  //   setCities(cities.filter((city) => city.id !== id));
   // };
+  const handleDelete = async (id: string) => {
+    console.log('id:', id);
+    try {
+      const response = await deleteCity(id);
+      console.log(response);
+      setActiveTab('price');
+      setTriggerState((prev) => !prev);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div className="flex-1 bg-white rounded-lg p-6">
       <h2 className="text-xl font-semibold mb-6 pb-4 border-b">
@@ -170,6 +178,7 @@ export default function PriceCitySettings({
             columns={columns}
             data={cities}
             totalEntries={cities.length}
+            handleDelete={handleDelete}
           />
         </div>
       </div>

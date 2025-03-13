@@ -18,16 +18,18 @@ import {
 } from '@/components/ui/table';
 import { Button } from '../ui/button';
 import { RiDeleteBin5Line } from 'react-icons/ri';
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { id: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   totalEntries: number;
+  handleDelete: (id: string) => void;
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: string }, TValue>({
   columns,
   data,
   totalEntries,
+  handleDelete,
 }: DataTableProps<TData, TValue>) {
   const table = useReactTable({
     data,
@@ -77,10 +79,7 @@ export function DataTable<TData, TValue>({
                   <TableCell>
                     <Button
                       className="cursor-pointer text-white  bg-red-700 hover:bg-red-100"
-                      onSelect={(e) => {
-                        e.preventDefault(); // Prevent the dropdown from closing
-                        // Open the AlertDialog for this row
-                      }}
+                      onClick={() => handleDelete(row.original.id)}
                     >
                       <RiDeleteBin5Line className="h-5 w-5" />
                     </Button>
