@@ -59,11 +59,11 @@ export default function PriceCitySettings() {
             Calculate the total Price for delivery based on weight
           </p>
 
-          <div className="mb-4">
+          <div className="mb-4 w-full">
             <label className="block mb-2 font-medium">Weight(kg)</label>
             <input
               type="number"
-              className="input-field"
+              className="input-field border rounded-md py-2 px-2 w-full"
               value={weight}
               onChange={handleWeightChange}
               placeholder="Enter weight"
@@ -91,7 +91,7 @@ export default function PriceCitySettings() {
           </div>
 
           <div className="flex justify-end">
-            <button className="primary-button bg-[#0a1172] flex items-center gap-2">
+            <button className="primary-button bg-[#0a1172] flex items-center gap-2 p-2 rounded-sm px-4 text-white">
               <Pencil size={16} />
               Edit Price
             </button>
@@ -155,7 +155,7 @@ export default function PriceCitySettings() {
             <label className="block mb-2 font-medium">City</label>
             <input
               type="text"
-              className="input-field"
+              className="input-field border rounded-md w-full p-2"
               value={newCity}
               onChange={(e) => setNewCity(e.target.value)}
               placeholder="(ex. Dire Dawa)"
@@ -163,7 +163,9 @@ export default function PriceCitySettings() {
           </div>
 
           <div className="flex justify-end">
-            <button className="primary-button bg-[#0a1172]">Add city</button>
+            <button className="primary-button bg-[#0a1172] p-2 rounded-sm px-4 text-white">
+              Add city
+            </button>
           </div>
         </div>
       </div>
