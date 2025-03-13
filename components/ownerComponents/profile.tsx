@@ -37,7 +37,7 @@ export default function ProfileSettings() {
               <div className="font-medium">Phone Number</div>
               <div>+251973246477</div>
               <div className="font-medium ">Email</div>
-              <div className="w-full border break-words">
+              <div className="w-full  break-words">
                 <p className="break-words w-full">JhonDoe22@gmail.com</p>
               </div>
               <div className="font-medium">Location:</div>
@@ -94,8 +94,8 @@ export default function ProfileSettings() {
               defaultValue="abcd123@gmail.com"
             />
           </div>
-          <div className="grid border items-end md:grid-cols-5 gap-5 w-full ">
-            <div className="w-full border md:col-span-3">
+          <div className="grid  items-end md:grid-cols-5 gap-5 w-full ">
+            <div className="w-full  md:col-span-3">
               <label className="block mb-2 font-medium">Password</label>
               <div className="relative w-full">
                 <input

@@ -3,11 +3,12 @@
 import type React from 'react';
 
 import { useState, useEffect } from 'react';
-import { Trash2, ChevronLeft, ChevronRight, Pencil } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Pencil } from 'lucide-react';
 import { fetchCity } from '@/actions/cities';
 import { city } from '@/types/cities';
-
+import { DataTable } from './cityTable';
+import { columns } from '@/components/ownerComponents/cityColumn';
+// import { DataTablePagination } from './pagination';
 export default function PriceCitySettings() {
   const [weight, setWeight] = useState('');
   const [calculatedPrice, setCalculatedPrice] = useState('0.00 birr');
@@ -44,7 +45,9 @@ export default function PriceCitySettings() {
   //   const handleDeleteCity = (id: number) => {
   //     setCities(cities.filter((city) => city.id !== id));
   //   };
-
+  // const handleDelete = () => {
+  //   console.log('delete');
+  // };
   return (
     <div className="flex-1 bg-white rounded-lg p-6">
       <h2 className="text-xl font-semibold mb-6 pb-4 border-b">
@@ -131,7 +134,13 @@ export default function PriceCitySettings() {
           </h3>
           <p className="mb-4 text-sm">Here are Cities that we are working on</p>
 
-          <div className="border rounded-lg overflow-hidden">
+          <DataTable
+            columns={columns}
+            data={cities}
+            totalEntries={cities.length}
+          />
+
+          {/* <div className="border rounded-lg overflow-hidden">
             <table className="w-full">
               <thead className="bg-gray-50">
                 <tr>
@@ -166,7 +175,7 @@ export default function PriceCitySettings() {
             <Button className="pagination-item">
               <ChevronRight size={16} />
             </Button>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>
