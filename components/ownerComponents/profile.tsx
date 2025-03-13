@@ -13,10 +13,10 @@ export default function ProfileSettings() {
       <h2 className="text-xl font-semibold mb-6">Profile Setting</h2>
 
       <div className="flex flex-col">
-        <div className="flex gap-12 px-2">
+        <div className="flex flex-col lg:flex-row gap-12 px-2">
           {/* Basic Information Card */}
-          <div className="flex flex-col  h-fit pt-2">
-            <div className="relative">
+          <div className="flex flex-col h-fit items-center justify-center pt-2">
+            <div className="relative  items-center justify-center">
               <div className="w-56 h-56 rounded-full overflow-hidden border-4 border-gray-200">
                 <Image src={image} alt="Profile" className="object-cover" />
               </div>

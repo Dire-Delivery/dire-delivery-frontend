@@ -19,7 +19,7 @@ export default function Home() {
             : "Here's your Pricing Report"}
         </p>
 
-        <div className="flex flex-col md:flex-row gap-6 bg-[#F1F2F8]">
+        <div className="flex flex-col lg:flex-row gap-6 bg-[#F1F2F8]">
           {/* Sidebar */}
           <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
