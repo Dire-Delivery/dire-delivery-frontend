@@ -2,20 +2,30 @@
 
 import type React from 'react';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Trash2, ChevronLeft, ChevronRight, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { fetchCity } from '@/actions/cities';
+import { city } from '@/types/cities';
 
 export default function PriceCitySettings() {
   const [weight, setWeight] = useState('');
   const [calculatedPrice, setCalculatedPrice] = useState('0.00 birr');
   const [newCity, setNewCity] = useState('');
-  const [cities, setCities] = useState([
-    { id: 1, name: 'Addis Ababa' },
-    { id: 2, name: 'Dire Dawa' },
-    { id: 3, name: 'Asosa' },
-    { id: 4, name: 'Hawassa' },
-  ]);
+  const [cities, setCities] = useState<city[]>([]);
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const response = await fetchCity();
+        console.log('cities:', response);
+        setCities(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchCities();
+  }, []);
 
   const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setWeight(e.target.value);
@@ -24,16 +34,16 @@ export default function PriceCitySettings() {
     setCalculatedPrice(`${(weightNum * 5).toFixed(2)} birr`);
   };
 
-  const handleAddCity = () => {
-    if (newCity.trim()) {
-      setCities([...cities, { id: Date.now(), name: newCity }]);
-      setNewCity('');
-    }
-  };
+  //   const handleAddCity = () => {
+  //     if (newCity.trim()) {
+  //       setCities([...cities, { id: Date.now(), name: newCity }]);
+  //       setNewCity('');
+  //     }
+  //   };
 
-  const handleDeleteCity = (id: number) => {
-    setCities(cities.filter((city) => city.id !== id));
-  };
+  //   const handleDeleteCity = (id: number) => {
+  //     setCities(cities.filter((city) => city.id !== id));
+  //   };
 
   return (
     <div className="flex-1 bg-white rounded-lg p-6">
@@ -110,10 +120,7 @@ export default function PriceCitySettings() {
                   <tr key={city.id} className="border-t">
                     <td className="py-3 px-4">{city.name}</td>
                     <td className="py-3 px-4 text-right">
-                      <Button
-                        className="delete-button"
-                        onClick={() => handleDeleteCity(city.id)}
-                      >
+                      <Button className="delete-button">
                         <Trash2 size={16} />
                       </Button>
                     </td>
@@ -156,12 +163,7 @@ export default function PriceCitySettings() {
           </div>
 
           <div className="flex justify-end">
-            <button
-              className="primary-button bg-[#0a1172]"
-              onClick={handleAddCity}
-            >
-              Add city
-            </button>
+            <button className="primary-button bg-[#0a1172]">Add city</button>
           </div>
         </div>
       </div>
