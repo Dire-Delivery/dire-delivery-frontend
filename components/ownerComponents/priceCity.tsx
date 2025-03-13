@@ -47,9 +47,9 @@ export default function PriceCitySettings() {
 
   return (
     <div className="flex-1 bg-white rounded-lg p-6">
-      <h2 className="text-xl font-semibold mb-6">Price and City Setting</h2>
+      <h2 className="text-xl font-semibold mb-6 pb-4 border-b">Price and City Setting</h2>
 
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid md:grid-cols-2 gap-24 px-4">
         {/* Price Calculator */}
         <div>
           <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
@@ -99,7 +99,7 @@ export default function PriceCitySettings() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-8 mt-8">
+      <div className="grid md:grid-cols-2 gap-24 mt-8 px-4">
         {/* Cities Working On */}
         <div>
           <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
