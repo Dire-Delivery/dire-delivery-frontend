@@ -47,32 +47,11 @@ export default function PriceCitySettings() {
 
   return (
     <div className="flex-1 bg-white rounded-lg p-6">
-      <h2 className="text-xl font-semibold mb-6 pb-4 border-b">Price and City Setting</h2>
+      <h2 className="text-xl font-semibold mb-6 pb-4 border-b">
+        Price and City Setting
+      </h2>
 
-      <div className="grid md:grid-cols-2 gap-24 px-4">
-        {/* Price Calculator */}
-        <div>
-          <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
-            Price Calculator
-          </h3>
-          <p className="mb-4 text-sm">
-            Calculate the total Price for delivery based on weight
-          </p>
-
-          <div className="mb-4 w-full">
-            <label className="block mb-2 font-medium">Weight(kg)</label>
-            <input
-              type="number"
-              className="input-field border rounded-md py-2 px-2 w-full"
-              value={weight}
-              onChange={handleWeightChange}
-              placeholder="Enter weight"
-            />
-          </div>
-
-          <div className="text-xl font-semibold mt-4">{calculatedPrice}</div>
-        </div>
-
+      <div className="grid md:grid-cols-2 gap-12 md:gap-24 px-4 mb-12">
         {/* Base Price */}
         <div>
           <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
@@ -97,9 +76,54 @@ export default function PriceCitySettings() {
             </button>
           </div>
         </div>
+        {/* Price Calculator */}
+        <div>
+          <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
+            Price Calculator
+          </h3>
+          <p className="mb-4 text-sm">
+            Calculate the total Price for delivery based on weight
+          </p>
+
+          <div className="mb-4 w-full">
+            <label className="block mb-2 font-medium">Weight(kg)</label>
+            <input
+              type="number"
+              className="input-field border rounded-md py-2 px-2 w-full"
+              value={weight}
+              onChange={handleWeightChange}
+              placeholder="Enter weight"
+            />
+          </div>
+
+          <div className="text-xl font-semibold mt-4">{calculatedPrice}</div>
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-24 mt-8 px-4">
+      <div className="grid md:grid-cols-2 gap-12 md:gap-24 mt-8 px-4">
+        {/* Add Cities */}
+        <div>
+          <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
+            Add Cities
+          </h3>
+
+          <div className="mb-4">
+            <label className="block mb-2 font-medium">City</label>
+            <input
+              type="text"
+              className="input-field border rounded-md w-full p-2"
+              value={newCity}
+              onChange={(e) => setNewCity(e.target.value)}
+              placeholder="(ex. Dire Dawa)"
+            />
+          </div>
+
+          <div className="flex justify-end">
+            <button className="primary-button bg-[#0a1172] p-2 rounded-sm px-4 text-white">
+              Add city
+            </button>
+          </div>
+        </div>
         {/* Cities Working On */}
         <div>
           <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
@@ -142,30 +166,6 @@ export default function PriceCitySettings() {
             <Button className="pagination-item">
               <ChevronRight size={16} />
             </Button>
-          </div>
-        </div>
-
-        {/* Add Cities */}
-        <div>
-          <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
-            Add Cities
-          </h3>
-
-          <div className="mb-4">
-            <label className="block mb-2 font-medium">City</label>
-            <input
-              type="text"
-              className="input-field border rounded-md w-full p-2"
-              value={newCity}
-              onChange={(e) => setNewCity(e.target.value)}
-              placeholder="(ex. Dire Dawa)"
-            />
-          </div>
-
-          <div className="flex justify-end">
-            <button className="primary-button bg-[#0a1172] p-2 rounded-sm px-4 text-white">
-              Add city
-            </button>
           </div>
         </div>
       </div>

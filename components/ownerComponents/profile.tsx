@@ -9,7 +9,7 @@ export default function ProfileSettings() {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="flex-1 bg-white rounded-lg p-6">
+    <div className="flex-1 bg-white rounded-lg  py-6 px-2 md:p-6">
       <h2 className="text-xl font-semibold mb-6">Profile Setting</h2>
 
       <div className="flex flex-col">
@@ -29,15 +29,17 @@ export default function ProfileSettings() {
             <h3 className="text-lg font-semibold mb-4 border-b pb-2">
               Basic Information
             </h3>
-            <div className="grid grid-cols-2 gap-y-2">
+            <div className="grid grid-cols-2 gap-y-2 border">
               <div className="font-medium">First Name:</div>
               <div>Jhon</div>
               <div className="font-medium">Last Name:</div>
               <div>Doe</div>
               <div className="font-medium">Phone Number</div>
               <div>+251973246477</div>
-              <div className="font-medium">Email</div>
-              <div>JhonDoe22@gmail.com</div>
+              <div className="font-medium ">Email</div>
+              <div className="w-full border break-words">
+                <p className="break-words w-full">JhonDoe22@gmail.com</p>
+              </div>
               <div className="font-medium">Location:</div>
               <div>AddisAbaba</div>
             </div>
@@ -45,7 +47,7 @@ export default function ProfileSettings() {
 
           {/* Form Fields */}
         </div>
-        <div className="grid md:grid-cols-2 gap-4 px-2 ">
+        <div className="grid lg:grid-cols-2 gap-4 px-2 ">
           <div className="w-full ">
             <label className="block mb-2 font-medium">First Name</label>
             <input
@@ -92,10 +94,10 @@ export default function ProfileSettings() {
               defaultValue="abcd123@gmail.com"
             />
           </div>
-          <div className="flex gap-5 items-end">
-            <div className="w-60">
+          <div className="grid border items-end md:grid-cols-5 gap-5 w-full ">
+            <div className="w-full border md:col-span-3">
               <label className="block mb-2 font-medium">Password</label>
-              <div className="relative">
+              <div className="relative w-full">
                 <input
                   title="password"
                   type={showPassword ? 'text' : 'password'}
@@ -110,9 +112,9 @@ export default function ProfileSettings() {
                 </button>
               </div>
             </div>
-            <div className="flex w-fit h-10 ">
-              <button className="primary-button bg-[#0a1172] text-white w-fit px-4 h-full rounded-md">
-                Change Password
+            <div className="flex w-full items-center justify-end md:justify-start h-10 md:col-span-2">
+              <button className="primary-button bg-[#0a1172] text-white w-fit px-4 h-fit rounded-md py-2">
+                Change
               </button>
             </div>
           </div>
