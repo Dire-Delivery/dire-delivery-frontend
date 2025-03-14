@@ -78,8 +78,8 @@ export function PeopleDataTable<
     const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
         null
     ); // Track which row's AlertDialog is open
-      const pathname = usePathname();
-      const role = pathname.split('/')[1]; // Gets "owner", "admin", or "employee"
+    const pathname = usePathname();
+    const role = pathname.split('/')[1]; // Gets "owner", "admin", or "employee"
 
     const table = useReactTable({
         data,
@@ -212,37 +212,37 @@ export function PeopleDataTable<
                                         </DropdownMenu>
 
                                         {/* AlertDialog for the row */}
-                                        {/* <AlertDialog
-                      open={openAlertDialogId === row.original.id}
-                      onOpenChange={(open) => {
-                        if (!open) setOpenAlertDialogId(null); // Close the AlertDialog
-                      }}
-                    >
-                      <AlertDialogContent>
-                        <AlertDialogHeader>
-                          <AlertDialogTitle className="text-[#060A87]">
-                            Are you absolutely sure?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription>
-                            This action cannot be undone. This will permanently
-                            delete your account and remove your data from our
-                            servers.
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
-                          <AlertDialogAction
-                            onClick={() => {
-                              handleDelete(row.original.id); // Perform the delete action
-                              setOpenAlertDialogId(null); // Close the AlertDialog
-                            }}
-                            className="bg-[#060A87]"
-                          >
-                            Continue
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog> */}
+                                        <AlertDialog
+                                            open={openAlertDialogId === row.original.id}
+                                            onOpenChange={(open) => {
+                                                if (!open) setOpenAlertDialogId(null); // Close the AlertDialog
+                                            }}
+                                        >
+                                            <AlertDialogContent>
+                                                <AlertDialogHeader>
+                                                    <AlertDialogTitle className="text-[#060A87]">
+                                                        Are you absolutely sure?
+                                                    </AlertDialogTitle>
+                                                    <AlertDialogDescription>
+                                                        This action cannot be undone. This will permanently
+                                                        delete your account and remove your data from our
+                                                        servers.
+                                                    </AlertDialogDescription>
+                                                </AlertDialogHeader>
+                                                <AlertDialogFooter>
+                                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                                    <AlertDialogAction
+                                                        onClick={() => {
+                                                            handleDelete(row.original.id); // Perform the delete action
+                                                            setOpenAlertDialogId(null); // Close the AlertDialog
+                                                        }}
+                                                        className="bg-[#060A87]"
+                                                    >
+                                                        Continue
+                                                    </AlertDialogAction>
+                                                </AlertDialogFooter>
+                                            </AlertDialogContent>
+                                        </AlertDialog>
                                     </TableCell>
                                 </TableRow>
                             ))
@@ -283,6 +283,7 @@ export function PeopleDataTable<
                                             : 'outline'
                                     }
                                     size="sm"
+                                    className={cn(table.getState().pagination.pageIndex === i && 'bg-[#060A87] hover:bg-[#060A87]')}
                                     onClick={() => table.setPageIndex(i)}
                                 >
                                     {i + 1}
