@@ -1,32 +1,43 @@
+name: Deploy
+
 on:
   push:
-    branches: main
-name: 🚀 Deploy website on push
+    branches:
+      - main
 
 jobs:
-  web-deploy:
-    name: 🎉 Deploy
+  deploy:
+    name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: 🚚 Get latest code
-        uses: actions/checkout@v4
-
-      - name: Use Node.js 22.11.0
-        uses: actions/setup-node@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v3
         with:
-          node-version: '22.11.0'
+          fetch-depth: 0
 
-      - name: 🔨 Build Project
-        run: |
-          npm install --legacy-peer-deps
-          npm run build
-
-      - name: 📂 Sync files to public_html
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+      - name: Connecting Server
+        uses: appleboy/ssh-action@master
         with:
-          server: ${{ secrets.FTP_SERVER }}
-          username: ${{ secrets.FTP_USERNAME }}
-          password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./ # Ensure this is the correct path to the built frontend
-          server-dir: /public_html/ # Upload directly to public_html
-          dangerous-clean-slate: true # Clears existing files to prevent conflicts
+          host: '192.250.239.84'
+          username: 'diredegd'
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          script: |
+            cd home/diredegd/public_html
+
+            echo "Stashing changes..."
+            git stash
+            git clean -f -d
+            git pull origin main
+
+            echo "Installing dependencies..."
+            npm install -g pm2
+            npm install --legacy-peer-deps
+
+            echo "Building the project..."
+            npm run Build
+
+            echo "Restarting the application with PM2..."
+            pm2 delete dire-delivery-fron-end || true
+            pm2 start $(find dist -name 'main.js') --name "dire-delivery-fron-end"
+
+            exit 0
