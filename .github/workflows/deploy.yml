@@ -27,6 +27,6 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          local-dir: ./out/ # Ensure this is the correct path to the built frontend
+          local-dir: ./ # Ensure this is the correct path to the built frontend
           server-dir: /public_html/ # Upload directly to public_html
           dangerous-clean-slate: true # Clears existing files to prevent conflicts
