@@ -21,11 +21,12 @@ jobs:
           npm install --legacy-peer-deps
           npm run build
 
-      - name: 📂 Sync files
+      - name: 📂 Sync files to public_html
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          dangerous-clean-slate: true
-          local-dir: ./
+          local-dir: ./out/ # Ensure this is the correct path to the built frontend
+          server-dir: /public_html/ # Upload directly to public_html
+          dangerous-clean-slate: true # Clears existing files to prevent conflicts
