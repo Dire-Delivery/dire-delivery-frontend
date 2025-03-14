@@ -157,7 +157,7 @@ export function PeopleDataTable<
                                     data-state={row.getIsSelected() && 'selected'}
                                 >
                                     {row.getVisibleCells().map((cell, index) => (
-                                        <TableCell key={cell.id} className={cn('relative mx-auto text-center', index == 0 && "flex items-center gap-3 pl-8")}>
+                                        <TableCell key={cell.id} className={cn('relative mx-auto text-center', index == 0 && "flex items-center mt-3 h-full gap-3 pl-8")}>
                                             {index == 0 &&
                                                 <Avatar className='w-8 h-auto'>
                                                     <AvatarImage src={row.original.imgUrl} />
