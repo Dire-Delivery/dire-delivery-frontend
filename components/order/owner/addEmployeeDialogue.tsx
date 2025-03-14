@@ -1,25 +1,22 @@
 'use client';
 
-import { X } from 'lucide-react';
 import { city } from '@/types/cities';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { useForm, SubmitHandler } from 'react-hook-form';
-import { addFormSchema } from '@/types/order';
-import { useState } from 'react';
-import { Order } from '@/types/orderType';
-import { formatDate } from '@/lib/utils';
-import { generateTransactionId } from '@/lib/utils';
-import { v4 as uuidv4 } from 'uuid';
-import ConfirmModal from '../confirmModal';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { X } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { v4 as uuidv4 } from 'uuid';
 import * as z from 'zod';
-import { AddOrder } from '@/actions/order';
+import ConfirmModal from '../confirmModal';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+
+
+import { userProfile, userToken } from "@/actions/auth";
+import { addUserSchema } from "@/lib/auth-schema";
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+
+const BaseUrl = process.env.NEXT_PUBLIC_API_URL
+
 type props = {
   cities: city[];
   showNewEmployeeModal: boolean;
@@ -39,141 +36,51 @@ export default function AddEmployeeDialogue({
   showRecipet,
   setShowRecipt,
 }: props) {
-  const [currentOrder, setCurrentOrder] = useState<Order>({
-    id: '',
-    createdAt: '',
-    addedBy: 'Eyosi',
-    senderName: '',
-    reciverName: '',
-    description: '',
-    senderAddress: '',
-    reciverAddress: '',
-    paymentMethod: undefined,
-    senderPhoneNumber: '',
-    reciverPhoneNumber: '',
-    senderEmail: '',
-    reciverEmail: '',
-    weight: 0,
-    quantity: 1,
-    transactionId: '',
-    status: '',
-  });
-  const [recieptOrder, setReipetOrder] = useState<Order>({
-    id: '',
-    createdAt: '',
-    addedBy: 'Eyosi',
-    senderName: '',
-    reciverName: '',
-    description: '',
-    senderAddress: '',
-    reciverAddress: '',
-    paymentMethod: undefined,
-    senderPhoneNumber: '',
-    reciverPhoneNumber: '',
-    senderEmail: '',
-    reciverEmail: '',
-    weight: 0,
-    quantity: 1,
-    transactionId: '',
-    status: '',
-  });
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    watch,
-    reset,
-  } = useForm<z.infer<typeof addFormSchema>>({
-    resolver: zodResolver(addFormSchema),
-  });
-  const priceCalculator = (weight: number, quantity: number) => {
-    const basePrice = 200;
-    if (weight <= 1 && weight > 0) {
-      return basePrice * quantity;
-    } else {
-      return basePrice * weight * quantity;
-    }
-  };
+  const form = useForm<z.infer<typeof addUserSchema>>({
+    resolver: zodResolver(addUserSchema),
+    defaultValues: {
+      fName: "",
+      lName: "",
+      email: "",
+      phoneNumber: "",
+    },
+  })
 
-  const onSubmit: SubmitHandler<z.infer<typeof addFormSchema>> = async (
-    data
-  ) => {
-    console.log('Form data submitted:', data); // Log form data
-    const totalPrice = priceCalculator(data.weight, data.quantity);
-    const date = new Date();
-    const randomTransaction = generateTransactionId();
-    const randomId = uuidv4();
-    const orderData = {
-      ...data,
-      id: randomId,
-      createdAt: formatDate(date.toLocaleDateString()),
-      transactionId: randomTransaction,
-      status: 'Pending',
-      Price: totalPrice,
-      addedBy: 'Eyosi',
-    };
-    console.log('Order data:', orderData); // Log order data
-    setCurrentOrder(orderData);
-    setShowNewEmployeeModal(false);
-    setShowConfirmationModal(true);
-  };
-  const submitting = async () => {
-    try {
-      const response = await AddOrder(currentOrder);
-      console.log('responseFromadd', response);
-      setReipetOrder(currentOrder);
-      setShowConfirmationModal(false);
-      setShowRecipt(true);
-      setCurrentOrder({
-        id: '',
-        createdAt: '',
-        addedBy: 'Eyosi',
-        senderName: '',
-        reciverName: '',
-        description: '',
-        senderAddress: '',
-        reciverAddress: '',
-        paymentMethod: undefined,
-        senderPhoneNumber: '',
-        reciverPhoneNumber: '',
-        senderEmail: '',
-        reciverEmail: '',
-        weight: 0,
-        quantity: 1,
-        transactionId: '',
-        status: '',
-      });
-      reset();
-    } catch (error) {
-      console.log(error);
+  const { handleSubmit, reset } = form;
+
+  async function onSubmit(values: z.infer<typeof addUserSchema>) {
+    const { fName, lName, email, phoneNumber } = values;
+
+    const addDetails = {
+      name: `fName lName`,
+      email,
+      phoneNumber
     }
-  };
+
+    const userData = await userProfile();
+    const token = await userToken();
+
+    if (userData && token) {
+      const response = await fetch(`${BaseUrl}/auth/${userData.id}/add-user`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(addDetails),
+      })
+
+      if (!response.ok) {
+        console.error("error while adding")
+        // add toast
+      }
+    }
+  }
+
   const handleClose = () => {
-    setCurrentOrder({
-      id: '',
-      createdAt: '',
-      addedBy: 'Eyosi',
-      senderName: '',
-      reciverName: '',
-      description: '',
-      senderAddress: '',
-      reciverAddress: '',
-      paymentMethod: undefined,
-      senderPhoneNumber: '',
-      reciverPhoneNumber: '',
-      senderEmail: '',
-      reciverEmail: '',
-      weight: 0,
-      quantity: 1,
-      transactionId: '',
-      status: '',
-    });
     setShowNewEmployeeModal(false);
     reset();
   };
-  console.log('Form errors:', errors);
-  console.log('currentOrder:', currentOrder);
 
   return (
     <>
@@ -181,15 +88,96 @@ export default function AddEmployeeDialogue({
         <div className="fixed inset-0 bg-[#060A87] bg-opacity-30 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full h-fit max-w-2xl">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold text-[#060A87]">Add An Employee</h2>
+              <h2 className="text-2xl font-bold text-[#060A87]">Add An Employee</h2>
               <button onClick={() => handleClose()} title="Close">
                 <X className="h-6 w-6" />
               </button>
             </div>
-            <form onSubmit={handleSubmit(onSubmit)} className="px-2">
-              <div className="space-y-2">
+
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+                <div className="flex gap-2 md:gap-6">
+                  <FormField
+                    control={form.control}
+                    name="fName"
+                    render={({ field }) => (
+                      <FormItem className="space-y-0 flex-1 md:space-y-2">
+                        <FormLabel className="font-medium text-base text-[#060A87] md:text-lg">First Name <span className="text-[#E03137]">*</span></FormLabel>
+                        <FormControl>
+                          <Input placeholder="Input your First Name" className="text-sm md:h-12 md:text-base placeholder-[#A0AEC0]" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="lName"
+                    render={({ field }) => (
+                      <FormItem className="space-y-0 flex-1 md:space-y-2">
+                        <FormLabel className="font-medium text-base text-[#060A87] md:text-lg" >Last Name <span className="text-[#E03137]">*</span></FormLabel>
+                        <FormControl>
+                          <Input placeholder="Input your Last Name" className="text-sm md:h-12 md:text-base placeholder-[#A0AEC0]"  {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-medium text-base text-[#060A87] md:text-lg">Email <span className="text-[#E03137]">*</span></FormLabel>
+                      <FormControl>
+                        <Input placeholder="john@mail.com" {...field} className="text-sm md:h-12 md:text-base placeholder-[#A0AEC0]" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phoneNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="font-medium text-base text-[#060A87] md:text-lg">Phone Number <span className="text-[#E03137]">*</span></FormLabel>
+                      <FormControl>
+                        <Input type="text" placeholder="Enter your phoneNumber" {...field} className="text-sm md:h-12 md:text-base placeholder-[#A0AEC0]" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <div className="flex justify-end gap-4 mt-2">
+                  <div></div>
+
+                  <button
+                    type="button"
+                    onClick={() => handleClose()}
+                    className="px-4 py-2 border rounded-lg hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  >
+                    Continue
+                  </button>
+                </div>
+              </form>
+            </Form>
+
+            {/* <form onSubmit={handleSubmit(onSubmit)} className="px-2">
+
+              
+
+              {/* <div className="space-y-2">
+
                 
-                
+
                 <div className="flex justify-end gap-4 mt-2">
                   <div></div>
 
@@ -207,13 +195,14 @@ export default function AddEmployeeDialogue({
                     Continue
                   </button>
                 </div>
-              </div>
-            </form>
+              </div> 
+            </form> */}
           </div>
         </div>
+
       )}
 
-      {showConfirmationModal && (
+      {/* {showConfirmationModal && (
         <div className="fixed inset-0 bg-[#060A87]/20 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
             <div className="flex justify-between items-center mb-4">
@@ -323,14 +312,14 @@ export default function AddEmployeeDialogue({
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
-      {showRecipet && (
+      {/* {showRecipet && (
         <ConfirmModal
           currentOrder={{ ...recieptOrder, id: uuidv4() }}
           setShowRecipt={setShowRecipt}
         />
-      )}
+      )} */}
     </>
   );
 }

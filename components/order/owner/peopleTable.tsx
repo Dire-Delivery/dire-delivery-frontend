@@ -51,6 +51,7 @@ import { RiDeleteBin5Line } from 'react-icons/ri';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { FaUserLarge } from "react-icons/fa6";
+import { usePathname } from 'next/navigation';
 
 interface EmployeeDataTableProps<TData extends { id: string, imgUrl: string }, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -77,6 +78,8 @@ export function PeopleDataTable<
     const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
         null
     ); // Track which row's AlertDialog is open
+      const pathname = usePathname();
+      const role = pathname.split('/')[1]; // Gets "owner", "admin", or "employee"
 
     const table = useReactTable({
         data,
@@ -131,7 +134,7 @@ export function PeopleDataTable<
                             <TableRow key={headerGroup.id}>
                                 {headerGroup.headers.map((header, index) => {
                                     return (
-                                    <TableHead key={header.id} className={cn('text-center', index == 0 && "text-start pl-12")}>
+                                        <TableHead key={header.id} className={cn('text-center', index == 0 && "text-start pl-12")}>
                                             {header.isPlaceholder
                                                 ? null
                                                 : flexRender(
@@ -141,7 +144,7 @@ export function PeopleDataTable<
                                         </TableHead>
                                     );
                                 })}
-                                <TableHead className='text-center'>{type == "employee" ? 'Promote to Admin' : 'Demote to Employee'}</TableHead>
+                                {role == "owner" && <TableHead className='text-center'>{type == "employee" ? 'Promote to Admin' : 'Demote to Employee'}</TableHead>}
                                 <TableHead className='text-center'>Actions</TableHead>
                             </TableRow>
                         ))}
@@ -165,16 +168,16 @@ export function PeopleDataTable<
                                                 cell.column.columnDef.cell,
                                                 cell.getContext()
                                             )}
-                                            
+
                                         </TableCell>
                                     ))}
-                                    <TableCell>
+                                    {role == "owner" && <TableCell>
                                         <Button className={cn('mx-auto bg-[#060A87] rounded-[10px] py-2 px-3 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5', type == 'admin' && 'bg-[#2F78EE] hover:bg-[#2F78EE]')}>
                                             <FaUserLarge />
                                             <div className='text-sm font-bold mb-[-3px]'>{type == "employee" ? 'Promote' : 'Demote'}</div>
                                             {type == 'employee' && <div className='text-3xl font-normal text-center mt-[-3px]'>+</div>}
                                         </Button>
-                                    </TableCell>
+                                    </TableCell>}
                                     <TableCell className='flex justify-center'>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger asChild>
@@ -185,26 +188,26 @@ export function PeopleDataTable<
                                             </DropdownMenuTrigger>
 
                                             <DropdownMenuContent align="end" className="w-40">
-                                                {/* <Link
-                          href={`/owner/orders/${row.original.id}`}
-                          passHref
-                        >
-                          <DropdownMenuItem className="cursor-pointer">
-                            <LuEye className="mr-2 h-4 w-4" />
-                            View
-                          </DropdownMenuItem>
-                        </Link>
+                                                <Link
+                                                    href={`/owner/orders/${row.original.id}`}
+                                                    passHref
+                                                >
+                                                    <DropdownMenuItem className="cursor-pointer">
+                                                        <LuEye className="mr-2 h-4 w-4" />
+                                                        View
+                                                    </DropdownMenuItem>
+                                                </Link>
 
-                        <DropdownMenuItem
-                          className="cursor-pointer text-red-600 hover:bg-red-100"
-                          onSelect={(e) => {
-                            e.preventDefault(); // Prevent the dropdown from closing
-                            setOpenAlertDialogId(row.original.id); // Open the AlertDialog for this row
-                          }}
-                        >
-                          <RiDeleteBin5Line className="mr-2 h-4 w-4" />
-                          Delete
-                        </DropdownMenuItem> */}
+                                                <DropdownMenuItem
+                                                    className="cursor-pointer text-red-600 hover:bg-red-100"
+                                                    onSelect={(e) => {
+                                                        e.preventDefault(); // Prevent the dropdown from closing
+                                                        setOpenAlertDialogId(row.original.id); // Open the AlertDialog for this row
+                                                    }}
+                                                >
+                                                    <RiDeleteBin5Line className="mr-2 h-4 w-4" />
+                                                    Delete
+                                                </DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
 
