@@ -29,14 +29,14 @@ import SidebarToggle from './sidebar-toggle';
 
 const ownerItems = [
   {
-    title: 'Admins',
-    url: '/owner/admins',
-    icon: UserCog,
-  },
-  {
     title: 'Employees',
     url: '/owner/employees',
     icon: Users,
+  },
+  {
+    title: 'Admins',
+    url: '/owner/admins',
+    icon: UserCog,
   },
   {
     title: 'Orders',

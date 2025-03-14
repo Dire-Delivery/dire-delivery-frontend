@@ -84,7 +84,7 @@ export default function Page() {
           setShowConfirmationModal={setShowConfirmationModal}
           cities={cities}
           showRecipet={showRecipet}
-          setShowRecipt={setShowRecipt}
+          setShowRecipt={setShowRecipt}         
         />
         <PeopleDataTable
           columns={
