@@ -8,12 +8,23 @@ import { v4 as uuidv4 } from 'uuid';
 import * as z from 'zod';
 import ConfirmModal from '../confirmModal';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import done from "@/public/images/done.svg"
 
 
 import { userProfile, userToken } from "@/actions/auth";
 import { addUserSchema } from "@/lib/auth-schema";
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
+import { AiOutlineCopy } from "react-icons/ai";
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -51,6 +62,12 @@ export default function AddEmployeeDialogue({
   async function onSubmit(values: z.infer<typeof addUserSchema>) {
     const { fName, lName, email, phoneNumber } = values;
 
+    // temporary
+
+    setShowNewEmployeeModal(false);
+    reset();
+    setShowConfirmationModal(true);
+
     const addDetails = {
       name: `fName lName`,
       email,
@@ -72,6 +89,9 @@ export default function AddEmployeeDialogue({
 
       if (!response.ok) {
         console.error("error while adding")
+        setShowNewEmployeeModal(false);
+        reset();
+        setShowConfirmationModal(true);
         // add toast
       }
     }
@@ -169,150 +189,43 @@ export default function AddEmployeeDialogue({
                 </div>
               </form>
             </Form>
-
-            {/* <form onSubmit={handleSubmit(onSubmit)} className="px-2">
-
-              
-
-              {/* <div className="space-y-2">
-
-                
-
-                <div className="flex justify-end gap-4 mt-2">
-                  <div></div>
-
-                  <button
-                    type="button"
-                    onClick={() => setShowNewEmployeeModal(false)}
-                    className="px-4 py-2 border rounded-lg hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-                  >
-                    Continue
-                  </button>
-                </div>
-              </div> 
-            </form> */}
           </div>
         </div>
 
       )}
 
-      {/* {showConfirmationModal && (
-        <div className="fixed inset-0 bg-[#060A87]/20 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
-            <div className="flex justify-between items-center mb-4">
-              <h2 className="text-xl font-bold">Order Summary</h2>
-              <button
-                onClick={() => setShowConfirmationModal(false)}
-                title="Close"
-              >
-                <X className="h-6 w-6" />
-              </button>
-            </div>
+      { }
 
-            <div className="border px-3 py-5 grid grid-cols-2 gap-10">
-              <div className="h-full">
-                <h3 className="font-bold text-lg mb-2 pb-2 border-b-2">
-                  Item Details
-                </h3>
-                <div className="px-3 flex flex-col gap-1">
-                  <p>
-                    <strong>Description:</strong> {currentOrder.description}
-                  </p>
-                  <p>
-                    <strong>Weight:</strong> {currentOrder.weight}kg
-                  </p>
-                  <p>
-                    <strong>Quantity:</strong> {currentOrder.quantity}
-                  </p>
-                </div>
+      {showConfirmationModal &&
+        <div className="fixed inset-0 bg-[#060A87] bg-opacity-30 flex items-center justify-center z-50">
+          <Card className='py-10 px-32 gap-12'>
+            <CardHeader>
+              <CardTitle className='text-[#060A87] font-bold text-2xl mx-auto'>Employee Added Successfully</CardTitle>
+            </CardHeader>
+            <CardContent className='flex flex-col gap-12 pt-12 '>
+              <div className='flex justify-center'>
+                <Image src={done} alt="done" />
               </div>
-
-              <div className="h-full">
-                <h3 className="font-bold text-lg mb-2 pb-2 border-b-2">
-                  Sender Detail
-                </h3>
-                <div className="px-3 flex flex-col gap-1">
-                  <p>
-                    <strong>Full Name:</strong> {currentOrder.senderName}
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {currentOrder.senderEmail}
-                  </p>
-                  <p>
-                    <strong>Phone Number:</strong>{' '}
-                    {currentOrder.senderPhoneNumber}
-                  </p>
-                  <p>
-                    <strong>Address:</strong> {currentOrder.senderAddress}
-                  </p>
+              <div className='border-[#7B7B7B63] border-[1px] p-3 pl-6 rounded-[2px] flex gap-20'>
+                <div>
+                  <div className='text-[#060A87] font-bold text-lg'>
+                    Email: <span className='text-[#4A4A4F]'>JhonnyDoe@gmail.con</span>
+                  </div>
+                  <div className='text-[#060A87] font-bold text-lg'>
+                    Password: <span className='text-[#4A4A4F]'>hfsudhfjshjiodyr324</span>
+                  </div>
                 </div>
+                <AiOutlineCopy className='cursor-pointer' stroke='#060A87' fill='#060A87' size={26}/>
               </div>
-
-              <div className="h-full">
-                <h3 className="font-bold text-lg mb-2 pb-2 border-b-2">
-                  Receiver Detail
-                </h3>
-                <div className="px-3 flex flex-col gap-1">
-                  <p>
-                    <strong>Full Name:</strong> {currentOrder.reciverName}
-                  </p>
-                  <p>
-                    <strong>Email:</strong> {currentOrder.reciverEmail}
-                  </p>
-                  <p>
-                    <strong>Phone Number:</strong>{' '}
-                    {currentOrder.reciverPhoneNumber}
-                  </p>
-                  <p>
-                    <strong>Address:</strong> {currentOrder.reciverAddress}
-                  </p>
-                </div>
-              </div>
-
-              <div className="h-full">
-                <h3 className="font-bold text-lg mb-2 pb-2 border-b-2">
-                  Payment Detail
-                </h3>
-                <div className="px-3 flex flex-col gap-1">
-                  <p>
-                    <strong>Transaction Id:</strong>{' '}
-                    {currentOrder.transactionId}
-                  </p>
-                  <p>
-                    <strong>Total Price:</strong>{' '}
-                    {priceCalculator(
-                      currentOrder.weight!,
-                      currentOrder.quantity!
-                    ).toFixed(2)}{' '}
-                    birr
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setShowConfirmationModal(false)}
-                className="px-4 py-2 border rounded-lg hover:bg-gray-50"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={submitting}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-              >
-                Place Order
-              </button>
-            </div>
-          </div>
+              <div className='text-[#3E4249] mt-[-45px] font-normal text-xs'>copy this and share to your employee to log in</div>
+            </CardContent>
+            <CardFooter className='mt-6'>
+              <Button onClick={() => setShowConfirmationModal(false)} className='flex justify-center items-center px-8 py-7 font-bold text-base bg-[#060A87] mx-auto hover:bg-[#060A87] hover:opacity-85'>Back to Employees Table</Button>
+            </CardFooter>
+          </Card>
         </div>
-      )} */}
+
+      }
 
       {/* {showRecipet && (
         <ConfirmModal
@@ -320,6 +233,7 @@ export default function AddEmployeeDialogue({
           setShowRecipt={setShowRecipt}
         />
       )} */}
+
     </>
   );
 }
