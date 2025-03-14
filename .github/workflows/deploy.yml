@@ -30,14 +30,9 @@ jobs:
             git pull origin main
 
             echo "Installing dependencies..."
-            npm install -g pm2
             npm install --legacy-peer-deps
 
             echo "Building the project..."
             npm run Build
-
-            echo "Restarting the application with PM2..."
-            pm2 delete dire-delivery-fron-end || true
-            pm2 start $(find dist -name 'main.js') --name "dire-delivery-fron-end"
 
             exit 0
