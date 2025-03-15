@@ -24,6 +24,9 @@ import { MdOutlineClose } from "react-icons/md";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import person from '@/public/images/person.png'
 import Image from 'next/image';
+import { PasswordInput } from '@/components/log-in/password-input';
+import { PiEyeClosedBold } from "react-icons/pi";
+import { PiEyeBold } from "react-icons/pi";
 
 export default function Page() {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -32,6 +35,7 @@ export default function Page() {
   const [showConfirmationModal, setShowConfirmationModal] =
     useState<boolean>(false);
   const [showPerson, setShowPerson] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState(false);
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -85,7 +89,10 @@ export default function Page() {
         {showPerson &&
           <Card className='w-full border-none shadow-none mt-4'>
             <CardHeader className='relative'>
-              <MdOutlineClose className='absolute top-[-5px] right-[-5px] cursor-pointer' onClick={() => setShowPerson(false)} />
+              <MdOutlineClose className='absolute top-[-5px] right-[-5px] cursor-pointer' onClick={() => {
+                setShowPerson(false)
+                setShowPassword(false)
+              }} />
               <CardTitle className='w-full flex justify-between items-center'>
                 <div className='font-bold text-2xl'>Employee Name</div>
                 <Button className={cn('bg-[#060A87] rounded-[10px] py-2 px-3 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5')}>
@@ -100,40 +107,56 @@ export default function Page() {
               <div className='flex items-center justify-center pl-12'>
                 <Image src={person} alt="CN" className='w-56 h-auto'></Image>
               </div>
-              <div className='flex-1 flex flex-col h-full gap-4'>
+              <div className='w-[500px] flex flex-col h-full gap-4 border-2 border-[#E2E8F0] px-8 py-4 rounded-sm' >
                 <div className='font-bold text-xl py-2  px-0.5 border-b-2 border-[#6B7280]'>Basic Information</div>
-                <div className='flex justify-between h-full px-3'>
-                  <div className='flex flex-col justify-between pb-4'>
+                <div className='flex h-full px-3 '>
+                  <div className='flex flex-col justify-between flex-1'>
                     <div>
-                      <div className='font-medium text-[#B9B9BA] text-base'>Full Name</div>
+                      <div className='font-medium text-[#696973] text-base'>Full Name</div>
                       <div className='font-semibold text-base'>John Doe</div>
                     </div>
                     <div>
-                      <div className='font-medium text-[#B9B9BA] text-base'>Phone</div>
+                      <div className='font-medium text-[#696973] text-base'>Phone</div>
                       <div className='font-semibold text-base'>+251923442233 </div>
                     </div>
                     <div>
-                      <div className='font-medium text-[#B9B9BA] text-base'>Joined Date</div>
+                      <div className='font-medium text-[#696973] text-base'>Joined Date</div>
                       <div className='font-semibold text-base'>2023-08-22</div>
                     </div>
                   </div>
-                  <div className='flex flex-col justify-between pb-4'>
+                  <div className='flex flex-col justify-between flex-1'>
                     <div>
-                      <div className='font-medium text-[#B9B9BA] text-base'>Email</div>
+                      <div className='font-medium text-[#696973] text-base'>Email</div>
                       <div className='font-semibold text-base'>JhonnyDoe@gmail.com</div>
                     </div>
                     <div>
-                      <div className='font-medium text-[#B9B9BA] text-base'>Location</div>
+                      <div className='font-medium text-[#696973] text-base'>Location</div>
                       <div className='font-semibold text-base'>Addis Ababa </div>
                     </div>
                     <div>
-                      <div className='font-medium text-[#B9B9BA] text-base'>Roll</div>
+                      <div className='font-medium text-[#696973] text-base'>Roll</div>
                       <div className='font-semibold text-base'>Employee </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className='border-4 flex-1'></div>
+              <div className='w-[340px] flex flex-col h-full gap-4 border-2 border-[#E2E8F0] px-8 py-4 rounded-sm'>
+                <div className='font-bold text-xl py-2  px-0.5 border-b-2 border-[#6B7280]'>Login Information</div>
+                <div className='flex flex-col gap-4'>
+                  <div>
+                    <div className='font-medium text-[#696973] text-base'>Email</div>
+                    <div className='font-semibold text-base'>JhonnyDoe@gmail.com</div>
+                  </div>
+                  <div >
+                    <div className='font-medium text-[#696973] text-base'>Password</div>
+                    <div className='border-[1px] border-[#E2E8F0] rounded-md h-10 w-full flex items-center justify-between px-2 pr-4'>
+                      {!showPassword ? <div className='font-black text-2xl tracking-[8px] pb-2.5 pl-2.5'>.......</div> : <div className='font-semibold text-base'>random1234</div>}
+                      {showPassword ? <PiEyeBold stroke='#71717A' className='cursor-pointer w-6 h-auto' onClick={() => setShowPassword(false)} /> : <PiEyeClosedBold stroke='#71717A' className='cursor-pointer w-6 h-auto' onClick={() => setShowPassword(true)} />}
+                    </div>
+                  </div>
+
+                </div>
+              </div>
             </CardContent>
           </Card>
 
@@ -166,6 +189,7 @@ export default function Page() {
           totalEntries={employees.length}
           handleDelete={handleDelete}
           setShowPerson={setShowPerson}
+          setShowPassword={setShowPassword}
           type="employee"
         />
       </section>

@@ -60,6 +60,7 @@ interface EmployeeDataTableProps<TData extends { id: string, imgUrl: string }, T
     handleDelete: (id: string) => void;
     type: "admin" | "employee";
     setShowPerson: React.Dispatch<React.SetStateAction<boolean>>;
+    setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
 
 }
 
@@ -75,7 +76,8 @@ export function PeopleDataTable<
     totalEntries,
     type,
     handleDelete,
-    setShowPerson
+    setShowPerson,
+    setShowPassword
 }: EmployeeDataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
@@ -191,7 +193,9 @@ export function PeopleDataTable<
                                             </DropdownMenuTrigger>
 
                                             <DropdownMenuContent align="end" className="w-40">
-                                                <DropdownMenuItem className="cursor-pointer" onClick={() => setShowPerson(true)}>
+                                                <DropdownMenuItem className="cursor-pointer" onClick={() => {
+                                                    setShowPerson(true)
+                                                    }}>
                                                     <LuEye className="mr-2 h-4 w-4" />
                                                     View
                                                 </DropdownMenuItem>
