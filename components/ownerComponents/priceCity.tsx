@@ -30,11 +30,13 @@ type Props = {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
   setTriggerState: React.Dispatch<React.SetStateAction<boolean>>;
   triggerState: boolean;
+  role: string;
 };
 export default function PriceCitySettings({
   setActiveTab,
   setTriggerState,
   triggerState,
+  role,
 }: Props) {
   const [weight, setWeight] = useState('');
   const [calculatedPrice, setCalculatedPrice] = useState('0.00 birr');
@@ -228,15 +230,17 @@ export default function PriceCitySettings({
               </div>
             </div>
 
-            <div className="flex justify-end">
-              <button
-                className="primary-button bg-[#0a1172] flex items-center gap-2 p-2 rounded-sm px-4 text-white"
-                onClick={() => setEditPrice(true)}
-              >
-                <Pencil size={16} />
-                Edit Price
-              </button>
-            </div>
+            {(role === 'OWNER' || role === 'ADMIN') && (
+              <div className="flex justify-end">
+                <button
+                  className="primary-button bg-[#0a1172] flex items-center gap-2 p-2 rounded-sm px-4 text-white"
+                  onClick={() => setEditPrice(true)}
+                >
+                  <Pencil size={16} />
+                  Edit Price
+                </button>
+              </div>
+            )}
           </div>
         )}
 
@@ -266,31 +270,33 @@ export default function PriceCitySettings({
 
       <div className="grid md:grid-cols-2 gap-12 md:gap-24 mt-8 px-4">
         {/* Add Cities */}
-        <div>
-          <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
-            Add Cities
-          </h3>
+        {(role === 'OWNER' || role === 'ADMIN') && (
+          <div>
+            <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
+              Add Cities
+            </h3>
 
-          <div className="mb-4">
-            <label className="block mb-2 font-medium">City</label>
-            <input
-              type="text"
-              className="input-field border rounded-md w-full p-2"
-              value={newCity}
-              onChange={(e) => setNewCity(e.target.value)}
-              placeholder="(ex. Dire Dawa)"
-            />
-          </div>
+            <div className="mb-4">
+              <label className="block mb-2 font-medium">City</label>
+              <input
+                type="text"
+                className="input-field border rounded-md w-full p-2"
+                value={newCity}
+                onChange={(e) => setNewCity(e.target.value)}
+                placeholder="(ex. Dire Dawa)"
+              />
+            </div>
 
-          <div className="flex justify-end">
-            <button
-              className="primary-button bg-[#0a1172] p-2 rounded-sm px-4 text-white"
-              onClick={() => handleAddCity(newCity)}
-            >
-              Add city
-            </button>
+            <div className="flex justify-end">
+              <button
+                className="primary-button bg-[#0a1172] p-2 rounded-sm px-4 text-white"
+                onClick={() => handleAddCity(newCity)}
+              >
+                Add city
+              </button>
+            </div>
           </div>
-        </div>
+        )}
         {/* Cities Working On */}
         <div>
           <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
@@ -299,6 +305,7 @@ export default function PriceCitySettings({
           <p className="mb-4 text-sm">Here are Cities that we are working on</p>
 
           <DataTable
+            role={role}
             columns={columns}
             data={cities}
             totalEntries={cities.length}

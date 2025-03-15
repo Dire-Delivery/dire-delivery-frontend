@@ -7,12 +7,13 @@ import PriceCitySettings from '@/components/ownerComponents/priceCity';
 export default function Home() {
   const [activeTab, setActiveTab] = useState('profile');
   const [triggerState, setTriggerState] = useState<boolean>(false);
-  const role = 'ADMIN';
+
+  const role = 'EMPLOYEE';
   return (
     <main className="min-h-screen p-6 px-4 lg:px-8 bg-[#F1F2F8]">
       <div className="max-w-fill mx-auto ">
         <h1 className="text-3xl font-bold text-[#0a1172] mb-2">
-          Welcome Back, [admin Name]!
+          Welcome Back, [employee Name]!
         </h1>
         <p className="text-[#666] mb-6">
           {activeTab === 'profile'
