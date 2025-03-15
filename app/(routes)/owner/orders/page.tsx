@@ -17,6 +17,8 @@ export default function Page() {
   const [showConfirmationModal, setShowConfirmationModal] =
     useState<boolean>(false);
   const [showRecipet, setShowRecipt] = useState<boolean>(false);
+  const role = 'OWNER';
+
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -89,13 +91,15 @@ export default function Page() {
         <DataTable
           columns={
             columns as ColumnDef<
-              { transactionId: string; id: string },
+              { transactionId: string; id: string; addedBy: string },
               unknown
             >[]
           }
           data={orders}
           totalEntries={orders.length}
           handleDelete={handleDelete}
+          role={role}
+          name={''}
         />
       </section>
     </section>
