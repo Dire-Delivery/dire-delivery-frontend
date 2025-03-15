@@ -665,6 +665,10 @@
     {
       "id": "6",
       "name": "Hawassa"
+    },
+    {
+      "id": "f6289614-30d4-45e0-bb54-f87909c5bfde",
+      "name": "Shashemene"
     }
   ],
   "help_support": {
@@ -672,6 +676,11 @@
       "email": "eyosias.solomon-ug@aau.edu.et",
       "phone": "+251 97 272 9423",
       "location": "5kilo AddisAbaba"
+    }
+  },
+  "price": {
+    "item": {
+      "basePrice": 200
     }
   }
 }

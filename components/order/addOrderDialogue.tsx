@@ -87,12 +87,12 @@ export default function AddOrderDialogue({
   } = useForm<z.infer<typeof addFormSchema>>({
     resolver: zodResolver(addFormSchema),
   });
-  const priceCalculator = (weight: number, quantity: number) => {
+  const priceCalculator = (weight: number) => {
     const basePrice = 200;
     if (weight <= 1 && weight > 0) {
-      return basePrice * quantity;
+      return basePrice;
     } else {
-      return basePrice * weight * quantity;
+      return basePrice * weight;
     }
   };
 
@@ -100,7 +100,7 @@ export default function AddOrderDialogue({
     data
   ) => {
     console.log('Form data submitted:', data); // Log form data
-    const totalPrice = priceCalculator(data.weight, data.quantity);
+    const totalPrice = priceCalculator(data.weight);
     const date = new Date();
     const randomTransaction = generateTransactionId();
     const randomId = uuidv4();
@@ -454,10 +454,7 @@ export default function AddOrderDialogue({
                       <div className="self-stretch pl-3 pr-14 py-2 rounded-md border border-slate-200 justify-start items-center inline-flex">
                         <div className="grow shrink basis-0 px-1.5 flex-col justify-end items-start gap-2.5 inline-flex">
                           <div className="text-black text-lg font-bold leading-[18px]">
-                            {priceCalculator(
-                              watch('weight') || 0,
-                              watch('quantity') || 1
-                            ).toFixed(2)}{' '}
+                            {priceCalculator(watch('weight') || 0).toFixed(2)}{' '}
                             birr
                           </div>
                         </div>
@@ -572,11 +569,7 @@ export default function AddOrderDialogue({
                   </p>
                   <p>
                     <strong>Total Price:</strong>{' '}
-                    {priceCalculator(
-                      currentOrder.weight!,
-                      currentOrder.quantity!
-                    ).toFixed(2)}{' '}
-                    birr
+                    {priceCalculator(currentOrder.weight!).toFixed(2)} birr
                   </p>
                 </div>
               </div>
