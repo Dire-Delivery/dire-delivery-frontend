@@ -58,7 +58,9 @@ interface EmployeeDataTableProps<TData extends { id: string, imgUrl: string }, T
     data: TData[];
     totalEntries: number;
     handleDelete: (id: string) => void;
-    type: "admin" | "employee"
+    type: "admin" | "employee";
+    setShowPerson: React.Dispatch<React.SetStateAction<boolean>>;
+
 }
 
 export function PeopleDataTable<
@@ -73,6 +75,7 @@ export function PeopleDataTable<
     totalEntries,
     type,
     handleDelete,
+    setShowPerson
 }: EmployeeDataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
@@ -188,15 +191,10 @@ export function PeopleDataTable<
                                             </DropdownMenuTrigger>
 
                                             <DropdownMenuContent align="end" className="w-40">
-                                                <Link
-                                                    href={`/owner/orders/${row.original.id}`}
-                                                    passHref
-                                                >
-                                                    <DropdownMenuItem className="cursor-pointer">
-                                                        <LuEye className="mr-2 h-4 w-4" />
-                                                        View
-                                                    </DropdownMenuItem>
-                                                </Link>
+                                                <DropdownMenuItem className="cursor-pointer" onClick={() => setShowPerson(true)}>
+                                                    <LuEye className="mr-2 h-4 w-4" />
+                                                    View
+                                                </DropdownMenuItem>
 
                                                 <DropdownMenuItem
                                                     className="cursor-pointer text-red-600 hover:bg-red-100"
