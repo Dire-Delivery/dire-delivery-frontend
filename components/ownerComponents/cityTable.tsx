@@ -23,9 +23,11 @@ interface DataTableProps<TData extends { id: string }, TValue> {
   data: TData[];
   totalEntries: number;
   handleDelete: (id: string) => void;
+  role: string;
 }
 
 export function DataTable<TData extends { id: string }, TValue>({
+  role,
   columns,
   data,
   totalEntries,
@@ -57,7 +59,9 @@ export function DataTable<TData extends { id: string }, TValue>({
                     </TableHead>
                   );
                 })}
-                <TableHead>Actions</TableHead>
+                {(role === 'OWNER' || role === 'ADMIN') && (
+                  <TableHead>Actions</TableHead>
+                )}
               </TableRow>
             ))}
           </TableHeader>
@@ -76,14 +80,16 @@ export function DataTable<TData extends { id: string }, TValue>({
                       )}
                     </TableCell>
                   ))}
-                  <TableCell>
-                    <Button
-                      className="cursor-pointer text-white  bg-red-700 hover:bg-red-100"
-                      onClick={() => handleDelete(row.original.id)}
-                    >
-                      <RiDeleteBin5Line className="h-5 w-5" />
-                    </Button>
-                  </TableCell>
+                  {(role === 'OWNER' || role === 'ADMIN') && (
+                    <TableCell>
+                      <Button
+                        className="cursor-pointer text-white  bg-red-700 hover:bg-red-100"
+                        onClick={() => handleDelete(row.original.id)}
+                      >
+                        <RiDeleteBin5Line className="h-5 w-5" />
+                      </Button>
+                    </TableCell>
+                  )}
                 </TableRow>
               ))
             ) : (

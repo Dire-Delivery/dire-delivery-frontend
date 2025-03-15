@@ -7,6 +7,7 @@ import PriceCitySettings from '@/components/ownerComponents/priceCity';
 export default function Home() {
   const [activeTab, setActiveTab] = useState('profile');
   const [triggerState, setTriggerState] = useState<boolean>(false);
+  const role = 'OWNER';
   return (
     <main className="min-h-screen p-6 px-4 lg:px-8 bg-[#F1F2F8]">
       <div className="max-w-fill mx-auto ">
@@ -28,6 +29,7 @@ export default function Home() {
             <ProfileSettings />
           ) : (
             <PriceCitySettings
+              role={role}
               setActiveTab={setActiveTab}
               setTriggerState={setTriggerState}
               triggerState={triggerState}
