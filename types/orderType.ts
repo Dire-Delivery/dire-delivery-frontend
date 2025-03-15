@@ -34,5 +34,5 @@ export type Order = {
   reciverPhoneNumber: string;
   senderEmail: string;
   reciverEmail: string;
-  addedBy?: string;
+  addedBy: string;
 };
