@@ -7,12 +7,11 @@ import PriceCitySettings from '@/components/ownerComponents/priceCity';
 export default function Home() {
   const [activeTab, setActiveTab] = useState('profile');
   const [triggerState, setTriggerState] = useState<boolean>(false);
-
   return (
-    <main className="min-h-screen">
-      <div className="max-w-6xl mx-auto border-2 border-red-500">
+    <main className="min-h-screen p-6 px-4 lg:px-8 bg-[#F1F2F8]">
+      <div className="max-w-fill mx-auto ">
         <h1 className="text-3xl font-bold text-[#0a1172] mb-2">
-          Welcome Back, Owner!
+          Welcome Back, [admin Name]!
         </h1>
         <p className="text-[#666] mb-6">
           {activeTab === 'profile'
@@ -20,7 +19,7 @@ export default function Home() {
             : "Here's your Pricing Report"}
         </p>
 
-        <div className="flex flex-col md:flex-row gap-6">
+        <div className="flex flex-col lg:flex-row gap-6 bg-[#F1F2F8]">
           {/* Sidebar */}
           <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
