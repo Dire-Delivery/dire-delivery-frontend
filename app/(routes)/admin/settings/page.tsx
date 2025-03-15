@@ -12,7 +12,7 @@ export default function Home() {
     <main className="min-h-screen">
       <div className="max-w-6xl mx-auto border-2 border-red-500">
         <h1 className="text-3xl font-bold text-[#0a1172] mb-2">
-          Welcome Back, Owner!
+          Welcome Back, [admin]!
         </h1>
         <p className="text-[#666] mb-6">
           {activeTab === 'profile'
