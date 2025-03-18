@@ -1,38 +1,47 @@
 export type Order = {
   id: string;
-  transactionId: string;
-  senderName: string;
-  reciverName: string;
-  description: string;
-  weight: number;
-  quantity: number;
-  Price?: number; //must be changed based on schema
-  senderAddress: string;
-  reciverAddress: string;
+  employeeId: string;
+  senderId: string;
+  receiverId: string;
+  itemId: string;
+  isPaid: number;
   status: string;
   createdAt: string;
-  updatedAt?: string;
-  paymentMethod?: string;
-  statuses?: {
-    pending?: {
-      type: string;
-      location: string;
-      date: string;
+  updatedAt: string;
+  orderDetails: {
+    sender: {
+      name: string;
+      phone: string;
+      address: string;
+      email: string;
     };
-    delivered?: {
-      type: string;
-      location: string;
-      date: string;
+    receiver: {
+      name: string;
+      phone: string;
+      address: string;
+      email: string;
     };
-    pickedUp?: {
-      type: string;
-      location: string;
+    status: {
+      status: string;
       date: string;
+      location: string;
+    }[];
+    item: {
+      description: string;
+      weight: number;
+      quantity: number;
+      totalPrice: number;
+    };
+    order: {
+      payment: number;
+      transactionCodes: string[];
+      status: string;
+    };
+    employeeInfo: {
+      name: string;
+      email: string;
+      phone: string | null;
+      location: string;
     };
   };
-  senderPhoneNumber: string;
-  reciverPhoneNumber: string;
-  senderEmail: string;
-  reciverEmail: string;
-  addedBy: string;
 };

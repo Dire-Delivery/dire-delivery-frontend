@@ -53,14 +53,14 @@ export default function tracking({
                     >
                       {/* Status Icon */}
                       <div
-                        className={`w-20 h-20 rounded-full flex items-center  justify-center z-10  ${getStatusColor(status.type)}`}
+                        className={`w-20 h-20 rounded-full flex items-center  justify-center z-10  ${getStatusColor(status.status)}`}
                       >
-                        {getStatusIcon(status.type)}
+                        {getStatusIcon(status.status)}
                       </div>
 
                       {/* Status Information */}
                       <div className="flex flex-col w-fit text-center md:text-center md:flex-1 md:justify-center ">
-                        <h3 className="font-bold text-xl w-fit ">{`Status: ${status.type}`}</h3>
+                        <h3 className="font-bold text-xl w-fit ">{`Status: ${status.status}`}</h3>
                         <p className="text-sm text-[#4B5563]">{status.date}</p>
                         <div className="text-base text-[#4B5563] font-semibold">
                           {status.location}
@@ -81,7 +81,7 @@ export default function tracking({
                       <div className="flex w-full justify-between ">
                         <h3 className="font-bold">Transaction Detail</h3>
                         <p className="text-[#71717A]">
-                          {anOrder.transactionId}
+                          {anOrder.orderDetails.order.transactionCodes[0]}
                         </p>
                       </div>
                       <div className="flex w-full justify-between">
@@ -98,11 +98,15 @@ export default function tracking({
                   "
                       >
                         <h3 className="font-bold">Description</h3>
-                        <p className="text-[#71717A]">{anOrder.description}</p>
+                        <p className="text-[#71717A]">
+                          {anOrder.orderDetails.item.description}
+                        </p>
                       </div>
                       <div className="flex w-full justify-between">
                         <h3 className="font-bold">Weight</h3>
-                        <p className="text-[#71717A]">{anOrder.weight}kg</p>
+                        <p className="text-[#71717A]">
+                          {anOrder.orderDetails.item.weight}kg
+                        </p>
                       </div>
                       <div
                         className="
@@ -112,7 +116,9 @@ export default function tracking({
                   "
                       >
                         <h3 className="font-bold">Quantity</h3>
-                        <p className="text-[#71717A]">{anOrder.quantity}</p>
+                        <p className="text-[#71717A]">
+                          {anOrder.orderDetails.item.quantity}
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -124,12 +130,14 @@ export default function tracking({
                     <div className="py-2 flex flex-col gap-2">
                       <div className="flex w-full justify-between ">
                         <h3 className="font-bold">Total Price</h3>
-                        <p className="text-[#71717A]">{anOrder.Price}birr</p>
+                        <p className="text-[#71717A]">
+                          {anOrder.orderDetails.item.totalPrice}birr
+                        </p>
                       </div>
                       <div className="flex w-full justify-between">
                         <h3 className="font-bold">Payment Method</h3>
                         <p className="text-[#71717A]">
-                          {anOrder.paymentMethod}
+                          {anOrder.orderDetails.order.payment}
                         </p>
                       </div>
                     </div>
@@ -144,11 +152,15 @@ export default function tracking({
                     <div className="py-2 flex flex-col gap-2">
                       <div className="flex w-full justify-between ">
                         <h3 className="font-bold">Full Name</h3>
-                        <p className="text-[#71717A]">{anOrder.senderName}</p>
+                        <p className="text-[#71717A]">
+                          {anOrder.orderDetails.sender.name}
+                        </p>
                       </div>
                       <div className="flex w-full justify-between">
                         <h3 className="font-bold">Email</h3>
-                        <p className="text-[#71717A]">{anOrder.senderEmail}</p>
+                        <p className="text-[#71717A]">
+                          {anOrder.orderDetails.sender.email}
+                        </p>
                       </div>
                       <div
                         className="
@@ -159,13 +171,13 @@ export default function tracking({
                       >
                         <h3 className="font-bold">Phone Number</h3>
                         <p className="text-[#71717A]">
-                          {anOrder.senderPhoneNumber}
+                          {anOrder.orderDetails.sender.phone}
                         </p>
                       </div>
                       <div className="flex w-full justify-between">
                         <h3 className="font-bold">Address</h3>
                         <p className="text-[#71717A]">
-                          {anOrder.senderAddress}
+                          {anOrder.orderDetails.sender.address}
                         </p>
                       </div>
                     </div>
@@ -178,11 +190,15 @@ export default function tracking({
                     <div className="py-2 flex flex-col gap-2">
                       <div className="flex w-full justify-between ">
                         <h3 className="font-bold">Full Name</h3>
-                        <p className="text-[#71717A]">{anOrder.reciverName}</p>
+                        <p className="text-[#71717A]">
+                          {anOrder.orderDetails.receiver.name}
+                        </p>
                       </div>
                       <div className="flex w-full justify-between">
                         <h3 className="font-bold">Email</h3>
-                        <p className="text-[#71717A]">{anOrder.reciverEmail}</p>
+                        <p className="text-[#71717A]">
+                          {anOrder.orderDetails.receiver.email}
+                        </p>
                       </div>
                       <div
                         className="
@@ -193,13 +209,13 @@ export default function tracking({
                       >
                         <h3 className="font-bold">Phone Number</h3>
                         <p className="text-[#71717A]">
-                          {anOrder.reciverPhoneNumber}
+                          {anOrder.orderDetails.receiver.phone}
                         </p>
                       </div>
                       <div className="flex w-full justify-between">
                         <h3 className="font-bold">Address</h3>
                         <p className="text-[#71717A]">
-                          {anOrder.reciverAddress}
+                          {anOrder.orderDetails.receiver.address}
                         </p>
                       </div>
                     </div>
