@@ -57,6 +57,7 @@ export default function SignIn() {
         redirect("/add-details")
       } else {
         setUserCookie(data.payload)
+        console.log("the response", data.payload)
 
         if (data.payload.role == "OWNER") {
           redirect("/owner")
