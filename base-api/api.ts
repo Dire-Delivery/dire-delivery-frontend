@@ -1,4 +1,5 @@
 'use server';
+import { userToken } from '@/actions/auth';
 
 interface CustomError {
   message: string;
@@ -16,12 +17,14 @@ export default async function apiCall({
   method?: string;
   data?: unknown;
 }) {
+  const token = userToken();
+
   try {
     const response = await fetch(url, {
       method: method,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: '', // Add token here if needed
+        Authorization: `Bearer ${token || ''}`, // Add token here if needed
       },
       body: method !== 'GET' ? JSON.stringify(data) : undefined,
     });

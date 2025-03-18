@@ -4,3 +4,7 @@ export const endPoints = {
   help: 'help_support',
   price: 'price',
 };
+
+export const apiEndpoints = {
+  anOrder: 'orders',
+};
