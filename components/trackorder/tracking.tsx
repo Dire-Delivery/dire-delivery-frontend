@@ -137,7 +137,9 @@ export default function tracking({
                       <div className="flex w-full justify-between">
                         <h3 className="font-bold">Payment Method</h3>
                         <p className="text-[#71717A]">
-                          {anOrder.orderDetails.order.payment}
+                          {anOrder.orderDetails.order.payment === 1
+                            ? 'Now'
+                            : 'On Delivery'}
                         </p>
                       </div>
                     </div>
