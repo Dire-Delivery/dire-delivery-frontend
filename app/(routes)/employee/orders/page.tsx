@@ -8,7 +8,7 @@ import {
 interface TransformedOrder extends OriginalTransformedOrder {
   addedBy: string;
 }
-import { DeleteOrder, FetchOrders } from '@/actions/order';
+import { DeleteOrder, FetchOrder, FetchOrders } from '@/actions/order';
 import { columns } from '@/components/order/owner/column';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '@/components/order/owner/orderTable';
@@ -154,6 +154,17 @@ export default function Page() {
     fetchCities();
   }, []);
 
+  const handleSearch = async (id: string) => {
+    setloading(true);
+    try {
+      const response = await FetchOrder(id);
+      const result = response;
+      console.log(result);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleDelete = async (id: string) => {
     console.log('about to delete:', id);
     const response = await DeleteOrder(id);
@@ -226,6 +237,7 @@ export default function Page() {
             data={transformedOrder}
             totalEntries={transformedOrder.length}
             handleDelete={handleDelete}
+            handleSearch={handleSearch}
           />
         ) : (
           <div className="flex justify-center items-center w-full h-full">

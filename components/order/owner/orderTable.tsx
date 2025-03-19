@@ -59,6 +59,7 @@ interface DataTableProps<
   role: string;
   name: string;
   handleDelete: (id: string) => void;
+  handleSearch: (id: string) => void;
   pagenumber: number;
   setPagenumber: React.Dispatch<React.SetStateAction<number>>;
   totalPages: number;
@@ -85,6 +86,7 @@ export function DataTable<
   setPagenumber,
   currentPage,
   setCurrentPage,
+  handleSearch,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
@@ -106,18 +108,33 @@ export function DataTable<
   return (
     <div className="w-full">
       <div className="flex items-center py-4 gap-4">
-        <Input
-          placeholder="Search by transaction code"
-          value={
-            (table.getColumn('transactionCode')?.getFilterValue() as string) ??
-            ''
-          }
-          onChange={(event) => {
-            const value = event.target.value || undefined;
-            table.getColumn('transactionCode')?.setFilterValue(value);
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            const transactionCode =
+              (table
+                .getColumn('transactionCode')
+                ?.getFilterValue() as string) ?? '';
+            handleSearch(transactionCode);
           }}
-          className="max-w-sm"
-        />
+          className="flex gap-2"
+        >
+          <Input
+            placeholder="Search by transaction code"
+            value={
+              (table
+                .getColumn('transactionCode')
+                ?.getFilterValue() as string) ?? ''
+            }
+            onChange={(event) => {
+              const value = event.target.value || undefined;
+              table.getColumn('transactionCode')?.setFilterValue(value);
+            }}
+            className="max-w-sm w-72"
+          />
+          <Button type="submit">Search</Button>
+        </form>
+
         <Select
           value={(table.getColumn('status')?.getFilterValue() as string) ?? ''}
           onValueChange={(value) =>
