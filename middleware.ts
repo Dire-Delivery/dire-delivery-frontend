@@ -13,10 +13,10 @@ export async function middleware(request: NextRequest) {
   if (token) {
     try {
       const decoded: { exp?: number } = jwtDecode(token);
-      console.log(decoded.exp, now);
       if (decoded.exp && decoded.exp < now) {
         console.log('Token expired');
         removeUserProfile();
+        return NextResponse.redirect(new URL('/log-in', request.url));
       }
     } catch (error) {
       console.error('Invalid token:', error);
