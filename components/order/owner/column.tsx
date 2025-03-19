@@ -7,49 +7,57 @@ import { getStatusColor } from '@/components/trackorder/factories';
 
 export const columns: ColumnDef<Order>[] = [
   {
-    accessorKey: 'transactionId',
-    header: 'TransactionId',
+    accessorKey: 'orderDetails.order.transactionCode',
+    header: 'Transaction ID',
+    cell: ({ row }) => row.original.orderDetails.order.transactionCode || 'N/A',
   },
   {
-    accessorKey: 'senderName',
+    accessorKey: 'orderDetails.sender.name',
     header: 'Sender Name',
+    cell: ({ row }) => row.original.orderDetails.sender.name,
   },
   {
-    accessorKey: 'reciverName',
-    header: 'Reciver Name',
+    accessorKey: 'orderDetails.receiver.name',
+    header: 'Receiver Name',
+    cell: ({ row }) => row.original.orderDetails.receiver.name,
   },
   {
-    accessorKey: 'addedBy',
+    accessorKey: 'orderDetails.employeeInfo.name',
     header: 'Added By',
+    cell: ({ row }) => row.original.orderDetails.employeeInfo.name,
   },
   {
     accessorKey: 'createdAt',
     header: 'Date',
     cell: ({ row }) => {
-      const formatted = formatDate(row.getValue('createdAt'));
+      const formatted = formatDate(row.original.orderDetails.status[0].date);
       return <div>{formatted}</div>;
     },
   },
   {
-    accessorKey: 'senderAddress',
+    accessorKey: 'orderDetails.sender.address',
     header: 'From',
+    cell: ({ row }) => row.original.orderDetails.sender.address,
   },
   {
-    accessorKey: 'reciverAddress',
+    accessorKey: 'orderDetails.receiver.address',
     header: 'To',
+    cell: ({ row }) => row.original.orderDetails.receiver.address,
   },
   {
-    accessorKey: 'status',
+    accessorKey: 'orderDetails.order.status',
     header: 'Status',
     cell: ({ row }) => {
-      const formatted = getStatusColor(
-        (row.getValue('status') as string).toLowerCase()
-      );
+      const latestStatus = row.original.orderDetails.order.status; // Get the latest status
+      if (!latestStatus) return <div>N/A</div>;
+
+      const formatted = getStatusColor(latestStatus);
+
       return (
         <div
           className={`w-20 h-fit rounded-xl flex items-center justify-center z-10 ${formatted}`}
         >
-          {row.getValue('status')}
+          {latestStatus}
         </div>
       );
     },

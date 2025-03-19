@@ -81,7 +81,7 @@ export default function tracking({
                       <div className="flex w-full justify-between ">
                         <h3 className="font-bold">Transaction Detail</h3>
                         <p className="text-[#71717A]">
-                          {anOrder.orderDetails.order.transactionCodes[0]}
+                          {anOrder.orderDetails.order.transactionCode}
                         </p>
                       </div>
                       <div className="flex w-full justify-between">
