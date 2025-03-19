@@ -36,12 +36,13 @@ export default function SignIn() {
       password: password
     }
     const data = await loginFetch(loginDetails);
-    console.log({data})
+    console.log({data}, typeof data.payload)
 
-    if (data && !data.error && !data.message) {
+    if (data && !data.error) {
+      toast.error(data.message)
       const maxAge = rememberMe ? 24 * 60 * 60 * 1000 * 7 : 24 * 60 * 60 * 1000; // 1 week vs 1 day
       setCookies(data, maxAge);
-      if (typeof data.payload === "string") {
+      if (typeof data.payload == 'string') {
         redirect("/add-details")
       } else {
         if (data.payload.role == "OWNER") {
