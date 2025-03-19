@@ -11,7 +11,6 @@ export default function SignIn() {
   const logout = async () => {
     const userData = await userProfile();
     const token = await userToken();
-    console.log("token", token)
 
     if (userData && token) {
 

@@ -22,13 +22,17 @@ import question from '@/public/Icons/question.svg';
 import { ClipboardList, Settings, UserCog, Users } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { LuChevronUp, LuLayoutGrid, LuLogOut } from 'react-icons/lu';
 import SidebarToggle from './sidebar-toggle';
+import { removeUserProfile, userProfile, userToken } from '@/actions/auth';
+
+const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
 export default function SidebarLayout() {
   const { state } = useSidebar();
+  const router = useRouter()
   const menuItems = [
     {
       title: 'Employees',
@@ -60,6 +64,26 @@ export default function SidebarLayout() {
     setSelectedItem(matchedItem ? matchedItem.title : '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]); // Re-run when pathname changes
+
+  const logout = async () => {
+      const userData = await userProfile();
+      const token = await userToken();
+  
+      if (userData && token) {
+        const response = await fetch(`${BaseUrl}/auth/${userData.id}/log-out`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
+          }
+        })
+  
+        if (response.ok) {
+          removeUserProfile();
+          router.push('/log-in');
+        }
+      }
+    }
 
   return (
     <Sidebar
@@ -210,7 +234,7 @@ export default function SidebarLayout() {
                   )}
                 >
                   <DialogHeader className="p-0">
-                    <DialogTitle className="flex gap-2 text-sm font-normal cursor-pointer">
+                    <DialogTitle className="flex gap-2 text-sm font-normal cursor-pointer" onClick={logout}>
                       <LuLogOut /> Logout
                     </DialogTitle>
                   </DialogHeader>

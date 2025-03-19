@@ -53,7 +53,6 @@ export async function removeUserProfile() {
 export const userProfile = async () => {
   const cookieStore = await cookies();
   const userProfile = cookieStore.get('user')?.value;
-  console.log('the found userProfile', userProfile);
   const user: User_Info = userProfile && JSON.parse(userProfile);
   return user;
 };
