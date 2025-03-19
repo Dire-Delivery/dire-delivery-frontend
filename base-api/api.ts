@@ -11,15 +11,14 @@ interface CustomError {
 export default async function apiCall({
   url,
   method = 'GET',
-  data = [],
-  token = '',
+  data = []
 }: {
   url: string;
   method?: string;
   data?: unknown;
-  token?: string;
 }) {
   try {
+    const token = await userToken();
     const response = await fetch(url, {
       method: method,
       headers: {
@@ -28,14 +27,6 @@ export default async function apiCall({
       },
       body: method !== 'GET' ? JSON.stringify(data) : undefined,
     });
-
-    console.log({
-      response,
-      token,
-      auth: token ? `Bearer ${token}` : '',
-      data,
-    });
-
     // Check if the response is JSON
     const contentType = response.headers.get('Content-Type');
     if (contentType && contentType.includes('application/json')) {

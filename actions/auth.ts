@@ -70,45 +70,26 @@ export const loginFetch = async (data: loginDetails) => {
 
 export const AddDetailsFetch = async (id: string, data: Details) => {
   const fetchURl = `${BaseUrl}/auth/${id}/sign-up`;
-  const token = await userToken();
-  if (token) {
-    const response = await apiCall({
-      url: fetchURl,
-      method: 'POST',
-      data: data,
-      token,
-    });
-    return response;
-  } else {
-    console.error('token not found');
-  }
+  const response = await apiCall({
+    url: fetchURl,
+    method: 'POST',
+    data: data,
+  });
+  return response;
 };
 
 export const AddUserFetch = async (id: string, data: AddUserDetails) => {
   const fetchURl = `${BaseUrl}/auth/${id}/add-user`;
-  const token = await userToken();
-  console.log({ token, fetchURl, data });
-  if (token) {
-    const response = await apiCall({
-      url: fetchURl,
-      method: 'POST',
-      data: data,
-      token,
-    });
-    return response;
-  } else {
-    console.error('token not found');
-  }
+  const response = await apiCall({
+    url: fetchURl,
+    method: 'POST',
+    data: data,
+  });
+  return response;
 };
 
 export const LogOutFetch = async (id: string) => {
   const fetchURl = `${BaseUrl}/auth/${id}/log-out`;
-  const token = await userToken();
-  console.log({ token, fetchURl });
-  if (token) {
-    const response = await apiCall({ url: fetchURl, method: 'GET', token });
-    return response;
-  } else {
-    console.error('token not found');
-  }
+  const response = await apiCall({ url: fetchURl, method: 'GET' });
+  return response;
 };
