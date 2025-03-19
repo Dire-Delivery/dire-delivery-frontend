@@ -1,46 +1,58 @@
 // app/actions/auth.ts
 'use server';
 
+import apiCall from '@/base-api/api';
 import { cookies } from 'next/headers';
-import { jwtDecode } from 'jwt-decode';
-export async function setUserCookie(userData: User_Info) {
-  const cookieStore = await cookies();
-  console.log('the userData is', userData);
-  // Set non-sensitive user data in separate cookie
-  cookieStore.set({
-    name: 'user',
-    value: JSON.stringify(userData),
 
-    // secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 60 * 24, // 1 day
-    path: '/',
-    sameSite: 'lax',
-  });
-}
+const BaseUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export async function setTokenCookie(token: string, maxAge: number) {
+export async function setCookies(data: any, expiration = 60 * 60 * 24 * 1000) {
   const cookieStore = await cookies();
+
   cookieStore.set({
     name: 'token',
-    value: token,
+    value: data.token,
     httpOnly: true,
-    maxAge, // ✅ Use the passed expiration time
+    expires: new Date(Date.now() + expiration), // ✅ Use the passed expiration time
     path: '/',
     sameSite: 'lax',
   });
+
+  if (typeof data.payload === 'string') {
+    const user = {
+      id: data.payload,
+    };
+
+    cookieStore.set({
+      name: 'user',
+      value: JSON.stringify(user),
+      httpOnly: true,
+      expires: new Date(Date.now() + expiration), // ✅ Use the passed expiration time
+      path: '/',
+      sameSite: 'lax',
+    });
+  } else {
+    cookieStore.set({
+      name: 'user',
+      value: JSON.stringify(data.payload),
+      httpOnly: true,
+      expires: new Date(Date.now() + expiration), // ✅ Use the passed expiration time
+      path: '/',
+      sameSite: 'lax',
+    });
+  }
 }
 
 export async function removeUserProfile() {
   const cookieStore = await cookies();
 
   cookieStore.delete('token');
-  cookieStore.delete('profile');
+  cookieStore.delete('user');
 }
 
 export const userProfile = async () => {
   const cookieStore = await cookies();
   const userProfile = cookieStore.get('user')?.value;
-  console.log('the found userProfile', userProfile);
   const user: User_Info = userProfile && JSON.parse(userProfile);
   return user;
 };
@@ -50,8 +62,34 @@ export const userToken = async () => {
   return token;
 };
 
-export const decodedUser = async () => {
-  const token = await userToken();
-  const decoded = jwtDecode(token!);
-  return decoded;
+export const loginFetch = async (data: loginDetails) => {
+  const fetchURl = `${BaseUrl}/auth/log-in`;
+  const response = await apiCall({ url: fetchURl, method: 'POST', data: data });
+  return response;
+};
+
+export const AddDetailsFetch = async (id: string, data: Details) => {
+  const fetchURl = `${BaseUrl}/auth/${id}/sign-up`;
+  const response = await apiCall({
+    url: fetchURl,
+    method: 'POST',
+    data: data,
+  });
+  return response;
+};
+
+export const AddUserFetch = async (id: string, data: AddUserDetails) => {
+  const fetchURl = `${BaseUrl}/auth/${id}/add-user`;
+  const response = await apiCall({
+    url: fetchURl,
+    method: 'POST',
+    data: data,
+  });
+  return response;
+};
+
+export const LogOutFetch = async (id: string) => {
+  const fetchURl = `${BaseUrl}/auth/${id}/log-out`;
+  const response = await apiCall({ url: fetchURl, method: 'GET' });
+  return response;
 };

@@ -17,25 +17,22 @@ export default async function apiCall({
   method?: string;
   data?: unknown;
 }) {
-  const token = await userToken();
-
   try {
-    console.log(token);
-
+    const token = await userToken();
     const response = await fetch(url, {
       method: method,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token || ''}`, // Add token here if needed
+        Authorization: token ? `Bearer ${token}` : '', // Add token here if needed
       },
       body: method !== 'GET' ? JSON.stringify(data) : undefined,
     });
-
     // Check if the response is JSON
     const contentType = response.headers.get('Content-Type');
     if (contentType && contentType.includes('application/json')) {
       const responseData = await response.json();
-      if (!response.ok) {
+      if (!response.ok && !responseData.token && !responseData.message) {
+        console.log({ responseData });
         throw new Error(responseData?.error?.message || 'Something went wrong');
       }
       return responseData;
