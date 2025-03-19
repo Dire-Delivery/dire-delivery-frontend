@@ -131,6 +131,7 @@ export function DataTable<
               table.getColumn('transactionCode')?.setFilterValue(value);
             }}
             className="max-w-sm w-72"
+            required
           />
           <Button type="submit">Search</Button>
         </form>
