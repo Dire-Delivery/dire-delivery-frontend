@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { setUserCookie, userProfile, userToken } from "@/actions/auth";
+import { setCookies, userProfile, userToken } from "@/actions/auth";
 import { PasswordInput } from "@/components/log-in/password-input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -51,9 +51,10 @@ export default function AddDetails() {
         body: JSON.stringify(addDetails),
       })
       const data = await response.json()
+      console.log("the data",data)
 
       if (data) {
-        setUserCookie(data.payload)
+        setCookies(data)
         if (data.payload.role == "ADMIN") {
           redirect("/admin")
         } else if (data.payload.role == "EMPLOYEE") {

@@ -35,6 +35,7 @@ export default function AddUsers() {
 
     const userData = await userProfile();
     const token = await userToken();
+    console.log({userData, token})
 
     if (userData && token) {
       const response = await fetch(`${BaseUrl}/auth/${userData.id}/add-user`, {

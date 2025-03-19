@@ -5,7 +5,7 @@ import { removeUserProfile } from './actions/auth';
 
 export async function middleware(request: NextRequest) {
   let token = request.cookies.get('token')?.value || null;
-  let profile = request.cookies.get('profile')?.value || null;
+  let user = request.cookies.get('user')?.value || null;
 
   const now = Math.floor(Date.now() / 1000);
 
@@ -25,8 +25,9 @@ export async function middleware(request: NextRequest) {
   }
 
 
-  if ((!token || !profile) && request.nextUrl.pathname != '/log-in') {
+  if ((!token || !user) && request.nextUrl.pathname != '/log-in') {
     const signInUrl = new URL('/log-in', request.url);
+    console.log("------------------------------------------redirected")
     return NextResponse.redirect(signInUrl);
   }
 

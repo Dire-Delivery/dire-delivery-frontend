@@ -3,38 +3,51 @@
 
 import { cookies } from 'next/headers';
 
-export async function setUserCookie(userData: User_Info) {
+export async function setCookies(
+  data: any,
+  maxAge = 60 * 60 * 24
+) {
   const cookieStore = await cookies();
-  console.log('the userData is', userData);
-  // Set non-sensitive user data in separate cookie
-  cookieStore.set({
-    name: 'user',
-    value: JSON.stringify(userData),
 
-    // secure: process.env.NODE_ENV === 'production',
-    maxAge: 60 * 60 * 24, // 1 day
-    path: '/',
-    sameSite: 'lax',
-  });
-}
-
-export async function setTokenCookie(token: string, maxAge: number) {
-  const cookieStore = await cookies();
   cookieStore.set({
     name: 'token',
-    value: token,
+    value: data.token,
     httpOnly: true,
-    maxAge, // ✅ Use the passed expiration time
+    maxAge : maxAge, // ✅ Use the passed expiration time
     path: '/',
     sameSite: 'lax',
   });
+
+  if (typeof data.payload === 'string') {
+    const user = {
+      id: data.payload,
+    };
+
+    cookieStore.set({
+      name: 'user',
+      value: JSON.stringify(user),
+      httpOnly: true,
+      maxAge : maxAge, // ✅ Use the passed expiration time
+      path: '/',
+      sameSite: 'lax',
+    });
+  } else {
+    cookieStore.set({
+      name: 'user',
+      value: JSON.stringify(data.payload),
+      httpOnly: true,
+      maxAge, // ✅ Use the passed expiration time
+      path: '/',
+      sameSite: 'lax',
+    });
+  }
 }
 
 export async function removeUserProfile() {
   const cookieStore = await cookies();
 
   cookieStore.delete('token');
-  cookieStore.delete('profile');
+  cookieStore.delete('user');
 }
 
 export const userProfile = async () => {

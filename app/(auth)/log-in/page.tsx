@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { setTokenCookie, setUserCookie } from "@/actions/auth";
+import { setCookies } from "@/actions/auth";
 import { PasswordInput } from "@/components/log-in/password-input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -48,17 +48,10 @@ export default function SignIn() {
 
     if (data && !data.error) {
       const maxAge = rememberMe ? 60 * 60 * 24 * 7 : 60 * 60 * 24; // 1 week vs 1 day
-      setTokenCookie(data.token, maxAge);
+      setCookies(data, maxAge);
       if (typeof data.payload === "string") {
-        const user = {
-          id: data.payload
-        }
-        setUserCookie(user)
         redirect("/add-details")
       } else {
-        setUserCookie(data.payload)
-        console.log("the response", data.payload)
-
         if (data.payload.role == "OWNER") {
           redirect("/owner")
         } else if (data.payload.role == "ADMIN") {
