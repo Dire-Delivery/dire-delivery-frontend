@@ -15,6 +15,7 @@ import {
 import { notFound } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
+import { userProfile } from '@/actions/auth';
 
 export default async function OrderPage({
   params,
@@ -26,6 +27,8 @@ export default async function OrderPage({
   console.log(id);
 
   const response = await FetchOrder(id);
+  const user = await userProfile();
+  console.log('user:', user);
 
   const order = response.orderDetails;
   console.log(order);
