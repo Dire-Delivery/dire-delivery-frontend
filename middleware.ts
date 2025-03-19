@@ -10,11 +10,9 @@ export async function middleware(request: NextRequest) {
   const now = Math.floor(Date.now() / 1000);
 
   // Decode token and check expiration
-  // Decode token and check expiration
   if (token) {
     try {
       const decoded: { exp?: number } = jwtDecode(token);
-      console.log("compare the tow", decoded.exp, now)
       if (decoded.exp && decoded.exp < now) {
         console.log("Token expired");
         removeUserProfile();
@@ -24,23 +22,32 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-
-  if ((!token || !user) && request.nextUrl.pathname != '/log-in') {
-    const signInUrl = new URL('/log-in', request.url);
-    return NextResponse.redirect(signInUrl);
+  // Redirect to log-in if no token or user is present
+  if ((!token || !user) && request.nextUrl.pathname !== '/log-in') {
+    return NextResponse.redirect(new URL('/log-in', request.url));
   }
 
-  if (user && token && request.nextUrl.pathname === '/log-in') {
+  if (user && token) {
     const userData = JSON.parse(user);
-    if (userData.role == "OWNER") {
-      const ownerUrl = new URL('/owner', request.url);
-      return NextResponse.redirect(ownerUrl);
-    } else if (userData.role == "ADMIN") {
-      const adminUrl = new URL('/admin', request.url);
-      return NextResponse.redirect(adminUrl);
-    } else if (userData.role == "EMPLOYEE") {
-      const employeeUrl = new URL('/employee', request.url);
-      return NextResponse.redirect(employeeUrl);
+
+    // Role-based path restrictions
+    if (
+      (request.nextUrl.pathname.startsWith('/admin') && userData.role !== 'ADMIN') ||
+      (request.nextUrl.pathname.startsWith('/owner') && userData.role !== 'OWNER') ||
+      (request.nextUrl.pathname.startsWith('/employee') && userData.role !== 'EMPLOYEE')
+    ) {
+      return NextResponse.redirect(new URL('/log-in', request.url));
+    }
+
+    // Redirect to role-specific dashboard if already logged in and visiting /log-in
+    if (request.nextUrl.pathname === '/log-in') {
+      if (userData.role === 'OWNER') {
+        return NextResponse.redirect(new URL('/owner', request.url));
+      } else if (userData.role === 'ADMIN') {
+        return NextResponse.redirect(new URL('/admin', request.url));
+      } else if (userData.role === 'EMPLOYEE') {
+        return NextResponse.redirect(new URL('/employee', request.url));
+      }
     }
   }
 
@@ -49,5 +56,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/admin/:path*', '/log-in','/owner/:path*', '/employee/:path*'],
-}
+  matcher: ['/', '/admin/:path*', '/log-in', '/owner/:path*', '/employee/:path*'],
+};
