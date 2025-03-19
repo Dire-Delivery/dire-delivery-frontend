@@ -4,7 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 
-import { userProfile, userToken } from "@/actions/auth";
+import { AddUserFetch, userProfile, userToken } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
@@ -35,22 +35,9 @@ export default function AddUsers() {
 
     const userData = await userProfile();
     const token = await userToken();
-    console.log({userData, token})
 
     if (userData && token) {
-      const response = await fetch(`${BaseUrl}/auth/${userData.id}/add-user`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(addDetails),
-      })
-
-      if (!response.ok) {
-        console.error("error while adding")
-        // add toast
-      }
+      const response = await AddUserFetch(userData.id, addDetails)
     }
   }
 

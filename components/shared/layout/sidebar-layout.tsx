@@ -26,7 +26,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { LuChevronUp, LuLayoutGrid, LuLogOut } from 'react-icons/lu';
 import SidebarToggle from './sidebar-toggle';
-import { removeUserProfile, userProfile, userToken } from '@/actions/auth';
+import { LogOutFetch, removeUserProfile, userProfile, userToken } from '@/actions/auth';
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -66,24 +66,15 @@ export default function SidebarLayout() {
   }, [pathname]); // Re-run when pathname changes
 
   const logout = async () => {
-      const userData = await userProfile();
-      const token = await userToken();
-  
-      if (userData && token) {
-        const response = await fetch(`${BaseUrl}/auth/${userData.id}/log-out`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-          }
-        })
-  
-        if (response.ok) {
-          removeUserProfile();
-          router.push('/log-in');
-        }
-      }
+    const userData = await userProfile();
+    const token = await userToken();
+
+    if (userData && token) {
+      await removeUserProfile();
+      router.push('/log-in');
+      const data = await LogOutFetch(userData.id)
     }
+  }
 
   return (
     <Sidebar
@@ -99,7 +90,7 @@ export default function SidebarLayout() {
           className={cn(
             'transition-all duration-300 ease-in-out hidden opacity-0 scale-90 px-4 md:px-0',
             state !== 'collapsed' &&
-              'scale-100 opacity-100 flex justify-between'
+            'scale-100 opacity-100 flex justify-between'
           )}
         >
           <div className="flex items-center gap-0">

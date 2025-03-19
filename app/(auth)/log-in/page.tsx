@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { setCookies } from "@/actions/auth";
+import { loginFetch, setCookies } from "@/actions/auth";
 import { PasswordInput } from "@/components/log-in/password-input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -36,15 +36,8 @@ export default function SignIn() {
       email: email,
       password: password
     }
-
-    const response = await fetch(`${BaseUrl}/auth/log-in`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(loginDetails),
-    })
-    const data = await response.json()
+    const data = await loginFetch(loginDetails);
+    console.log({data})
 
     if (data && !data.error) {
       const maxAge = rememberMe ? 24 * 60 * 60 * 1000 * 7 : 24 * 60 * 60 * 1000; // 1 week vs 1 day

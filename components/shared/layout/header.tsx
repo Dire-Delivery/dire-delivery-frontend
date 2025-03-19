@@ -11,7 +11,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from '@/lib/utils';
 import { LuChevronUp, LuLogOut } from 'react-icons/lu';
 import SidebarToggleHeader from "./sidebar-toggle-header";
-import { removeUserProfile, userProfile, userToken } from '@/actions/auth';
+import { LogOutFetch, removeUserProfile, userProfile, userToken } from '@/actions/auth';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -25,17 +25,10 @@ function Header() {
     const token = await userToken();
 
     if (userData && token) {
-      const response = await fetch(`${BaseUrl}/auth/${userData.id}/log-out`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        }
-      })
-
-      if (response.ok) {
-        removeUserProfile();
+      if (userData && token) {
+        await removeUserProfile();
         router.push('/log-in');
+        const data = await LogOutFetch(userData.id)
       }
     }
   }

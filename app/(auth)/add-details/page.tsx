@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { setCookies, userProfile, userToken } from "@/actions/auth";
+import { AddDetailsFetch, setCookies, userProfile, userToken } from "@/actions/auth";
 import { PasswordInput } from "@/components/log-in/password-input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -42,15 +42,7 @@ export default function AddDetails() {
     const token = await userToken();
 
     if (userData && token) {
-      const response = await fetch(`${BaseUrl}/auth/${userData.id}/sign-up`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(addDetails),
-      })
-      const data = await response.json()
+      const data = await AddDetailsFetch(userData.id, addDetails);
       console.log("the data",data)
 
       if (data) {
