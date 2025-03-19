@@ -5,15 +5,16 @@ import { cookies } from 'next/headers';
 
 export async function setCookies(
   data: any,
-  maxAge = 60 * 60 * 24
+  expiration = 60 * 60 * 24 * 1000
 ) {
   const cookieStore = await cookies();
+  console.log("--------------------maxage", expiration)
 
   cookieStore.set({
     name: 'token',
     value: data.token,
     httpOnly: true,
-    maxAge : maxAge, // ✅ Use the passed expiration time
+    expires : new Date(Date.now() + expiration), // ✅ Use the passed expiration time
     path: '/',
     sameSite: 'lax',
   });
@@ -27,7 +28,7 @@ export async function setCookies(
       name: 'user',
       value: JSON.stringify(user),
       httpOnly: true,
-      maxAge : maxAge, // ✅ Use the passed expiration time
+      expires: new Date(Date.now() + expiration), // ✅ Use the passed expiration time
       path: '/',
       sameSite: 'lax',
     });
@@ -36,7 +37,7 @@ export async function setCookies(
       name: 'user',
       value: JSON.stringify(data.payload),
       httpOnly: true,
-      maxAge, // ✅ Use the passed expiration time
+      expires: new Date(Date.now() + expiration), // ✅ Use the passed expiration time
       path: '/',
       sameSite: 'lax',
     });

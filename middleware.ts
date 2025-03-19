@@ -13,6 +13,7 @@ export async function middleware(request: NextRequest) {
   if (token) {
     try {
       const decoded: { exp?: number } = jwtDecode(token);
+      console.log(decoded.exp, now)
       if (decoded.exp && decoded.exp < now) {
         console.log("Token expired");
         removeUserProfile();

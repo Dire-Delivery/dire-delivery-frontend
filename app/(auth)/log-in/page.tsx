@@ -47,7 +47,7 @@ export default function SignIn() {
     const data = await response.json()
 
     if (data && !data.error) {
-      const maxAge = rememberMe ? 60 * 60 * 24 * 7 : 60 * 60 * 24; // 1 week vs 1 day
+      const maxAge = rememberMe ? 24 * 60 * 60 * 1000 * 7 : 24 * 60 * 60 * 1000; // 1 week vs 1 day
       setCookies(data, maxAge);
       if (typeof data.payload === "string") {
         redirect("/add-details")
@@ -108,8 +108,8 @@ export default function SignIn() {
                 )}
               />
               <div className="flex justify-between ml-[-5px] mr-[-5px] items-center">
-                <label className="flex gap-1.5 items-center cursor-pointer" onClick={() => setRememberMe(!rememberMe)}>
-                  <Checkbox checked={rememberMe} className="data-[state=checked]:bg-[#27A376]" />
+                <label className="flex gap-1.5 items-center cursor-pointer">
+                  <Checkbox checked={rememberMe} className="data-[state=checked]:bg-[#27A376]" onClick={() => setRememberMe(!rememberMe)}/>
                   <span className="text-[#687588] font-medium">Remember Me</span>
                 </label>
                 <div className="text-[#687588] font-medium text-s items-center cursor-pointer">Forgot Password</div>
