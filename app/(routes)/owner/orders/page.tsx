@@ -16,10 +16,10 @@ import AddOrderDialogue from '@/components/order/addOrderDialogue';
 import { city } from '@/types/cities';
 import { fetchCity } from '@/actions/cities';
 import { Plus } from 'lucide-react';
-import { decodedUser } from '@/actions/auth';
 import { userType } from '@/types/user';
 import { v4 as uuidv4 } from 'uuid';
 import Loading from '@/components/loading';
+import { userProfile } from '@/actions/auth';
 export default function Page() {
   const [transformedOrder, setTransformedOrder] = useState<
     TransformedOrder[] | null
@@ -35,14 +35,15 @@ export default function Page() {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [triggerstate, SetTriggerState] = useState<boolean>(false);
-  const role = user?.data.role;
-  const name = user?.data.name;
-  const userId = user?.data.id;
+  const role = user?.role;
+  const name = user?.name;
+  const userId = user?.id;
   const redirectLink = '/owner/orders';
 
   useEffect(() => {
     const fetchUser = async () => {
-      const decoded = await decodedUser();
+      const decoded = await userProfile();
+      console.log('user', decoded);
       setUser(decoded as userType);
     };
 

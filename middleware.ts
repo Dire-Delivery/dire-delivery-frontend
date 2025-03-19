@@ -4,8 +4,8 @@ import { jwtDecode } from 'jwt-decode';
 import { removeUserProfile } from './actions/auth';
 
 export async function middleware(request: NextRequest) {
-  let token = request.cookies.get('token')?.value || null;
-  let user = request.cookies.get('user')?.value || null;
+  const token = request.cookies.get('token')?.value || null;
+  const user = request.cookies.get('user')?.value || null;
 
   const now = Math.floor(Date.now() / 1000);
 
