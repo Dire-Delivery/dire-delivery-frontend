@@ -49,49 +49,16 @@ import Link from 'next/link';
 import { LuEye } from 'react-icons/lu';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 
-type NewType<
-  TData extends {
-    orderDetails?: {
-      employeeInfo: {
-        name: string;
-        email: string;
-        phone: string | null;
-        location: string;
-      };
-      order?: {
-        payment: number;
-        transactionCode: string;
-        status: string;
-      };
-    };
-    id: string;
-  },
-> = TData;
-
 interface DataTableProps<TData extends { id: string }, TValue> {
-  columns: ColumnDef<NewType<TData>, TValue>[];
+  columns: ColumnDef<TData, TValue>[];
   data: TData[];
   totalEntries: number;
   handleDelete: (id: string) => void;
-  role: string;
-  name: string;
 }
 
 export function DataTable<
   TData extends {
-    orderDetails: {
-      employeeInfo: {
-        name: string;
-        email: string;
-        phone: string | null;
-        location: string;
-      };
-      order: {
-        payment: number;
-        transactionCode: string;
-        status: string;
-      };
-    };
+    transactionCode: string;
     id: string;
   },
   TValue,
@@ -100,13 +67,11 @@ export function DataTable<
   data,
   totalEntries,
   handleDelete,
-  name,
-  role,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
     null
-  );
+  ); // Track which row's AlertDialog is open
 
   const table = useReactTable({
     data,
@@ -120,43 +85,28 @@ export function DataTable<
     },
   });
 
-  // Debugging logs
-  console.log('Table Data:', data);
-  console.log('Column Filters:', columnFilters);
-  console.log('Filtered Rows:', table.getRowModel().rows);
-
   return (
     <div className="w-full">
       <div className="flex items-center py-4 gap-4">
-        {/* Search by Transaction Code */}
         <Input
-          placeholder="Search by transaction code"
+          placeholder="Search by name"
           value={
-            (table
-              .getColumn('orderDetails.order.transactionCode')
-              ?.getFilterValue() as string) ?? ''
+            (table.getColumn('senderName')?.getFilterValue() as string) ?? ''
           }
           onChange={(event) => {
             const value = event.target.value || undefined;
-            table
-              .getColumn('orderDetails.order.transactionCode')
-              ?.setFilterValue(value);
+            table.getColumn('senderName')?.setFilterValue(value);
+            table.getColumn('reciverName')?.setFilterValue(value);
           }}
           className="max-w-sm"
         />
-
-        {/* Filter by Status */}
         <Select
-          value={
-            (table
-              .getColumn('orderDetails.order.status')
-              ?.getFilterValue() as string) ?? ''
-          }
-          onValueChange={(value) => {
+          value={(table.getColumn('status')?.getFilterValue() as string) ?? ''}
+          onValueChange={(value) =>
             table
-              .getColumn('orderDetails.order.status')
-              ?.setFilterValue(value === 'All Status' ? undefined : value);
-          }}
+              .getColumn('status')
+              ?.setFilterValue(value === 'All Status' ? undefined : value)
+          }
         >
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="All Status" />
@@ -169,23 +119,23 @@ export function DataTable<
           </SelectContent>
         </Select>
       </div>
-
-      {/* Table */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                ))}
+                {headerGroup.headers.map((header) => {
+                  return (
+                    <TableHead key={header.id}>
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(
+                            header.column.columnDef.header,
+                            header.getContext()
+                          )}
+                    </TableHead>
+                  );
+                })}
                 <TableHead>Actions</TableHead>
               </TableRow>
             ))}
@@ -206,16 +156,17 @@ export function DataTable<
                     </TableCell>
                   ))}
                   <TableCell>
-                    {/* Actions Dropdown */}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <span className="text-lg">⋮</span>
+                          <span className="text-lg">⋮</span>{' '}
+                          {/* Three-dot button */}
                         </Button>
                       </DropdownMenuTrigger>
+
                       <DropdownMenuContent align="end" className="w-40">
                         <Link
-                          href={`/owner/orders/${row.original.orderDetails.order.transactionCode}`}
+                          href={`/admin/orders/${row.original.transactionCode}`}
                           passHref
                         >
                           <DropdownMenuItem className="cursor-pointer">
@@ -223,29 +174,25 @@ export function DataTable<
                             View
                           </DropdownMenuItem>
                         </Link>
-                        {(row.original.orderDetails.employeeInfo.name ===
-                          name ||
-                          role === 'ADMIN' ||
-                          role === 'OWNER') && (
-                          <DropdownMenuItem
-                            className="cursor-pointer text-red-600 hover:bg-red-100"
-                            onSelect={(e) => {
-                              e.preventDefault();
-                              setOpenAlertDialogId(row.original.id);
-                            }}
-                          >
-                            <RiDeleteBin5Line className="mr-2 h-4 w-4" />
-                            Delete
-                          </DropdownMenuItem>
-                        )}
+
+                        <DropdownMenuItem
+                          className="cursor-pointer text-red-600 hover:bg-red-100"
+                          onSelect={(e) => {
+                            e.preventDefault(); // Prevent the dropdown from closing
+                            setOpenAlertDialogId(row.original.transactionCode); // Open the AlertDialog for this row
+                          }}
+                        >
+                          <RiDeleteBin5Line className="mr-2 h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
 
-                    {/* Delete Confirmation Dialog */}
+                    {/* AlertDialog for the row */}
                     <AlertDialog
-                      open={openAlertDialogId === row.original.id}
+                      open={openAlertDialogId === row.original.transactionCode}
                       onOpenChange={(open) => {
-                        if (!open) setOpenAlertDialogId(null);
+                        if (!open) setOpenAlertDialogId(null); // Close the AlertDialog
                       }}
                     >
                       <AlertDialogContent>
@@ -255,15 +202,16 @@ export function DataTable<
                           </AlertDialogTitle>
                           <AlertDialogDescription>
                             This action cannot be undone. This will permanently
-                            delete the order.
+                            delete your account and remove your data from our
+                            servers.
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction
                             onClick={() => {
-                              handleDelete(row.original.id);
-                              setOpenAlertDialogId(null);
+                              handleDelete(row.original.id); // Perform the delete action
+                              setOpenAlertDialogId(null); // Close the AlertDialog
                             }}
                             className="bg-[#060A87]"
                           >
@@ -278,7 +226,7 @@ export function DataTable<
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length + 1}
+                  colSpan={columns.length}
                   className="h-24 text-center"
                 >
                   No results.
@@ -288,10 +236,8 @@ export function DataTable<
           </TableBody>
         </Table>
       </div>
-
-      {/* Pagination */}
       <div className="flex items-center justify-between space-x-2 py-4">
-        <div className="hidden md:block text-sm text-muted-foreground">
+        <div className=" hidden md:block text-sm text-muted-foreground">
           Showing {table.getRowModel().rows.length} of {totalEntries} entries
         </div>
         <div className="flex items-center space-x-2">

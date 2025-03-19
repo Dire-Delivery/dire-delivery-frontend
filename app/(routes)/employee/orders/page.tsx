@@ -11,11 +11,13 @@ import { fetchCity } from '@/actions/cities';
 import { Plus } from 'lucide-react';
 import { decodedUser } from '@/actions/auth';
 import { userType } from '@/types/user';
+import { v4 as uuidv4 } from 'uuid';
 export default function Page() {
   const [orderTable, setorderTable] = useState<Order[]>([]);
   const [orders, setOrders] = useState<orderTable>();
-  const [transformedOrder, setTransformedOrder] =
-    useState<TransformedOrder | null>(null);
+  const [transformedOrder, setTransformedOrder] = useState<
+    TransformedOrder[] | null
+  >(null);
   const [cities, setCities] = useState<city[]>([]);
   const [showNewOrderModal, setShowNewOrderModal] = useState<boolean>(false);
   const [showConfirmationModal, setShowConfirmationModal] =
@@ -43,79 +45,77 @@ export default function Page() {
           userid: userId!,
           pagenumber: 1,
         });
-        console.log(response);
+        console.log('respose:', response);
         setOrders(response);
-        const result = response;
-        if (!result || !result.orderDetails) {
-          console.error('Invalid API response:', result);
-          return;
-        }
+        const result = response.orders;
 
-        setTransformedOrder({
-          id: result.id,
-          transactionId: result.order.orderId, // Adjust field names if needed
-          senderName: result.orderDetails.sender?.name || '',
-          reciverName: result.orderDetails.receiver?.name || '',
-          description: result.orderDetails.item?.description || '',
-          weight: result.orderDetails.item?.weight || 0,
-          quantity: result.orderDetails.item?.quantity || 0,
-          Price: result.orderDetails.item?.totalPrice || 0,
-          senderAddress: result.orderDetails.sender?.address || '',
-          reciverAddress: result.orderDetails.receiver?.address || '',
-          status: result.orderDetails.status?.[0]?.status || 'unknown', // Get first status
-          createdAt: result.createdAt || '',
-          updatedAt: result.updatedAt || '',
-          paymentMethod: result.order?.payment || 'unknown',
-          statuses: {
-            pending: result.orderDetails.status?.find(
-              (s: { status: string }) => s.status === 'pending'
-            )
-              ? {
-                  type: 'pending',
-                  date: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'pending'
-                  )!.date,
-                  location: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'pending'
-                  )!.location,
-                }
-              : undefined,
-            delivered: result.orderDetails.status?.find(
-              (s: { status: string }) => s.status === 'delivered'
-            )
-              ? {
-                  type: 'delivered',
-                  date: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'delivered'
-                  )!.date,
-                  location: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'delivered'
-                  )!.location,
-                }
-              : undefined,
-            pickedUp: result.orderDetails.status?.find(
-              (s: { status: string }) => s.status === 'picked up'
-            )
-              ? {
-                  type: 'picked up',
-                  date: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'picked up'
-                  )!.date,
-                  location: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'picked up'
-                  )!.location,
-                }
-              : undefined,
-          },
-          senderPhoneNumber: result.orderDetails.sender?.phone || '',
-          reciverPhoneNumber: result.orderDetails.receiver?.phone || '',
-          senderEmail: result.orderDetails.sender?.email || '',
-          reciverEmail: result.orderDetails.receiver?.email || '',
-        });
-        console.log(
-          'transformation:sdfkhsjhdfjkshdjfhskjdfhksjddddddddddddddddddddddddddddddddddddddfhsjdhfjkshdjkfskjdfhkjshdkjfskjdfhkjsdfjksdjfjshdkf'
+        console.log('fetched order:', result);
+
+        setTransformedOrder(
+          result.map((result: Order) => ({
+            id: uuidv4(),
+            transactionCode: result.orderDetails.order.transactionCode, // Use transactionCode instead of orderId
+            senderName: result.orderDetails.sender?.name || '',
+            reciverName: result.orderDetails.receiver?.name || '',
+            description: result.orderDetails.item?.description || '',
+            weight: result.orderDetails.item?.weight || 0,
+            quantity: result.orderDetails.item?.quantity || 0,
+            Price: result.orderDetails.item?.totalPrice || 0,
+            senderAddress: result.orderDetails.sender?.address || '',
+            reciverAddress: result.orderDetails.receiver?.address || '',
+            status: result.orderDetails.status?.[0]?.status || 'unknown', // Get first status
+            createdAt: result.createdAt || '',
+            updatedAt: result.updatedAt || '',
+            paymentMethod:
+              result.orderDetails.order?.payment === 0 ? 'Unpaid' : 'Paid', // Adjust payment method logic
+            statuses: {
+              pending: result.orderDetails.status?.find(
+                (s: { status: string }) => s.status === 'Pending'
+              )
+                ? {
+                    type: 'Pending',
+                    date: result.orderDetails.status.find(
+                      (s: { status: string }) => s.status === 'Pending'
+                    )!.date,
+                    location: result.orderDetails.status.find(
+                      (s: { status: string }) => s.status === 'Pending'
+                    )!.location,
+                  }
+                : undefined,
+              delivered: result.orderDetails.status?.find(
+                (s: { status: string }) => s.status === 'Delivered'
+              )
+                ? {
+                    type: 'Delivered',
+                    date: result.orderDetails.status.find(
+                      (s: { status: string }) => s.status === 'Delivered'
+                    )!.date,
+                    location: result.orderDetails.status.find(
+                      (s: { status: string }) => s.status === 'Delivered'
+                    )!.location,
+                  }
+                : undefined,
+              pickedUp: result.orderDetails.status?.find(
+                (s: { status: string }) => s.status === 'Picked up'
+              )
+                ? {
+                    type: 'Picked up',
+                    date: result.orderDetails.status.find(
+                      (s: { status: string }) => s.status === 'Picked up'
+                    )!.date,
+                    location: result.orderDetails.status.find(
+                      (s: { status: string }) => s.status === 'Picked up'
+                    )!.location,
+                  }
+                : undefined,
+            },
+            senderPhoneNumber: result.orderDetails.sender?.phone || '',
+            reciverPhoneNumber: result.orderDetails.receiver?.phone || '',
+            senderEmail: result.orderDetails.sender?.email || '',
+            reciverEmail: result.orderDetails.receiver?.email || '',
+          }))
         );
-        // setTransformedOrder(transformedOrder);
+
         setorderTable(response.orders);
       } catch (error) {
         console.log(error);
@@ -143,12 +143,12 @@ export default function Page() {
     console.log(response);
   };
 
-  console.log('city:', cities);
+  // console.log('city:', cities);
   // console.log('user', user?.data);
   console.log(`orders:`, orders);
   console.log('orderArray:', orderTable);
-  console.log('orderLength');
-  console.log('orderLength', orderTable ? orderTable.length : 0);
+  // console.log('orderLength');
+  // console.log('orderLength', orderTable ? orderTable.length : 0);
   console.log('transformedOrder:', transformedOrder);
 
   return (
@@ -184,34 +184,23 @@ export default function Page() {
           showRecipet={showRecipet}
           setShowRecipt={setShowRecipt}
         />
-        {/* <DataTable
-          role={role!}
-          name={name!}
-          columns={
-            columns as ColumnDef<
-              {
-                orderDetails: {
-                  employeeInfo: {
-                    name: string;
-                    email: string;
-                    phone: string | null;
-                    location: string;
-                  };
-                  order: {
-                    payment: number;
-                    transactionCode: string;
-                    status: string;
-                  };
-                };
-                id: string;
-              },
-              unknown
-            >[]
-          }
-          data={orderTable!}
-          totalEntries={orderTable ? orderTable.length : 0}
-          handleDelete={handleDelete}
-        /> */}
+        {transformedOrder ? (
+          <DataTable
+            columns={
+              columns as ColumnDef<
+                { transactionCode: string; id: string },
+                unknown
+              >[]
+            }
+            data={transformedOrder}
+            totalEntries={transformedOrder.length}
+            handleDelete={handleDelete}
+          />
+        ) : (
+          <div className="flex justify-center items-center w-full h-full">
+            <p>Loading...</p>
+          </div>
+        )}
       </section>
     </section>
   );

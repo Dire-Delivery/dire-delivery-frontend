@@ -99,7 +99,7 @@ export type orderTable = {
 };
 export type TransformedOrder = {
   id: string;
-  transactionId: string;
+  transactionCode: string;
   senderName: string;
   reciverName: string;
   description: string;
