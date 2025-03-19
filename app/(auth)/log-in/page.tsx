@@ -16,6 +16,8 @@ import { redirect } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { toast } from "sonner";
+
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -39,7 +41,7 @@ export default function SignIn() {
     const data = await loginFetch(loginDetails);
     console.log({data})
 
-    if (data && !data.error) {
+    if (data && !data.error && !data.message) {
       const maxAge = rememberMe ? 24 * 60 * 60 * 1000 * 7 : 24 * 60 * 60 * 1000; // 1 week vs 1 day
       setCookies(data, maxAge);
       if (typeof data.payload === "string") {
@@ -57,7 +59,7 @@ export default function SignIn() {
         }
       }
     } else {
-      console.log("data not found")
+      toast.error(data.message)
     }
   }
 
