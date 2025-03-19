@@ -85,6 +85,7 @@ const employeeItems = [
 export default function SidebarLayout() {
 
   const { state } = useSidebar();
+  const router = useRouter();
   const pathname = usePathname();
   const role = pathname.split('/')[1]; // Gets "owner", "admin", or "employee"
   const [selectedItem, setSelectedItem] = useState('');

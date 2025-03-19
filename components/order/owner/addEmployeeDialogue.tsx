@@ -19,12 +19,13 @@ import {
 import done from "@/public/images/done.svg"
 
 
-import { userProfile, userToken } from "@/actions/auth";
+import { AddUserFetch, userProfile, userToken } from "@/actions/auth";
 import { addUserSchema } from "@/lib/auth-schema";
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { AiOutlineCopy } from "react-icons/ai";
+import { toast } from 'sonner';
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -65,7 +66,7 @@ export default function AddEmployeeDialogue({
     setShowConfirmationModal(true);
 
     const addDetails = {
-      name: `fName lName`,
+      name: `${fName} ${lName}`,
       email,
       phoneNumber
     }
@@ -74,21 +75,17 @@ export default function AddEmployeeDialogue({
     const token = await userToken();
 
     if (userData && token) {
-      const response = await fetch(`${BaseUrl}/auth/${userData.id}/add-user`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(addDetails),
-      })
+      const response = await AddUserFetch(userData.id, addDetails)
+      if (response.message) {
+        toast.error(response.message)
+      }
 
-      if (!response.ok) {
-        console.error("error while adding")
+      console.log("the message", response.message)
+
+      if (response.message == "employee successfully created") {
         setShowNewEmployeeModal(false);
         reset();
         setShowConfirmationModal(true);
-        // add toast
       }
     }
   }
@@ -211,7 +208,7 @@ export default function AddEmployeeDialogue({
                     Password: <span className='text-[#4A4A4F]'>hfsudhfjshjiodyr324</span>
                   </div>
                 </div>
-                <AiOutlineCopy className='cursor-pointer' stroke='#060A87' fill='#060A87' size={26}/>
+                <AiOutlineCopy className='cursor-pointer' stroke='#060A87' fill='#060A87' size={26} />
               </div>
               <div className='text-[#3E4249] mt-[-45px] font-normal text-xs'>copy this and share to your employee to log in</div>
             </CardContent>

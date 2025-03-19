@@ -28,11 +28,13 @@ export default async function apiCall({
       body: method !== 'GET' ? JSON.stringify(data) : undefined,
     });
     // Check if the response is JSON
+    console.log({response, data, token, method, url})
     const contentType = response.headers.get('Content-Type');
     if (contentType && contentType.includes('application/json')) {
       const responseData = await response.json();
+      console.log("the response data", responseData)
       if (!response.ok && !responseData.token && !responseData.message) {
-        console.log({ responseData });
+        console.log("error thrown");
         throw new Error(responseData?.error?.message || 'Something went wrong');
       }
       return responseData;
