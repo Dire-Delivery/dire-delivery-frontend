@@ -66,6 +66,7 @@ interface DataTableProps<
   setTotalPages: React.Dispatch<React.SetStateAction<number>>;
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  redirectLink: string;
 }
 
 export function DataTable<
@@ -87,6 +88,7 @@ export function DataTable<
   currentPage,
   setCurrentPage,
   handleSearch,
+  redirectLink,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
@@ -202,7 +204,7 @@ export function DataTable<
 
                       <DropdownMenuContent align="end" className="w-40">
                         <Link
-                          href={`/owner/orders/${row.original.transactionCode}`}
+                          href={`${redirectLink}/${row.original.transactionCode}`}
                           passHref
                         >
                           <DropdownMenuItem className="cursor-pointer">

@@ -38,6 +38,7 @@ export default function Page() {
   const role = user?.data.role;
   const name = user?.data.name;
   const userId = user?.data.id;
+  const redirectLink = '/admin/orders';
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -220,6 +221,7 @@ export default function Page() {
           </div>
         ) : transformedOrder ? (
           <DataTable
+            redirectLink={redirectLink}
             totalPages={totalPages}
             setTotalPages={setTotalPages}
             currentPage={currentPage}
