@@ -89,14 +89,14 @@ export function DataTable<
     <div className="w-full">
       <div className="flex items-center py-4 gap-4">
         <Input
-          placeholder="Search by name"
+          placeholder="Search by transaction code"
           value={
-            (table.getColumn('senderName')?.getFilterValue() as string) ?? ''
+            (table.getColumn('transactionCode')?.getFilterValue() as string) ??
+            ''
           }
           onChange={(event) => {
             const value = event.target.value || undefined;
-            table.getColumn('senderName')?.setFilterValue(value);
-            table.getColumn('reciverName')?.setFilterValue(value);
+            table.getColumn('transactionCode')?.setFilterValue(value);
           }}
           className="max-w-sm"
         />

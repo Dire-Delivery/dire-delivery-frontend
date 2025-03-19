@@ -25,7 +25,7 @@ export default function Page() {
   const [showRecipet, setShowRecipt] = useState<boolean>(false);
   const [user, setUser] = useState<userType | null>(null);
 
-  const role = user?.data.role;
+  // const role = user?.data.role;
   const name = user?.data.name;
   const userId = user?.data.id;
 
@@ -64,7 +64,7 @@ export default function Page() {
             senderAddress: result.orderDetails.sender?.address || '',
             reciverAddress: result.orderDetails.receiver?.address || '',
             status: result.orderDetails.status?.[0]?.status || 'unknown', // Get first status
-            createdAt: result.createdAt || '',
+            createdAt: result.orderDetails.order.createdAT || '',
             updatedAt: result.updatedAt || '',
             paymentMethod:
               result.orderDetails.order?.payment === 0 ? 'Unpaid' : 'Paid', // Adjust payment method logic
@@ -113,6 +113,7 @@ export default function Page() {
             reciverPhoneNumber: result.orderDetails.receiver?.phone || '',
             senderEmail: result.orderDetails.sender?.email || '',
             reciverEmail: result.orderDetails.receiver?.email || '',
+            addedBy: result.orderDetails.employeeInfo?.name || '',
           }))
         );
 

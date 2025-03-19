@@ -36,6 +36,7 @@ export type Order = {
       payment: number;
       transactionCode: string;
       status: string;
+      createdAT: string;
     };
     employeeInfo: {
       name: string;
@@ -87,6 +88,7 @@ export type orderTable = {
         payment: number;
         transactionCodes: string;
         status: string;
+        createdAT: string;
       };
       employeeInfo: {
         name: string;
@@ -133,4 +135,5 @@ export type TransformedOrder = {
   reciverPhoneNumber: string;
   senderEmail: string;
   reciverEmail: string;
+  addedby: string;
 };
