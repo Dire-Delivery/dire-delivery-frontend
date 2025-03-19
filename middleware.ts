@@ -27,8 +27,21 @@ export async function middleware(request: NextRequest) {
 
   if ((!token || !user) && request.nextUrl.pathname != '/log-in') {
     const signInUrl = new URL('/log-in', request.url);
-    console.log("------------------------------------------redirected")
     return NextResponse.redirect(signInUrl);
+  }
+
+  if (user && token && request.nextUrl.pathname === '/log-in') {
+    const userData = JSON.parse(user);
+    if (userData.role == "OWNER") {
+      const ownerUrl = new URL('/owner', request.url);
+      return NextResponse.redirect(ownerUrl);
+    } else if (userData.role == "ADMIN") {
+      const adminUrl = new URL('/admin', request.url);
+      return NextResponse.redirect(adminUrl);
+    } else if (userData.role == "EMPLOYEE") {
+      const employeeUrl = new URL('/employee', request.url);
+      return NextResponse.redirect(employeeUrl);
+    }
   }
 
   // Allow the request to proceed
