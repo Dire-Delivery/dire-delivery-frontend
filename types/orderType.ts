@@ -137,3 +137,12 @@ export type TransformedOrder = {
   reciverEmail: string;
   addedby: string;
 };
+
+export type orderStatus = {
+  trxCode: string;
+  status: string;
+};
+
+export type deleteOrder = {
+  trxCode: string;
+};

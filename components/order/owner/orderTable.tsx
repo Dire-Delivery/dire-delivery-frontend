@@ -254,7 +254,7 @@ export function DataTable<
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction
                             onClick={() => {
-                              handleDelete(row.original.id); // Perform the delete action
+                              handleDelete(row.original.transactionCode); // Perform the delete action
                               setOpenAlertDialogId(null); // Close the AlertDialog
                             }}
                             className="bg-[#060A87]"

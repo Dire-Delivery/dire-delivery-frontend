@@ -34,7 +34,7 @@ export default function Page() {
   const [loading, setloading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
-
+  const [triggerstate, SetTriggerState] = useState<boolean>(false);
   const role = user?.data.role;
   const name = user?.data.name;
   const userId = user?.data.id;
@@ -140,7 +140,7 @@ export default function Page() {
       }
     };
     fetchOrders();
-  }, [userId, pagenumber]);
+  }, [userId, pagenumber, triggerstate]);
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -168,7 +168,13 @@ export default function Page() {
 
   const handleDelete = async (id: string) => {
     console.log('about to delete:', id);
-    const response = await DeleteOrder(id);
+    const trxCode = {
+      trxCode: id,
+    };
+    console.log('trxcode', trxCode);
+
+    const response = await DeleteOrder({ userid: userId!, data: trxCode });
+    SetTriggerState((prev) => !prev);
     console.log(response);
   };
 
@@ -221,7 +227,7 @@ export default function Page() {
           </div>
         ) : transformedOrder ? (
           <DataTable
-          redirectLink={redirectLink}
+            redirectLink={redirectLink}
             totalPages={totalPages}
             setTotalPages={setTotalPages}
             currentPage={currentPage}

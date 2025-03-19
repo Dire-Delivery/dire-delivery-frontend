@@ -1,7 +1,7 @@
 import apiCall from '@/base-api/api';
 import { orderTrack } from '@/types/orderTrack';
 import { endPoints } from '@/data/endPoints';
-import { Order } from '@/types/orderType';
+import { Order, orderStatus, deleteOrder } from '@/types/orderType';
 
 const BaseURL = process.env.NEXT_PUBLIC_API_URL;
 const url = `${BaseURL}/${endPoints.anOrder}`;
@@ -45,27 +45,30 @@ export const AddOrder = async (data: Order) => {
   return response;
 };
 
-export const DeleteOrder = async (id: string) => {
-  console.log('Deleting', id);
-  const fetchURl = `${url}/${id}`;
-  console.log('Delete URL', fetchURl);
+export const DeleteOrder = async ({
+  userid,
+  data,
+}: {
+  userid: string;
+  data: deleteOrder;
+}) => {
+  const endPoint = `${BaseURL}/orders/${userid}/delete-order`;
+  console.log('delete:', endPoint);
 
-  try {
-    const response = await apiCall({ url: fetchURl, method: 'DELETE' });
+  const response = await apiCall({ url: endPoint, method: 'POST', data: data });
+  console.log('serverResponse:', response);
+  return response;
+};
 
-    // Handle the response based on its type
-    if (typeof response === 'string') {
-      console.log('Delete response (non-JSON):', response);
-      return { success: true, message: response };
-    } else {
-      console.log('Delete response (JSON):', response);
-      return response;
-    }
-  } catch (error) {
-    console.error('Error deleting order:', error);
-    return {
-      success: false,
-      message: 'An error occurred while deleting the order.',
-    };
-  }
+export const updateOrderStatus = async ({
+  userid,
+  data,
+}: {
+  userid: string;
+  data: orderStatus;
+}) => {
+  const endPoint = `${BaseURL}/orders/${userid}/update-status`;
+  const response = await apiCall({ url: endPoint, method: 'POST', data: data });
+  console.log('serverResponse:', response);
+  return response;
 };
