@@ -1,0 +1,38 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Connecting Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: '192.250.239.84'
+          username: 'diredegd'
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          script: |
+            cd home/diredegd/public_html
+
+            echo "Stashing changes..."
+            git stash
+            git clean -f -d
+            git pull origin main
+
+            echo "Installing dependencies..."
+            npm install --legacy-peer-deps
+
+            echo "Building the project..."
+            npm run Build
+
+            exit 0

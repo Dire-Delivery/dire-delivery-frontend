@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { setUserCookie, userProfile, userToken } from "@/actions/auth";
+import { AddDetailsFetch, setCookies, userProfile, userToken } from "@/actions/auth";
 import { PasswordInput } from "@/components/log-in/password-input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -16,7 +16,6 @@ import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
 export default function AddDetails() {
   const form = useForm<z.infer<typeof addDetailsSchema>>({
@@ -42,18 +41,11 @@ export default function AddDetails() {
     const token = await userToken();
 
     if (userData && token) {
-      const response = await fetch(`${BaseUrl}/auth/${userData.id}/sign-up`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(addDetails),
-      })
-      const data = await response.json()
+      const data = await AddDetailsFetch(userData.id, addDetails);
+      console.log("the data",data)
 
       if (data) {
-        setUserCookie(data.payload)
+        setCookies(data)
         if (data.payload.role == "ADMIN") {
           redirect("/admin")
         } else if (data.payload.role == "EMPLOYEE") {

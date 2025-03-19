@@ -17,6 +17,8 @@ export default function Page() {
   const [showConfirmationModal, setShowConfirmationModal] =
     useState<boolean>(false);
   const [showRecipet, setShowRecipt] = useState<boolean>(false);
+  const role = 'EMPLOYEE';
+  const name = 'Eyosi';
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -59,7 +61,7 @@ export default function Page() {
       <div className="h-fit justify-start items-center gap-9 inline-flex">
         <div className="flex-col justify-start items-start gap-2 inline-flex">
           <div className="self-stretch text-[#060A87] text-2xl md:text-3xl font-extrabold font-['Manrope'] leading-[36px]">
-            Welcome Back, Owner!
+            Welcome Back, [employee name]!
           </div>
           <div className="self-stretch text-[#495d85] text-sm md:text-base font-extrabold font-['Manrope'] leading-tight">
             Here’s your Orders Report
@@ -87,9 +89,11 @@ export default function Page() {
           setShowRecipt={setShowRecipt}
         />
         <DataTable
+          role={role}
+          name={name}
           columns={
             columns as ColumnDef<
-              { transactionId: string; id: string },
+              { transactionId: string; id: string; addedBy: string },
               unknown
             >[]
           }

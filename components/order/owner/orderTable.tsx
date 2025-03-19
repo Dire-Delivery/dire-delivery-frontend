@@ -35,7 +35,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-  AlertDialog,  
+  AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
@@ -54,10 +54,13 @@ interface DataTableProps<TData extends { id: string }, TValue> {
   data: TData[];
   totalEntries: number;
   handleDelete: (id: string) => void;
+  role: string;
+  name: string;
 }
 
 export function DataTable<
   TData extends {
+    addedBy: string;
     transactionId: string;
     id: string;
   },
@@ -67,6 +70,8 @@ export function DataTable<
   data,
   totalEntries,
   handleDelete,
+  name,
+  role,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
@@ -175,16 +180,20 @@ export function DataTable<
                           </DropdownMenuItem>
                         </Link>
 
-                        <DropdownMenuItem
-                          className="cursor-pointer text-red-600 hover:bg-red-100"
-                          onSelect={(e) => {
-                            e.preventDefault(); // Prevent the dropdown from closing
-                            setOpenAlertDialogId(row.original.transactionId); // Open the AlertDialog for this row
-                          }}
-                        >
-                          <RiDeleteBin5Line className="mr-2 h-4 w-4" />
-                          Delete
-                        </DropdownMenuItem>
+                        {(row.original.addedBy == name ||
+                          role === 'ADMIN' ||
+                          role === 'OWNER') && (
+                          <DropdownMenuItem
+                            className="cursor-pointer text-red-600 hover:bg-red-100"
+                            onSelect={(e) => {
+                              e.preventDefault(); // Prevent the dropdown from closing
+                              setOpenAlertDialogId(row.original.transactionId); // Open the AlertDialog for this row
+                            }}
+                          >
+                            <RiDeleteBin5Line className="mr-2 h-4 w-4" />
+                            Delete
+                          </DropdownMenuItem>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
 

@@ -4,15 +4,14 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 
-import { userProfile, userToken } from "@/actions/auth";
+import { AddUserFetch, userProfile, userToken } from "@/actions/auth";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { addUserSchema } from "@/lib/auth-schema";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
-
-const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
 export default function AddUsers() {
   const form = useForm<z.infer<typeof addUserSchema>>({
@@ -37,18 +36,9 @@ export default function AddUsers() {
     const token = await userToken();
 
     if (userData && token) {
-      const response = await fetch(`${BaseUrl}/auth/${userData.id}/add-user`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify(addDetails),
-      })
-
-      if (!response.ok) {
-        console.error("error while adding")
-        // add toast
+      const response = await AddUserFetch(userData.id, addDetails)
+      if (response.message) {
+        toast.error(response.message)
       }
     }
   }
