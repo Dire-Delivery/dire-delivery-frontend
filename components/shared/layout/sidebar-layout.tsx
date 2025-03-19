@@ -1,5 +1,6 @@
 'use client';
 
+import { LogOutFetch, removeUserProfile, userProfile, userToken } from '@/actions/auth';
 import {
   Dialog,
   DialogContent,
@@ -22,13 +23,14 @@ import question from '@/public/Icons/question.svg';
 import { ClipboardList, Settings, UserCog, Users } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { LuChevronUp, LuLayoutGrid, LuLogOut } from 'react-icons/lu';
 import SidebarToggle from './sidebar-toggle';
 
 export default function SidebarLayout() {
   const { state } = useSidebar();
+  const router = useRouter()
   const menuItems = [
     {
       title: 'Employees',
@@ -61,6 +63,17 @@ export default function SidebarLayout() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]); // Re-run when pathname changes
 
+  const logout = async () => {
+    const userData = await userProfile();
+    const token = await userToken();
+
+    if (userData && token) {
+      await removeUserProfile();
+      router.push('/log-in');
+      await LogOutFetch(userData.id)
+    }
+  }
+
   return (
     <Sidebar
       collapsible="icon"
@@ -75,7 +88,7 @@ export default function SidebarLayout() {
           className={cn(
             'transition-all duration-300 ease-in-out hidden opacity-0 scale-90 px-4 md:px-0',
             state !== 'collapsed' &&
-              'scale-100 opacity-100 flex justify-between'
+            'scale-100 opacity-100 flex justify-between'
           )}
         >
           <div className="flex items-center gap-0">
@@ -210,7 +223,7 @@ export default function SidebarLayout() {
                   )}
                 >
                   <DialogHeader className="p-0">
-                    <DialogTitle className="flex gap-2 text-sm font-normal cursor-pointer">
+                    <DialogTitle className="flex gap-2 text-sm font-normal cursor-pointer" onClick={logout}>
                       <LuLogOut /> Logout
                     </DialogTitle>
                   </DialogHeader>

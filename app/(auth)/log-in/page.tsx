@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { setTokenCookie, setUserCookie } from "@/actions/auth";
+import { loginFetch, setCookies } from "@/actions/auth";
 import { PasswordInput } from "@/components/log-in/password-input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -15,9 +15,8 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
-
-const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
 export default function SignIn() {
   const [rememberMe, setRememberMe] = useState(false); // ✅ Add state for Remember Me
@@ -36,28 +35,15 @@ export default function SignIn() {
       email: email,
       password: password
     }
+    const data = await loginFetch(loginDetails);
+    console.log({data})
 
-    const response = await fetch(`${BaseUrl}/auth/log-in`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(loginDetails),
-    })
-    const data = await response.json()
-
-    if (data && !data.error) {
-      const maxAge = rememberMe ? 60 * 60 * 24 * 7 : 60 * 60 * 24; // 1 week vs 1 day
-      setTokenCookie(data.token, maxAge);
+    if (data && !data.error && !data.message) {
+      const maxAge = rememberMe ? 24 * 60 * 60 * 1000 * 7 : 24 * 60 * 60 * 1000; // 1 week vs 1 day
+      setCookies(data, maxAge);
       if (typeof data.payload === "string") {
-        const user = {
-          id: data.payload
-        }
-        setUserCookie(user)
         redirect("/add-details")
       } else {
-        setUserCookie(data.payload)
-
         if (data.payload.role == "OWNER") {
           redirect("/owner")
         } else if (data.payload.role == "ADMIN") {
@@ -70,7 +56,7 @@ export default function SignIn() {
         }
       }
     } else {
-      console.log("data not found")
+      toast.error(data.message)
     }
   }
 
@@ -114,8 +100,8 @@ export default function SignIn() {
                 )}
               />
               <div className="flex justify-between ml-[-5px] mr-[-5px] items-center">
-                <label className="flex gap-1.5 items-center cursor-pointer" onClick={() => setRememberMe(!rememberMe)}>
-                  <Checkbox checked={rememberMe} className="data-[state=checked]:bg-[#27A376]" />
+                <label className="flex gap-1.5 items-center cursor-pointer">
+                  <Checkbox checked={rememberMe} className="data-[state=checked]:bg-[#27A376]" onClick={() => setRememberMe(!rememberMe)}/>
                   <span className="text-[#687588] font-medium">Remember Me</span>
                 </label>
                 <div className="text-[#687588] font-medium text-s items-center cursor-pointer">Forgot Password</div>

@@ -12,28 +12,36 @@ export default async function apiCall({
   url,
   method = 'GET',
   data = [],
+  token = '',
 }: {
   url: string;
   method?: string;
   data?: unknown;
+  token?: string;
 }) {
-  const token = userToken();
-
   try {
     const response = await fetch(url, {
       method: method,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token || ''}`, // Add token here if needed
+        Authorization: token ? `Bearer ${token}` : '', // Add token here if needed
       },
       body: method !== 'GET' ? JSON.stringify(data) : undefined,
+    });
+
+    console.log({
+      response,
+      token,
+      auth: token ? `Bearer ${token}` : '',
+      data,
     });
 
     // Check if the response is JSON
     const contentType = response.headers.get('Content-Type');
     if (contentType && contentType.includes('application/json')) {
       const responseData = await response.json();
-      if (!response.ok) {
+      if (!response.ok && !responseData.token && !responseData.message) {
+        console.log({ responseData });
         throw new Error(responseData?.error?.message || 'Something went wrong');
       }
       return responseData;
