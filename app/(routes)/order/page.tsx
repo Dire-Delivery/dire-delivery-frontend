@@ -37,9 +37,10 @@ export default function Page() {
       const fetchtrackData = async () => {
         try {
           const response = await TrackOrder({ id: transactionid });
-          if (response.length > 0) {
-            setanOrder(response[0]);
-            setStatuses(Object.values(response[0].statuses));
+
+          if (response) {
+            setanOrder(response);
+            setStatuses(Object.values(response.orderDetails.status));
             setFound(true);
           } else {
             setFound(false);
@@ -52,6 +53,7 @@ export default function Page() {
       fetchtrackData();
     }
   }, [transactionid]);
+
   return (
     <>
       {/* Navbar */}

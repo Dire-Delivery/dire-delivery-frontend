@@ -16,7 +16,6 @@ import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
 export default function AddDetails() {
   const form = useForm<z.infer<typeof addDetailsSchema>>({

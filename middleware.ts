@@ -13,13 +13,13 @@ export async function middleware(request: NextRequest) {
   if (token) {
     try {
       const decoded: { exp?: number } = jwtDecode(token);
-      console.log(decoded.exp, now)
+      console.log(decoded.exp, now);
       if (decoded.exp && decoded.exp < now) {
-        console.log("Token expired");
+        console.log('Token expired');
         removeUserProfile();
       }
     } catch (error) {
-      console.error("Invalid token:", error);
+      console.error('Invalid token:', error);
     }
   }
 
@@ -33,9 +33,12 @@ export async function middleware(request: NextRequest) {
 
     // Role-based path restrictions
     if (
-      (request.nextUrl.pathname.startsWith('/admin') && userData.role !== 'ADMIN') ||
-      (request.nextUrl.pathname.startsWith('/owner') && userData.role !== 'OWNER') ||
-      (request.nextUrl.pathname.startsWith('/employee') && userData.role !== 'EMPLOYEE')
+      (request.nextUrl.pathname.startsWith('/admin') &&
+        userData.role !== 'ADMIN') ||
+      (request.nextUrl.pathname.startsWith('/owner') &&
+        userData.role !== 'OWNER') ||
+      (request.nextUrl.pathname.startsWith('/employee') &&
+        userData.role !== 'EMPLOYEE')
     ) {
       return NextResponse.redirect(new URL('/log-in', request.url));
     }
@@ -57,5 +60,11 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/', '/admin/:path*', '/log-in', '/owner/:path*', '/employee/:path*'],
+  matcher: [
+    '/',
+    '/admin/:path*',
+    '/log-in',
+    '/owner/:path*',
+    '/employee/:path*',
+  ],
 };

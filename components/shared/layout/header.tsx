@@ -1,5 +1,6 @@
 'use client'
 
+import { LogOutFetch, removeUserProfile, userProfile, userToken } from '@/actions/auth';
 import {
   Dialog,
   DialogContent,
@@ -9,13 +10,10 @@ import {
 } from '@/components/shared/custom-shadcn/custom-dialog-logout';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from '@/lib/utils';
+import { useRouter } from 'next/navigation';
 import { LuChevronUp, LuLogOut } from 'react-icons/lu';
 import SidebarToggleHeader from "./sidebar-toggle-header";
-import { LogOutFetch, removeUserProfile, userProfile, userToken } from '@/actions/auth';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
-const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
 function Header() {
   const router = useRouter()
@@ -28,7 +26,7 @@ function Header() {
       if (userData && token) {
         await removeUserProfile();
         router.push('/log-in');
-        const data = await LogOutFetch(userData.id)
+        await LogOutFetch(userData.id)
       }
     }
   }

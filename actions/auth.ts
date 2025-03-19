@@ -4,19 +4,16 @@
 import apiCall from '@/base-api/api';
 import { cookies } from 'next/headers';
 
-const BaseUrl = process.env.NEXT_PUBLIC_API_URL
+const BaseUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export async function setCookies(
-  data: any,
-  expiration = 60 * 60 * 24 * 1000
-) {
+export async function setCookies(data: any, expiration = 60 * 60 * 24 * 1000) {
   const cookieStore = await cookies();
 
   cookieStore.set({
     name: 'token',
     value: data.token,
     httpOnly: true,
-    expires : new Date(Date.now() + expiration), // ✅ Use the passed expiration time
+    expires: new Date(Date.now() + expiration), // ✅ Use the passed expiration time
     path: '/',
     sameSite: 'lax',
   });
@@ -67,7 +64,7 @@ export const userToken = async () => {
 
 export const loginFetch = async (data: loginDetails) => {
   const fetchURl = `${BaseUrl}/auth/log-in`;
-  const response = await apiCall({ url: fetchURl, method: 'POST', data: data});
+  const response = await apiCall({ url: fetchURl, method: 'POST', data: data });
   return response;
 };
 
@@ -75,33 +72,43 @@ export const AddDetailsFetch = async (id: string, data: Details) => {
   const fetchURl = `${BaseUrl}/auth/${id}/sign-up`;
   const token = await userToken();
   if (token) {
-    const response = await apiCall({ url: fetchURl, method: 'POST', data: data, token });
+    const response = await apiCall({
+      url: fetchURl,
+      method: 'POST',
+      data: data,
+      token,
+    });
     return response;
   } else {
-    console.error("token not found");
+    console.error('token not found');
   }
 };
 
 export const AddUserFetch = async (id: string, data: AddUserDetails) => {
   const fetchURl = `${BaseUrl}/auth/${id}/add-user`;
   const token = await userToken();
-  console.log({token, fetchURl, data})
+  console.log({ token, fetchURl, data });
   if (token) {
-    const response = await apiCall({ url: fetchURl, method: 'POST', data: data, token });
+    const response = await apiCall({
+      url: fetchURl,
+      method: 'POST',
+      data: data,
+      token,
+    });
     return response;
   } else {
-    console.error("token not found");
+    console.error('token not found');
   }
 };
 
 export const LogOutFetch = async (id: string) => {
   const fetchURl = `${BaseUrl}/auth/${id}/log-out`;
   const token = await userToken();
-  console.log({token, fetchURl})
+  console.log({ token, fetchURl });
   if (token) {
     const response = await apiCall({ url: fetchURl, method: 'GET', token });
     return response;
   } else {
-    console.error("token not found");
+    console.error('token not found');
   }
 };

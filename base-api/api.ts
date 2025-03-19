@@ -1,6 +1,5 @@
 'use server';
-
-import { userToken } from "@/actions/auth";
+import { userToken } from '@/actions/auth';
 
 interface CustomError {
   message: string;
@@ -13,7 +12,7 @@ export default async function apiCall({
   url,
   method = 'GET',
   data = [],
-  token = ''
+  token = '',
 }: {
   url: string;
   method?: string;
@@ -30,14 +29,19 @@ export default async function apiCall({
       body: method !== 'GET' ? JSON.stringify(data) : undefined,
     });
 
-    console.log({response, token, auth: token ? `Bearer ${token}` : '', data})
+    console.log({
+      response,
+      token,
+      auth: token ? `Bearer ${token}` : '',
+      data,
+    });
 
     // Check if the response is JSON
     const contentType = response.headers.get('Content-Type');
     if (contentType && contentType.includes('application/json')) {
       const responseData = await response.json();
-      if (!response.ok && !responseData.token && (!responseData.message)) {
-        console.log({responseData})
+      if (!response.ok && !responseData.token && !responseData.message) {
+        console.log({ responseData });
         throw new Error(responseData?.error?.message || 'Something went wrong');
       }
       return responseData;

@@ -15,11 +15,8 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { toast } from "sonner";
-
-
-const BaseUrl = process.env.NEXT_PUBLIC_API_URL
+import { z } from "zod";
 
 export default function SignIn() {
   const [rememberMe, setRememberMe] = useState(false); // ✅ Add state for Remember Me

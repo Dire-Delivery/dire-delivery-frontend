@@ -1,5 +1,6 @@
 'use client';
 
+import { LogOutFetch, removeUserProfile, userProfile, userToken } from '@/actions/auth';
 import {
   Dialog,
   DialogContent,
@@ -26,9 +27,6 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { LuChevronUp, LuLayoutGrid, LuLogOut } from 'react-icons/lu';
 import SidebarToggle from './sidebar-toggle';
-import { LogOutFetch, removeUserProfile, userProfile, userToken } from '@/actions/auth';
-
-const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
 export default function SidebarLayout() {
   const { state } = useSidebar();
@@ -72,7 +70,7 @@ export default function SidebarLayout() {
     if (userData && token) {
       await removeUserProfile();
       router.push('/log-in');
-      const data = await LogOutFetch(userData.id)
+      await LogOutFetch(userData.id)
     }
   }
 

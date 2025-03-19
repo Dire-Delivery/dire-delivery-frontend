@@ -10,9 +10,8 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input";
 import { addUserSchema } from "@/lib/auth-schema";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
-
-const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
 export default function AddUsers() {
   const form = useForm<z.infer<typeof addUserSchema>>({
@@ -38,6 +37,9 @@ export default function AddUsers() {
 
     if (userData && token) {
       const response = await AddUserFetch(userData.id, addDetails)
+      if (response.message) {
+        toast.error(response.message)
+      }
     }
   }
 

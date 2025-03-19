@@ -1,5 +1,5 @@
 export type orderStatus = {
-  type: string;
+  status: string;
   date: string;
   location: string;
 };

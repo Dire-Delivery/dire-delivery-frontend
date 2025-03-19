@@ -3,11 +3,12 @@ import { orderTrack } from '@/types/orderTrack';
 import { endPoints } from '@/data/endPoints';
 import { Order } from '@/types/orderType';
 
-const BaseURL = 'http://localhost:3001';
+const BaseURL = process.env.NEXT_PUBLIC_API_URL;
 const url = `${BaseURL}/${endPoints.anOrder}`;
+
 export const TrackOrder = async ({ id }: orderTrack) => {
   console.log('id:', id);
-  const fetchURl = `${url}?transactionId=${id}`;
+  const fetchURl = `${BaseURL}/orders/${id}`;
   console.log('fetchURl:', fetchURl);
   const response = await apiCall({ url: fetchURl });
   return response;
@@ -22,7 +23,7 @@ export const FetchOrders = async () => {
 
 export const FetchOrder = async (id: string) => {
   console.log('id:', id);
-  const fetchURl = `${url}?transactionId=${id}`;
+  const fetchURl = `${BaseURL}/orders/${id}`;
   console.log('fetchURl:', fetchURl);
   const response = await apiCall({ url: fetchURl });
   return response;
