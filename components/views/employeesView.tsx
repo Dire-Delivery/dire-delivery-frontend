@@ -49,28 +49,11 @@ export default function EmployeesView({type}: {type: "owner" | "admin"}) {
     fetchOrders();
   }, []);
 
-  // useEffect(() => {
-  //   const fetchCities = async () => {
-  //     try {
-  //       const response = await fetchCity();
-  //       // console.log('cities:', response);
-  //       setCities(response);
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetchCities();
-  // }, []);
-
   const handleDelete = async (id: string) => {
     // console.log('about to delete:', id);
     const response = await DeleteOrder(id);
     console.log(response);
   };
-
-  // console.log('city:', cities);
-
-  // console.log(`orders:`, orders);
 
   return (
     <section className="w-full px-4 md:px-8 py-4 bg-[#F1F2F8]">

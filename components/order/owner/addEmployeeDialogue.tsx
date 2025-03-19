@@ -59,12 +59,6 @@ export default function AddEmployeeDialogue({
   async function onSubmit(values: z.infer<typeof addUserSchema>) {
     const { fName, lName, email, phoneNumber } = values;
 
-    // temporary
-
-    setShowNewEmployeeModal(false);
-    reset();
-    setShowConfirmationModal(true);
-
     const addDetails = {
       name: `${fName} ${lName}`,
       email,
