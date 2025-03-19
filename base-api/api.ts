@@ -11,7 +11,7 @@ interface CustomError {
 export default async function apiCall({
   url,
   method = 'GET',
-  data = [],
+  data = []
 }: {
   url: string;
   method?: string;
