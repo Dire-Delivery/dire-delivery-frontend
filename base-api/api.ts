@@ -17,9 +17,11 @@ export default async function apiCall({
   method?: string;
   data?: unknown;
 }) {
-  const token = userToken();
+  const token = await userToken();
 
   try {
+    console.log(token);
+
     const response = await fetch(url, {
       method: method,
       headers: {

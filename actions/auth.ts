@@ -2,7 +2,7 @@
 'use server';
 
 import { cookies } from 'next/headers';
-
+import { jwtDecode } from 'jwt-decode';
 export async function setUserCookie(userData: User_Info) {
   const cookieStore = await cookies();
   console.log('the userData is', userData);
@@ -48,4 +48,10 @@ export const userToken = async () => {
   const cookieStore = await cookies();
   const token = cookieStore.get('token')?.value;
   return token;
+};
+
+export const decodedUser = async () => {
+  const token = await userToken();
+  const decoded = jwtDecode(token!);
+  return decoded;
 };

@@ -14,8 +14,14 @@ export const TrackOrder = async ({ id }: orderTrack) => {
   return response;
 };
 
-export const FetchOrders = async () => {
-  const fetchURl = `${url}`;
+export const FetchOrders = async ({
+  userid,
+  pagenumber,
+}: {
+  userid: string;
+  pagenumber: number;
+}) => {
+  const fetchURl = `${BaseURL}/orders/${userid}/all-orders/${pagenumber}`;
   console.log(`fetchUrl`, fetchURl);
   const response = await apiCall({ url: fetchURl });
   return response;
