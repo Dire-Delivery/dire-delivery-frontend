@@ -24,6 +24,8 @@ export const FetchOrders = async ({
   const fetchURl = `${BaseURL}/orders/${userid}/all-orders/${pagenumber}`;
   console.log(`fetchUrl`, fetchURl);
   const response = await apiCall({ url: fetchURl });
+  console.log('serverrespose:', response);
+
   return response;
 };
 

@@ -49,17 +49,29 @@ import Link from 'next/link';
 import { LuEye } from 'react-icons/lu';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 
-interface DataTableProps<TData extends { id: string }, TValue> {
+interface DataTableProps<
+  TData extends { id: string; addedBy: string },
+  TValue,
+> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   totalEntries: number;
+  role: string;
+  name: string;
   handleDelete: (id: string) => void;
+  pagenumber: number;
+  setPagenumber: React.Dispatch<React.SetStateAction<number>>;
+  totalPages: number;
+  setTotalPages: React.Dispatch<React.SetStateAction<number>>;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
 export function DataTable<
   TData extends {
     transactionCode: string;
     id: string;
+    addedBy: string;
   },
   TValue,
 >({
@@ -67,6 +79,12 @@ export function DataTable<
   data,
   totalEntries,
   handleDelete,
+  role,
+  name,
+  totalPages,
+  setPagenumber,
+  currentPage,
+  setCurrentPage,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
@@ -175,16 +193,22 @@ export function DataTable<
                           </DropdownMenuItem>
                         </Link>
 
-                        <DropdownMenuItem
-                          className="cursor-pointer text-red-600 hover:bg-red-100"
-                          onSelect={(e) => {
-                            e.preventDefault(); // Prevent the dropdown from closing
-                            setOpenAlertDialogId(row.original.transactionCode); // Open the AlertDialog for this row
-                          }}
-                        >
-                          <RiDeleteBin5Line className="mr-2 h-4 w-4" />
-                          Delete
-                        </DropdownMenuItem>
+                        {(role === 'OWNER' ||
+                          role === 'ADMIN' ||
+                          row.original.addedBy === name) && (
+                          <DropdownMenuItem
+                            className="cursor-pointer text-red-600 hover:bg-red-100"
+                            onSelect={(e) => {
+                              e.preventDefault(); // Prevent the dropdown from closing
+                              setOpenAlertDialogId(
+                                row.original.transactionCode
+                              ); // Open the AlertDialog for this row
+                            }}
+                          >
+                            <RiDeleteBin5Line className="mr-2 h-4 w-4" />
+                            Delete
+                          </DropdownMenuItem>
+                        )}
                       </DropdownMenuContent>
                     </DropdownMenu>
 
@@ -237,53 +261,72 @@ export function DataTable<
         </Table>
       </div>
       <div className="flex items-center justify-between space-x-2 py-4">
-        <div className=" hidden md:block text-sm text-muted-foreground">
+        {/* Showing Entries */}
+        <div className="hidden md:block text-sm text-muted-foreground">
           Showing {table.getRowModel().rows.length} of {totalEntries} entries
         </div>
+
+        {/* Pagination Controls */}
         <div className="flex items-center space-x-2">
+          {/* Previous Button */}
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => {
+              const newPage = Math.max(1, currentPage - 1); // Ensure page doesn't go below 1
+              setCurrentPage(newPage); // Update currentPage
+              setPagenumber(newPage); // Update pagenumber for fetching
+            }}
+            disabled={currentPage === 1} // Disable if on the first page
           >
             Previous
           </Button>
+
+          {/* Page Numbers */}
           <div className="flex items-center space-x-1">
-            {Array.from({ length: Math.min(5, table.getPageCount()) }).map(
-              (_, i) => (
+            {Array.from({ length: Math.min(5, totalPages) }).map((_, i) => {
+              const page = i + 1;
+              return (
                 <Button
-                  key={i}
-                  variant={
-                    table.getState().pagination.pageIndex === i
-                      ? 'default'
-                      : 'outline'
-                  }
+                  key={page}
+                  variant={currentPage === page ? 'default' : 'outline'}
                   size="sm"
-                  onClick={() => table.setPageIndex(i)}
+                  onClick={() => {
+                    setCurrentPage(page); // Update currentPage
+                    setPagenumber(page); // Update pagenumber for fetching
+                  }}
                 >
-                  {i + 1}
+                  {page}
                 </Button>
-              )
-            )}
-            {table.getPageCount() > 5 && (
+              );
+            })}
+            {totalPages > 5 && (
               <>
                 <span>...</span>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                  onClick={() => {
+                    setCurrentPage(totalPages); // Go to the last page
+                    setPagenumber(totalPages); // Update pagenumber for fetching
+                  }}
                 >
-                  {table.getPageCount()}
+                  {totalPages}
                 </Button>
               </>
             )}
           </div>
+
+          {/* Next Button */}
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => {
+              const newPage = Math.min(totalPages, currentPage + 1); // Ensure page doesn't exceed totalPages
+              setCurrentPage(newPage); // Update currentPage
+              setPagenumber(newPage); // Update pagenumber for fetching
+            }}
+            disabled={currentPage === totalPages} // Disable if on the last page
           >
             Next
           </Button>

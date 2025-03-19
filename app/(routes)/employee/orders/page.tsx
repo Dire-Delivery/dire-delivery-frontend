@@ -1,6 +1,13 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Order, orderTable, TransformedOrder } from '@/types/orderType';
+import {
+  Order,
+  TransformedOrder as OriginalTransformedOrder,
+} from '@/types/orderType';
+
+interface TransformedOrder extends OriginalTransformedOrder {
+  addedBy: string;
+}
 import { DeleteOrder, FetchOrders } from '@/actions/order';
 import { columns } from '@/components/order/owner/column';
 import { ColumnDef } from '@tanstack/react-table';
@@ -12,9 +19,8 @@ import { Plus } from 'lucide-react';
 import { decodedUser } from '@/actions/auth';
 import { userType } from '@/types/user';
 import { v4 as uuidv4 } from 'uuid';
+import Loading from '@/components/loading';
 export default function Page() {
-  const [orderTable, setorderTable] = useState<Order[]>([]);
-  const [orders, setOrders] = useState<orderTable>();
   const [transformedOrder, setTransformedOrder] = useState<
     TransformedOrder[] | null
   >(null);
@@ -24,8 +30,12 @@ export default function Page() {
     useState<boolean>(false);
   const [showRecipet, setShowRecipt] = useState<boolean>(false);
   const [user, setUser] = useState<userType | null>(null);
+  const [pagenumber, setPagenumber] = useState<number>(1);
+  const [loading, setloading] = useState<boolean>(true);
+  const [totalPages, setTotalPages] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
-  // const role = user?.data.role;
+  const role = user?.data.role;
   const name = user?.data.name;
   const userId = user?.data.id;
 
@@ -39,14 +49,19 @@ export default function Page() {
   }, []);
 
   useEffect(() => {
+    setloading(true);
     const fetchOrders = async () => {
       try {
         const response = await FetchOrders({
           userid: userId!,
-          pagenumber: 1,
+          pagenumber: pagenumber,
         });
         console.log('respose:', response);
-        setOrders(response);
+        setTotalPages(response.totalPage);
+        setCurrentPage(response.currentPage);
+        setTimeout(() => {
+          setloading(false);
+        }, 1000);
         const result = response.orders;
 
         console.log('fetched order:', result);
@@ -116,14 +131,15 @@ export default function Page() {
             addedBy: result.orderDetails.employeeInfo?.name || '',
           }))
         );
-
-        setorderTable(response.orders);
       } catch (error) {
+        setTimeout(() => {
+          setloading(false);
+        }, 1000);
         console.log(error);
       }
     };
     fetchOrders();
-  }, [userId]);
+  }, [userId, pagenumber]);
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -146,11 +162,13 @@ export default function Page() {
 
   // console.log('city:', cities);
   // console.log('user', user?.data);
-  console.log(`orders:`, orders);
-  console.log('orderArray:', orderTable);
+  // console.log(`orders:`, orders);
+  // console.log('orderArray:', orderTable);
   // console.log('orderLength');
   // console.log('orderLength', orderTable ? orderTable.length : 0);
   console.log('transformedOrder:', transformedOrder);
+  console.log('totalPages:', totalPages);
+  console.log('currenPage:', currentPage);
 
   return (
     <section className="w-full px-4 md:px-8 py-4 bg-[#F1F2F8]">
@@ -185,11 +203,23 @@ export default function Page() {
           showRecipet={showRecipet}
           setShowRecipt={setShowRecipt}
         />
-        {transformedOrder ? (
+        {loading ? (
+          <div className="flex justify-center items-center">
+            <Loading />
+          </div>
+        ) : transformedOrder ? (
           <DataTable
+            totalPages={totalPages}
+            setTotalPages={setTotalPages}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            pagenumber={pagenumber}
+            setPagenumber={setPagenumber}
+            role={role!}
+            name={name!}
             columns={
               columns as ColumnDef<
-                { transactionCode: string; id: string },
+                { transactionCode: string; id: string; addedBy: string },
                 unknown
               >[]
             }
@@ -199,7 +229,7 @@ export default function Page() {
           />
         ) : (
           <div className="flex justify-center items-center w-full h-full">
-            <p>Loading...</p>
+            <p>Not Found</p>
           </div>
         )}
       </section>

@@ -1,6 +1,14 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { Order } from '@/types/orderType';
+import {
+  Order,
+  orderTable,
+  TransformedOrder as OriginalTransformedOrder,
+} from '@/types/orderType';
+
+interface TransformedOrder extends OriginalTransformedOrder {
+  addedBy: string;
+}
 import { DeleteOrder, FetchOrders } from '@/actions/order';
 import { columns } from '@/components/order/owner/column';
 import { ColumnDef } from '@tanstack/react-table';
@@ -9,28 +17,121 @@ import AddOrderDialogue from '@/components/order/addOrderDialogue';
 import { city } from '@/types/cities';
 import { fetchCity } from '@/actions/cities';
 import { Plus } from 'lucide-react';
-
+import { decodedUser } from '@/actions/auth';
+import { userType } from '@/types/user';
+import { v4 as uuidv4 } from 'uuid';
 export default function Page() {
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [orderTable, setorderTable] = useState<Order[]>([]);
+  const [orders, setOrders] = useState<orderTable>();
+  const [transformedOrder, setTransformedOrder] = useState<
+    TransformedOrder[] | null
+  >(null);
   const [cities, setCities] = useState<city[]>([]);
   const [showNewOrderModal, setShowNewOrderModal] = useState<boolean>(false);
   const [showConfirmationModal, setShowConfirmationModal] =
     useState<boolean>(false);
   const [showRecipet, setShowRecipt] = useState<boolean>(false);
-  const role = 'OWNER';
+  const [user, setUser] = useState<userType | null>(null);
+
+  const role = user?.data.role;
+  const name = user?.data.name;
+  const userId = user?.data.id;
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const decoded = await decodedUser();
+      setUser(decoded as userType);
+    };
+
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await FetchOrders();
-        console.log(response);
+        const response = await FetchOrders({
+          userid: userId!,
+          pagenumber: 1,
+        });
+        console.log('respose:', response);
         setOrders(response);
+        const result = response.orders;
+
+        console.log('fetched order:', result);
+
+        setTransformedOrder(
+          result.map((result: Order) => ({
+            id: uuidv4(),
+            transactionCode: result.orderDetails.order.transactionCode, // Use transactionCode instead of orderId
+            senderName: result.orderDetails.sender?.name || '',
+            reciverName: result.orderDetails.receiver?.name || '',
+            description: result.orderDetails.item?.description || '',
+            weight: result.orderDetails.item?.weight || 0,
+            quantity: result.orderDetails.item?.quantity || 0,
+            Price: result.orderDetails.item?.totalPrice || 0,
+            senderAddress: result.orderDetails.sender?.address || '',
+            reciverAddress: result.orderDetails.receiver?.address || '',
+            status: result.orderDetails.status?.[0]?.status || 'unknown', // Get first status
+            createdAt: result.orderDetails.order.createdAT || '',
+            updatedAt: result.updatedAt || '',
+            paymentMethod:
+              result.orderDetails.order?.payment === 0 ? 'Unpaid' : 'Paid', // Adjust payment method logic
+            statuses: {
+              pending: result.orderDetails.status?.find(
+                (s: { status: string }) => s.status === 'Pending'
+              )
+                ? {
+                    type: 'Pending',
+                    date: result.orderDetails.status.find(
+                      (s: { status: string }) => s.status === 'Pending'
+                    )!.date,
+                    location: result.orderDetails.status.find(
+                      (s: { status: string }) => s.status === 'Pending'
+                    )!.location,
+                  }
+                : undefined,
+              delivered: result.orderDetails.status?.find(
+                (s: { status: string }) => s.status === 'Delivered'
+              )
+                ? {
+                    type: 'Delivered',
+                    date: result.orderDetails.status.find(
+                      (s: { status: string }) => s.status === 'Delivered'
+                    )!.date,
+                    location: result.orderDetails.status.find(
+                      (s: { status: string }) => s.status === 'Delivered'
+                    )!.location,
+                  }
+                : undefined,
+              pickedUp: result.orderDetails.status?.find(
+                (s: { status: string }) => s.status === 'Picked up'
+              )
+                ? {
+                    type: 'Picked up',
+                    date: result.orderDetails.status.find(
+                      (s: { status: string }) => s.status === 'Picked up'
+                    )!.date,
+                    location: result.orderDetails.status.find(
+                      (s: { status: string }) => s.status === 'Picked up'
+                    )!.location,
+                  }
+                : undefined,
+            },
+            senderPhoneNumber: result.orderDetails.sender?.phone || '',
+            reciverPhoneNumber: result.orderDetails.receiver?.phone || '',
+            senderEmail: result.orderDetails.sender?.email || '',
+            reciverEmail: result.orderDetails.receiver?.email || '',
+            addedBy: result.orderDetails.employeeInfo?.name || '',
+          }))
+        );
+
+        setorderTable(response.orders);
       } catch (error) {
         console.log(error);
       }
     };
     fetchOrders();
-  }, []);
+  }, [userId]);
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -51,9 +152,13 @@ export default function Page() {
     console.log(response);
   };
 
-  console.log('city:', cities);
-
+  // console.log('city:', cities);
+  // console.log('user', user?.data);
   console.log(`orders:`, orders);
+  console.log('orderArray:', orderTable);
+  // console.log('orderLength');
+  // console.log('orderLength', orderTable ? orderTable.length : 0);
+  console.log('transformedOrder:', transformedOrder);
 
   return (
     <section className="w-full px-4 md:px-8 py-4 bg-[#F1F2F8]">
@@ -61,7 +166,7 @@ export default function Page() {
       <div className="h-fit justify-start items-center gap-9 inline-flex">
         <div className="flex-col justify-start items-start gap-2 inline-flex">
           <div className="self-stretch text-[#060A87] text-2xl md:text-3xl font-extrabold font-['Manrope'] leading-[36px]">
-            Welcome Back, Owner!
+            Welcome Back, {name}!
           </div>
           <div className="self-stretch text-[#495d85] text-sm md:text-base font-extrabold font-['Manrope'] leading-tight">
             Here’s your Orders Report
@@ -88,19 +193,25 @@ export default function Page() {
           showRecipet={showRecipet}
           setShowRecipt={setShowRecipt}
         />
-        <DataTable
-          columns={
-            columns as ColumnDef<
-              { transactionId: string; id: string; addedBy: string },
-              unknown
-            >[]
-          }
-          data={orders}
-          totalEntries={orders.length}
-          handleDelete={handleDelete}
-          role={role}
-          name={''}
-        />
+        {transformedOrder ? (
+          <DataTable
+            role={role!}
+            name={name!}
+            columns={
+              columns as ColumnDef<
+                { transactionCode: string; id: string; addedBy: string },
+                unknown
+              >[]
+            }
+            data={transformedOrder}
+            totalEntries={transformedOrder.length}
+            handleDelete={handleDelete}
+          />
+        ) : (
+          <div className="flex justify-center items-center w-full h-full">
+            <p>Loading...</p>
+          </div>
+        )}
       </section>
     </section>
   );
