@@ -5,7 +5,7 @@ import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
 import { employeeColumns } from '@/components/order/owner/peopleColumn';
 import { PeopleDataTable } from '@/components/order/owner/peopleTable';
 import { city } from '@/types/cities';
-import { Employee } from '@/types/employeeType';
+import { Employee, EmployeeLoginDetails } from '@/types/employeeType';
 import { ColumnDef } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -160,6 +160,7 @@ export default function EmployeesView({type}: {type: "owner" | "admin"}) {
           showConfirmationModal={showConfirmationModal}
           setShowConfirmationModal={setShowConfirmationModal}
           cities={cities}
+
         />
         <PeopleDataTable
           columns={

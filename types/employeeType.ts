@@ -7,3 +7,7 @@ export type Employee = {
     imgUrl: string;
   }
   
+export type EmployeeLoginDetails = {
+  email: string;
+  password: string;
+}

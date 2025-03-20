@@ -26,6 +26,8 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { AiOutlineCopy } from "react-icons/ai";
 import { toast } from 'sonner';
+import { useState } from 'react';
+import { EmployeeLoginDetails } from '@/types/employeeType';
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -56,6 +58,8 @@ export default function AddEmployeeDialogue({
 
   const { handleSubmit, reset } = form;
 
+  const [newEmployeeLoginDetails, setNewEmployeeLoginDetails] = useState<EmployeeLoginDetails>({ email: '', password: '' })
+
   async function onSubmit(values: z.infer<typeof addUserSchema>) {
     const { fName, lName, email, phoneNumber } = values;
 
@@ -80,6 +84,12 @@ export default function AddEmployeeDialogue({
         setShowNewEmployeeModal(false);
         reset();
         setShowConfirmationModal(true);
+
+        const employeeDetails = {
+          email: response.email,
+          password: response.password
+        }
+        setNewEmployeeLoginDetails(employeeDetails);
       }
     }
   }
@@ -87,6 +97,17 @@ export default function AddEmployeeDialogue({
   const handleClose = () => {
     setShowNewEmployeeModal(false);
     reset();
+  };
+
+  const handleCopy = async () => {
+    try {
+      const copyText = `Email: ${newEmployeeLoginDetails.email} \nPassword: ${newEmployeeLoginDetails.password}`
+      await navigator.clipboard.writeText(copyText);
+      toast.success("Successfully copied to clipboard");
+
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
   };
 
   return (
@@ -196,18 +217,20 @@ export default function AddEmployeeDialogue({
               <div className='border-[#7B7B7B63] border-[1px] p-3 pl-6 rounded-[2px] flex gap-20'>
                 <div>
                   <div className='text-[#060A87] font-bold text-lg'>
-                    Email: <span className='text-[#4A4A4F]'>JhonnyDoe@gmail.con</span>
+                    Email: <span className='text-[#4A4A4F]'>{newEmployeeLoginDetails.email}</span>
                   </div>
                   <div className='text-[#060A87] font-bold text-lg'>
-                    Password: <span className='text-[#4A4A4F]'>hfsudhfjshjiodyr324</span>
+                    Password: <span className='text-[#4A4A4F]'>{newEmployeeLoginDetails.password}</span>
                   </div>
                 </div>
-                <AiOutlineCopy className='cursor-pointer' stroke='#060A87' fill='#060A87' size={26} />
+                <AiOutlineCopy onClick={handleCopy} className='cursor-pointer' stroke='#060A87' fill='#060A87' size={26} />
               </div>
-              <div className='text-[#3E4249] mt-[-45px] font-normal text-xs'>copy this and share to your employee to log in</div>
+              <div className='text-[#3E4249] mt-[-45px] font-normal text-xs'>Copy this and share to your employee to log in.<br /> The password has been emailed to them.</div>
             </CardContent>
             <CardFooter className='mt-6'>
-              <Button onClick={() => setShowConfirmationModal(false)} className='flex justify-center items-center px-8 py-7 font-bold text-base bg-[#060A87] mx-auto hover:bg-[#060A87] hover:opacity-85'>Back to Employees Table</Button>
+              <Button onClick={() => { 
+                setNewEmployeeLoginDetails({email: "", password: ""})
+                setShowConfirmationModal(false) }} className='flex justify-center items-center px-8 py-7 font-bold text-base bg-[#060A87] mx-auto hover:bg-[#060A87] hover:opacity-85'>Back to Employees Table</Button>
             </CardFooter>
           </Card>
         </div>
