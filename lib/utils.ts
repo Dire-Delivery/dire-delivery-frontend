@@ -25,8 +25,8 @@ export function convertToEmployeesFormat(users: User[]) {
       id: user.id,
       name: user.name,
       email: user.email,
-      phoneNumber: user.phone,
-      location: user.location,
+      phoneNumber: user.phone ? user.phone : '-',
+      location: user.location ? user.location: '-',
       imgUrl: user.image
     }
     return EmployeeFormat
