@@ -1,3 +1,4 @@
+import { Employee, User } from '@/types/employeeType';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 
@@ -16,4 +17,18 @@ export const formatDate = (isoString: string) => {
 export function generateTransactionId() {
   const randomNumbers = Math.floor(10000 + Math.random() * 90000);
   return `DTE${randomNumbers}`;
+}
+
+export function convertToEmployeesFormat(users: User[]) {
+  return users.map((user: User) => {
+    const EmployeeFormat: Employee = {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      phoneNumber: user.phone,
+      location: user.location,
+      imgUrl: user.image
+    }
+    return EmployeeFormat
+  })
 }

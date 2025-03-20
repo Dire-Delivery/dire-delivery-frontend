@@ -33,10 +33,10 @@ export default async function apiCall({
     if (contentType && contentType.includes('application/json')) {
       const responseData = await response.json();
       console.log("the response data", responseData)
-      if (!response.ok && !responseData.token && !responseData.message) {
-        console.log("error thrown");
-        throw new Error(responseData?.error?.message || 'Something went wrong');
-      }
+      // if (!response.ok && !responseData.token && !responseData.message) {
+      //   console.log("error thrown");
+      //   throw new Error(responseData?.error?.message || 'Something went wrong');
+      // }
       return responseData;
     } else {
       // Handle non-JSON responses (e.g., plain text)

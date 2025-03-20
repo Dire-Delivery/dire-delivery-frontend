@@ -1,5 +1,5 @@
 'use client';
-import { DeleteOrder, FetchEmployees, } from '@/actions/employee';
+import { FetchEmployees, } from '@/actions/employee';
 import AddOrderDialogue from '@/components/order/addOrderDialogue';
 import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
 import { employeeColumns } from '@/components/order/owner/peopleColumn';
@@ -18,7 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn, convertToEmployeesFormat } from '@/lib/utils';
 import { FaUserLarge } from 'react-icons/fa6';
 import { MdOutlineClose } from "react-icons/md";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -27,8 +27,9 @@ import Image from 'next/image';
 import { PasswordInput } from '@/components/log-in/password-input';
 import { PiEyeClosedBold } from "react-icons/pi";
 import { PiEyeBold } from "react-icons/pi";
+import { userProfile, userToken } from '@/actions/auth';
 
-export default function EmployeesView({type}: {type: "owner" | "admin"}) {
+export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [cities, setCities] = useState<city[]>([]);
   const [showNewEmployeeModal, setShowNewEmployeeModal] = useState<boolean>(false);
@@ -39,9 +40,16 @@ export default function EmployeesView({type}: {type: "owner" | "admin"}) {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await FetchEmployees();
-        console.log({ response });
-        setEmployees(response);
+        const userData = await userProfile();
+        const token = await userToken();
+        if (userData && token) {
+          const response = await FetchEmployees(userData.id);
+          console.log({ response });
+          const convertedEmployeeFormat = convertToEmployeesFormat(response.users);
+          setEmployees(convertedEmployeeFormat);
+        } else {
+          throw new Error("userData or token not found")
+        }
       } catch (error) {
         console.log(error);
       }
@@ -51,8 +59,8 @@ export default function EmployeesView({type}: {type: "owner" | "admin"}) {
 
   const handleDelete = async (id: string) => {
     // console.log('about to delete:', id);
-    const response = await DeleteOrder(id);
-    console.log(response);
+    // const response = await DeleteOrder(id);
+    // console.log(response);
   };
 
   return (
@@ -61,7 +69,7 @@ export default function EmployeesView({type}: {type: "owner" | "admin"}) {
       <div className="h-fit justify-start items-center gap-9 inline-flex">
         <div className="flex-col justify-start items-start gap-2 inline-flex">
           <div className="self-stretch text-[#060A87] text-2xl md:text-3xl font-extrabold font-['Manrope'] leading-[36px]">
-            Welcome Back, {type == "owner" ? "Owner": "Admin"}!
+            Welcome Back, {type == "owner" ? "Owner" : "Admin"}!
           </div>
           <div className="self-stretch text-[#495d85] text-sm md:text-base font-extrabold font-['Manrope'] leading-tight">
             Here’s your Employees Report
@@ -165,7 +173,7 @@ export default function EmployeesView({type}: {type: "owner" | "admin"}) {
         <PeopleDataTable
           columns={
             employeeColumns as ColumnDef<
-              { id: string, imgUrl: string },
+                Employee,
               unknown
             >[]
           }

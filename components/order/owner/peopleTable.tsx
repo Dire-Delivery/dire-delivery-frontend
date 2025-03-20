@@ -52,8 +52,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { FaUserLarge } from "react-icons/fa6";
 import { usePathname } from 'next/navigation';
+import { Employee } from '@/types/employeeType';
 
-interface EmployeeDataTableProps<TData extends { id: string, imgUrl: string }, TValue> {
+interface EmployeeDataTableProps<TData extends Employee, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     totalEntries: number;
@@ -65,10 +66,7 @@ interface EmployeeDataTableProps<TData extends { id: string, imgUrl: string }, T
 }
 
 export function PeopleDataTable<
-    TData extends {
-        id: string;
-        imgUrl: string;
-    },
+    TData extends Employee,
     TValue,
 >({
     columns,
@@ -162,8 +160,8 @@ export function PeopleDataTable<
                                     data-state={row.getIsSelected() && 'selected'}
                                 >
                                     {row.getVisibleCells().map((cell, index) => (
-                                        <TableCell key={cell.id} className={cn('relative mx-auto text-center', index == 0 && "flex items-center h-full gap-3 pl-8")}>
-                                            {index == 0 &&
+                                        <TableCell key={cell.id} className={cn((index != 0 || (index == 0 && row.original.imgUrl)) && 'relative mx-auto text-center', index == 0 && row.original.imgUrl && "flex items-center h-full gap-3 pl-8", index == 0 && !row.original.imgUrl && "px-8")}>
+                                            {index == 0 && row.original.imgUrl &&
                                                 <Avatar className='w-8 h-auto'>
                                                     <AvatarImage src={row.original.imgUrl} />
                                                     <AvatarFallback>CN</AvatarFallback>
