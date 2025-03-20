@@ -28,6 +28,7 @@ import { AiOutlineCopy } from "react-icons/ai";
 import { toast } from 'sonner';
 import { useState } from 'react';
 import { EmployeeLoginDetails } from '@/types/employeeType';
+import { useRouter } from 'next/navigation';
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -55,6 +56,7 @@ export default function AddEmployeeDialogue({
       phoneNumber: "",
     },
   })
+  const router = useRouter()
 
   const { handleSubmit, reset } = form;
 
@@ -228,9 +230,10 @@ export default function AddEmployeeDialogue({
               <div className='text-[#3E4249] mt-[-45px] font-normal text-xs'>Copy this and share to your employee to log in.<br /> The password has been emailed to them.</div>
             </CardContent>
             <CardFooter className='mt-6'>
-              <Button onClick={() => { 
-                setNewEmployeeLoginDetails({email: "", password: ""})
-                setShowConfirmationModal(false) }} className='flex justify-center items-center px-8 py-7 font-bold text-base bg-[#060A87] mx-auto hover:bg-[#060A87] hover:opacity-85'>Back to Employees Table</Button>
+              <Button onClick={() => {
+                setNewEmployeeLoginDetails({ email: "", password: "" })
+                setShowConfirmationModal(false)
+              }} className='flex justify-center items-center px-8 py-7 font-bold text-base bg-[#060A87] mx-auto hover:bg-[#060A87] hover:opacity-85'>Back to Employees Table</Button>
             </CardFooter>
           </Card>
         </div>

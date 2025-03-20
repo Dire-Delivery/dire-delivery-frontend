@@ -55,9 +55,9 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
       }
     };
     fetchOrders();
-  }, []);
+  }, [showConfirmationModal]);
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (id: string) => {      
     // console.log('about to delete:', id);
     // const response = await DeleteOrder(id);
     // console.log(response);
