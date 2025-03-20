@@ -18,3 +18,9 @@ export const PromoteEmployee = async (ownerId: string ,employeeId: string) => {
   const response = await apiCall({ url: fetchURl, method: 'POST', data: {userId: employeeId, role: "ADMIN"} });
   return response;
 };
+
+export const DeletePerson = async (ownerId: string ,employeeId: string) => {
+  const fetchURl = `${BaseUrl}/users/${ownerId}/delete-user/${employeeId}`;
+  const response = await apiCall({ url: fetchURl, method: 'Delete' });
+  return response;
+};

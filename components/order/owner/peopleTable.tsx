@@ -279,6 +279,7 @@ export function PeopleDataTable<
                                                         className="cursor-pointer text-red-600 hover:bg-red-100"
                                                         onSelect={(e) => {
                                                             e.preventDefault(); // Prevent the dropdown from closing
+                                                            setSelectedPerson(row.original)
                                                             setOpenAlertDialogId(row.original.id); // Open the AlertDialog for this row
                                                         }}
                                                     >
@@ -302,7 +303,7 @@ export function PeopleDataTable<
                                                         </AlertDialogTitle>
                                                         <AlertDialogDescription>
                                                             This action cannot be undone. This will permanently
-                                                            delete your account and remove your data from our
+                                                            delete the account and remove the data from our
                                                             servers.
                                                         </AlertDialogDescription>
                                                     </AlertDialogHeader>
@@ -312,6 +313,7 @@ export function PeopleDataTable<
                                                             onClick={() => {
                                                                 handleDelete(row.original.id); // Perform the delete action
                                                                 setOpenAlertDialogId(null); // Close the AlertDialog
+
                                                             }}
                                                             className="bg-[#060A87]"
                                                         >

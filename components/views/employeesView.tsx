@@ -1,5 +1,5 @@
 'use client';
-import { FetchEmployees, } from '@/actions/employee';
+import { DeletePerson, FetchEmployees, } from '@/actions/employee';
 import AddOrderDialogue from '@/components/order/addOrderDialogue';
 import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
 import { employeeColumns } from '@/components/order/owner/peopleColumn';
@@ -28,6 +28,7 @@ import { PasswordInput } from '@/components/log-in/password-input';
 import { PiEyeClosedBold } from "react-icons/pi";
 import { PiEyeBold } from "react-icons/pi";
 import { userProfile, userToken } from '@/actions/auth';
+import { toast } from 'sonner';
 
 export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
   const [employees, setEmployees] = useState<Person[]>([]);
@@ -37,7 +38,8 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
     useState<boolean>(false);
   const [showPerson, setShowPerson] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
-      const [showChangeRoleModal, setShowChangeRoleModal] = useState(false);
+  const [showChangeRoleModal, setShowChangeRoleModal] = useState(false);
+  const [refreshTableToggle, setRefreshTableToggle] = useState(false);
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -56,12 +58,22 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
       }
     };
     fetchOrders();
-  }, [showConfirmationModal, showChangeRoleModal]);
+  }, [showConfirmationModal, showChangeRoleModal, refreshTableToggle]);
 
-  const handleDelete = async (id: string) => {      
-    // console.log('about to delete:', id);
-    // const response = await DeleteOrder(id);
-    // console.log(response);
+  const handleDelete = async (id: string) => {
+    try {
+      const userData = await userProfile();
+      const token = await userToken();
+      if (userData && token) {
+        const response = await DeletePerson(userData.id, id);
+        toast.success(response.message)
+        setRefreshTableToggle(!refreshTableToggle);
+      } else {
+        throw new Error("userData or token not found")
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -174,7 +186,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
         <PeopleDataTable
           columns={
             employeeColumns as ColumnDef<
-                Person,
+              Person,
               unknown
             >[]
           }
