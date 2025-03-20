@@ -65,7 +65,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
   };
 
   return (
-    <section className="w-full px-4 md:px-8 py-4 bg-[#F1F2F8]">
+    <section className="w-full px-4 md:px-8 py-12">
       {/* Welcome Section */}
       <div className="h-fit justify-start items-center gap-9 inline-flex">
         <div className="flex-col justify-start items-start gap-2 inline-flex">
@@ -77,7 +77,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           </div>
         </div>
       </div>
-      <section className=" w-full border px-6 py-2 mt-3 bg-white rounded-2xl flex-col justify-between items-start inline-flex overflow-hidden">
+      <section className=" w-full border px-6 py-2 mt-8 bg-white rounded-2xl flex-col justify-between items-start inline-flex overflow-hidden">
         {showPerson &&
           <Card className='w-full border-none shadow-none mt-4'>
             <CardHeader className='relative'>
