@@ -1,15 +1,15 @@
 'use client';
-import { DeleteOrder, FetchEmployees, } from '@/actions/employee';
+import { FetchEmployees, } from '@/actions/employee';
 import { adminsColumns } from '@/components/order/owner/peopleColumn';
 import { PeopleDataTable } from '@/components/order/owner/peopleTable';
 import { city } from '@/types/cities';
-import { Employee } from '@/types/employeeType';
+import { Person } from '@/types/employeeType';
 import { ColumnDef } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export default function Page() {
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [employees, setEmployees] = useState<Person[]>([]);
   const [cities, setCities] = useState<city[]>([]);
   const [showNewOrderModal, setShowNewOrderModal] = useState<boolean>(false);
   const [showConfirmationModal, setShowConfirmationModal] =

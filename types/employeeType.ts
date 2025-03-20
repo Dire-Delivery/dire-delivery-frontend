@@ -1,4 +1,4 @@
-export type Employee = {
+export type Person = {
     id: string;
     name: string;
     email: string;
@@ -22,6 +22,10 @@ export type User = {
   phone: string | null;
 }
 
+export type PromoteDate = {
+  userId: string;
+  role: "ADMIN"
+}
 
 // {
 //   "id": "7f9a52b5-0554-11f0-83cb-0260a62aad58",

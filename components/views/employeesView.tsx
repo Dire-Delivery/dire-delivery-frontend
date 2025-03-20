@@ -5,7 +5,7 @@ import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
 import { employeeColumns } from '@/components/order/owner/peopleColumn';
 import { PeopleDataTable } from '@/components/order/owner/peopleTable';
 import { city } from '@/types/cities';
-import { Employee, EmployeeLoginDetails } from '@/types/employeeType';
+import { Person, EmployeeLoginDetails } from '@/types/employeeType';
 import { ColumnDef } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -30,13 +30,14 @@ import { PiEyeBold } from "react-icons/pi";
 import { userProfile, userToken } from '@/actions/auth';
 
 export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [employees, setEmployees] = useState<Person[]>([]);
   const [cities, setCities] = useState<city[]>([]);
   const [showNewEmployeeModal, setShowNewEmployeeModal] = useState<boolean>(false);
   const [showConfirmationModal, setShowConfirmationModal] =
     useState<boolean>(false);
   const [showPerson, setShowPerson] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState(false);
+      const [showChangeRoleModal, setShowChangeRoleModal] = useState(false);
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -55,7 +56,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
       }
     };
     fetchOrders();
-  }, [showConfirmationModal]);
+  }, [showConfirmationModal, showChangeRoleModal]);
 
   const handleDelete = async (id: string) => {      
     // console.log('about to delete:', id);
@@ -173,7 +174,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
         <PeopleDataTable
           columns={
             employeeColumns as ColumnDef<
-                Employee,
+                Person,
               unknown
             >[]
           }
@@ -183,6 +184,8 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           setShowPerson={setShowPerson}
           setShowPassword={setShowPassword}
           type="employee"
+          showChangeRoleModal={showChangeRoleModal}
+          setShowChangeRoleModal={setShowChangeRoleModal}
         />
       </section>
     </section>
