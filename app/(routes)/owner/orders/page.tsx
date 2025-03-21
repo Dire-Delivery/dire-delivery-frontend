@@ -80,7 +80,7 @@ export default function Page() {
             Price: result.orderDetails.item?.totalPrice || 0,
             senderAddress: result.orderDetails.sender?.address || '',
             reciverAddress: result.orderDetails.receiver?.address || '',
-            status: result.orderDetails.status?.[0]?.status || 'unknown', // Get first status
+            status: result.orderDetails.order.status || 'unknown', // Get first status
             createdAt: result.orderDetails.order.createdAT || '',
             updatedAt: result.updatedAt || '',
             paymentMethod:

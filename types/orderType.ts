@@ -47,6 +47,44 @@ export type Order = {
   };
 };
 
+export type orderDetail = {
+  sender: {
+    name: string;
+    phone: string;
+    address: string;
+    email: string;
+  };
+  receiver: {
+    name: string;
+    phone: string;
+    address: string;
+    email: string;
+  };
+  status: {
+    status: string;
+    date: string;
+    location: string;
+  }[];
+  item: {
+    description: string;
+    weight: number;
+    quantity: number;
+    totalPrice: number;
+  };
+  order: {
+    payment: number;
+    transactionCode: string;
+    status: string;
+    createdAT: string;
+  };
+  employeeInfo: {
+    name: string;
+    email: string;
+    phone: string | null;
+    location: string;
+  };
+};
+
 export type orderTable = {
   totalPage: number;
   currentPage: number;

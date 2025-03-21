@@ -1,8 +1,11 @@
-import { FetchOrder } from '@/actions/order';
+'use client'; // Mark this component as a client component
+
+import { useEffect, useState } from 'react';
+import { use } from 'react'; // Import the `use` function
+import { FetchOrder, updateOrderStatus } from '@/actions/order';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@radix-ui/react-radio-group';
 import {
   ArrowLeft,
   FileText,
@@ -16,24 +19,62 @@ import { notFound } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 import { userProfile } from '@/actions/auth';
+import { orderDetail } from '@/types/orderType';
+import { userType } from '@/types/user';
 
-export default async function OrderPage({
+export default function OrderPage({
   params,
 }: {
   params: Promise<{ orderid: string }>;
 }) {
-  const { orderid } = await params;
-  const id = orderid;
-  console.log(id);
+  // Unwrap the `params` Promise using `React.use()`
+  const { orderid } = use(params);
+  const [order, setOrder] = useState<orderDetail | null>(null);
+  const [user, setUser] = useState<userType | null>(null);
+  // const router = useRouter();
+  const [triggerState, setTriggerState] = useState<boolean>(false);
 
-  const response = await FetchOrder(id);
-  const user = await userProfile();
-  console.log('user:', user);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await FetchOrder(orderid);
+        const userData = await userProfile();
+        setUser(userData as userType);
+        setOrder(response.orderDetails);
+      } catch (error) {
+        console.error('Error fetching order:', error);
+        notFound();
+      }
+    };
 
-  const order = response.orderDetails;
-  console.log(order);
+    fetchData();
+  }, [orderid, triggerState]);
 
-  if (!order) return notFound(); // Handles cases where the order isn't found
+  console.log('order:', order);
+
+  const handlestatus = async (id: string, status: string) => {
+    const data = {
+      trxCode: id,
+      status: status,
+    };
+    try {
+      const response = await updateOrderStatus({
+        userid: user!.id,
+        data: data,
+      });
+      console.log('response of change:', response);
+
+      setTriggerState(!triggerState);
+    } catch (error) {
+      console.error('Error updating order status:', error);
+    }
+
+    console.log('status data', data);
+  };
+
+  if (!order) {
+    return <div>Loading...</div>; // Or some loading spinner
+  }
 
   return (
     <section className="w-full h-dvh px-8 py-4 bg-[#F1F2F8]">
@@ -153,20 +194,50 @@ export default async function OrderPage({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <RadioGroup className="space-y-3">
+                <form className="space-y-3">
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="pending" id="pending" />
+                    <input
+                      title="pending"
+                      type="radio"
+                      id="pending"
+                      name="status"
+                      value="Pending"
+                      checked={order.order.status === 'Pending'}
+                      onChange={() =>
+                        handlestatus(order.order.transactionCode, 'Pending')
+                      }
+                    />
                     <Label htmlFor="pending">Pending</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="delivered" id="delivered" />
+                    <input
+                      title="delivered"
+                      type="radio"
+                      id="delivered"
+                      name="status"
+                      value="Delivered"
+                      checked={order.order.status === 'Delivered'}
+                      onChange={() =>
+                        handlestatus(order.order.transactionCode, 'Delivered')
+                      }
+                    />
                     <Label htmlFor="delivered">Delivered</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="pickedup" id="pickedup" />
+                    <input
+                      title="Picked Up"
+                      type="radio"
+                      id="pickedup"
+                      name="status"
+                      value="Picked Up"
+                      checked={order.order.status === 'Picked up'}
+                      onChange={() =>
+                        handlestatus(order.order.transactionCode, 'Picked up')
+                      }
+                    />
                     <Label htmlFor="pickedup">Picked Up</Label>
                   </div>
-                </RadioGroup>
+                </form>
               </CardContent>
             </Card>
 
