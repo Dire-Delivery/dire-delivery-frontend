@@ -271,7 +271,7 @@ export function PeopleDataTable<
 
                                                 <DropdownMenuContent align="end" className="w-40">
                                                     <DropdownMenuItem className="cursor-pointer" onClick={() => {
-                                                        setShowPerson(true)
+                                                        
                                                         handleFind(row.original.id);
                                                     }}>
                                                         <LuEye className="mr-2 h-4 w-4" />

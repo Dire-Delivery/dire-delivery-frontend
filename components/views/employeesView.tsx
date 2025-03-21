@@ -85,6 +85,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
         const data = await FindPerson(userData.id, id);
         if (data) {
           setPersonInfo(data);
+          setShowPerson(true);
         }
         console.log({data})
       } else {
