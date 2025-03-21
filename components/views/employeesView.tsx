@@ -91,21 +91,20 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
       </div>
       <section className=" w-full border px-6 py-2 mt-8 bg-white rounded-2xl flex-col justify-between items-start inline-flex overflow-hidden">
         {showPerson &&
-          <Card className='w-full border-none shadow-none mt-4'>
-            <CardHeader className='relative'>
-              <MdOutlineClose className='absolute top-[-5px] right-[-5px] cursor-pointer' onClick={() => {
+          <Card className='w-full border-none shadow-none mt-0'>
+            <CardHeader className='relative px-0 pt-0'>
+              <MdOutlineClose className='absolute top-[7px] right-[-5px] cursor-pointer' onClick={() => {
                 setShowPerson(false)
                 setShowPassword(false)
-              }} />
+              }} size={20}/>
               <CardTitle className='w-full flex justify-between items-center'>
                 <div className='font-bold text-2xl'>Employee Name</div>
-                <Button className={cn('bg-[#060A87] rounded-[10px] py-2 px-3 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5')}>
+                <Button className={cn('bg-[#060A87] rounded-[10px] py-2 px-3 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5 mr-8 mt-4')}>
                   <FaUserLarge />
                   <div className='text-sm font-bold mb-[-3px]'>Promote</div>
                   <div className='text-3xl font-normal text-center mt-[-3px]'>+</div>
                 </Button>
               </CardTitle>
-              <CardDescription>Card Description</CardDescription>
             </CardHeader>
             <CardContent className='w-full flex gap-12 h-64 p-0'>
               <div className='flex items-center justify-center pl-12'>
