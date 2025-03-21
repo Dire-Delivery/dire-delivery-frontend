@@ -54,8 +54,13 @@ export const DeleteOrder = async ({
 }) => {
   const endPoint = `${BaseURL}/orders/${userid}/delete-order`;
   console.log('delete:', endPoint);
+  console.log('data:', data);
 
-  const response = await apiCall({ url: endPoint, method: 'POST', data: data });
+  const response = await apiCall({
+    url: endPoint,
+    method: 'DELETE',
+    data: data,
+  });
   console.log('serverResponse:', response);
   return response;
 };
