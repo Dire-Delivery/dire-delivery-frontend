@@ -1,11 +1,11 @@
 'use client';
-import { DeletePerson, FetchEmployees, } from '@/actions/employee';
+import { DeletePerson, FetchEmployees, FindPerson, } from '@/actions/employee';
 import AddOrderDialogue from '@/components/order/addOrderDialogue';
 import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
 import { employeeColumns } from '@/components/order/owner/peopleColumn';
 import { PeopleDataTable } from '@/components/order/owner/peopleTable';
 import { city } from '@/types/cities';
-import { Person, EmployeeLoginDetails } from '@/types/employeeType';
+import { Person, EmployeeLoginDetails, User } from '@/types/employeeType';
 import { ColumnDef } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -40,6 +40,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
   const [showPassword, setShowPassword] = useState(false);
   const [showChangeRoleModal, setShowChangeRoleModal] = useState(false);
   const [refreshTableToggle, setRefreshTableToggle] = useState(false);
+  const [personInfo, setPersonInfo] = useState<User>();
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -76,6 +77,25 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
     }
   };
 
+  const handleFind = async (id: string) => {
+    try {
+      const userData = await userProfile();
+      const token = await userToken();
+      if (userData && token) {
+        const data = await FindPerson(userData.id, id);
+        if (data) {
+          setPersonInfo(data);
+        }
+        console.log({data})
+      } else {
+        throw new Error("userData or token not found")
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   return (
     <section className="w-full px-4 md:px-8 py-12">
       {/* Welcome Section */}
@@ -96,31 +116,24 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
               <MdOutlineClose className='absolute top-[7px] right-[-5px] cursor-pointer' onClick={() => {
                 setShowPerson(false)
                 setShowPassword(false)
-              }} size={20}/>
+              }} size={20} />
               <CardTitle className='w-full flex justify-between items-center'>
                 <div className='font-bold text-2xl'>Employee Name</div>
-                <Button className={cn('bg-[#060A87] rounded-[10px] py-2 px-3 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5 mr-8 mt-4')}>
-                  <FaUserLarge />
-                  <div className='text-sm font-bold mb-[-3px]'>Promote</div>
-                  <div className='text-3xl font-normal text-center mt-[-3px]'>+</div>
-                </Button>
               </CardTitle>
             </CardHeader>
             <CardContent className='w-full flex gap-12 h-64 p-0'>
-              <div className='flex items-center justify-center pl-12'>
-                <Image src={person} alt="CN" className='w-56 h-auto'></Image>
-              </div>
+
               <div className='w-[500px] flex flex-col h-full gap-4 border-2 border-[#E2E8F0] px-8 py-4 rounded-sm' >
                 <div className='font-bold text-xl py-2  px-0.5 border-b-2 border-[#6B7280]'>Basic Information</div>
                 <div className='flex h-full px-3 '>
                   <div className='flex flex-col justify-between flex-1'>
                     <div>
                       <div className='font-medium text-[#696973] text-base'>Full Name</div>
-                      <div className='font-semibold text-base'>John Doe</div>
+                      <div className='font-semibold text-base'>{personInfo?.name}</div>
                     </div>
                     <div>
                       <div className='font-medium text-[#696973] text-base'>Phone</div>
-                      <div className='font-semibold text-base'>+251923442233 </div>
+                      <div className='font-semibold text-base'>{personInfo?.phone ? personInfo?.phone : "-"}</div>
                     </div>
                     <div>
                       <div className='font-medium text-[#696973] text-base'>Joined Date</div>
@@ -130,15 +143,15 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
                   <div className='flex flex-col justify-between flex-1'>
                     <div>
                       <div className='font-medium text-[#696973] text-base'>Email</div>
-                      <div className='font-semibold text-base'>JhonnyDoe@gmail.com</div>
+                      <div className='font-semibold text-base'>{personInfo?.email}</div>
                     </div>
                     <div>
                       <div className='font-medium text-[#696973] text-base'>Location</div>
-                      <div className='font-semibold text-base'>Addis Ababa </div>
+                      <div className='font-semibold text-base'>{personInfo?.location ? personInfo?.location : "-"}</div>
                     </div>
                     <div>
                       <div className='font-medium text-[#696973] text-base'>Roll</div>
-                      <div className='font-semibold text-base'>Employee </div>
+                      <div className='font-semibold text-base'>{personInfo?.role}</div>
                     </div>
                   </div>
                 </div>
@@ -148,7 +161,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
                 <div className='flex flex-col gap-4'>
                   <div>
                     <div className='font-medium text-[#696973] text-base'>Email</div>
-                    <div className='font-semibold text-base'>JhonnyDoe@gmail.com</div>
+                    <div className='font-semibold text-base'>{personInfo?.email}</div>
                   </div>
                   <div >
                     <div className='font-medium text-[#696973] text-base'>Password</div>
@@ -159,6 +172,14 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
                   </div>
 
                 </div>
+
+              </div>
+              <div className='flex justify-center items-center'>
+                <Button className={cn('bg-[#060A87] rounded-[10px] py-6 px-7 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5')}>
+                  <FaUserLarge size={20}/>
+                  <div className='text-lg font-bold mb-[-3px]'>Promote</div>
+                  <div className='text-4xl font-normal text-center mt-[-3px] ml-2'>+</div>
+                </Button>
               </div>
             </CardContent>
           </Card>
@@ -180,7 +201,6 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           showConfirmationModal={showConfirmationModal}
           setShowConfirmationModal={setShowConfirmationModal}
           cities={cities}
-
         />
         <PeopleDataTable
           columns={
@@ -192,6 +212,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           data={employees}
           totalEntries={employees.length}
           handleDelete={handleDelete}
+          handleFind={handleFind}
           setShowPerson={setShowPerson}
           setShowPassword={setShowPassword}
           type="employee"

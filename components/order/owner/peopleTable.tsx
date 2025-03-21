@@ -63,6 +63,7 @@ interface EmployeeDataTableProps<TData extends Person, TValue> {
     data: TData[];
     totalEntries: number;
     handleDelete: (id: string) => void;
+    handleFind: (id: string) => void;
     type: "admin" | "employee";
     setShowPerson: React.Dispatch<React.SetStateAction<boolean>>;
     setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
@@ -80,6 +81,7 @@ export function PeopleDataTable<
     totalEntries,
     type,
     handleDelete,
+    handleFind,
     setShowPerson,
     setShowPassword,
     showChangeRoleModal,
@@ -270,6 +272,7 @@ export function PeopleDataTable<
                                                 <DropdownMenuContent align="end" className="w-40">
                                                     <DropdownMenuItem className="cursor-pointer" onClick={() => {
                                                         setShowPerson(true)
+                                                        handleFind(row.original.id);
                                                     }}>
                                                         <LuEye className="mr-2 h-4 w-4" />
                                                         View

@@ -19,8 +19,14 @@ export const PromoteEmployee = async (ownerId: string ,employeeId: string) => {
   return response;
 };
 
-export const DeletePerson = async (ownerId: string ,employeeId: string) => {
-  const fetchURl = `${BaseUrl}/users/${ownerId}/delete-user/${employeeId}`;
+export const DeletePerson = async (ownerId: string ,personId: string) => {
+  const fetchURl = `${BaseUrl}/users/${ownerId}/delete-user/${personId}`;
   const response = await apiCall({ url: fetchURl, method: 'Delete' });
+  return response;
+};
+
+export const FindPerson = async (ownerId: string ,personId: string) => {
+  const fetchURl = `${BaseUrl}/users/${ownerId}/find-one/${personId}`;
+  const response = await apiCall({ url: fetchURl });
   return response;
 };
