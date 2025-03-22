@@ -169,14 +169,10 @@ export default function Page() {
 
   const handleDelete = async (id: string) => {
     console.log('about to delete:', id);
-    const trxCode = {
-      trxCode: id,
-    };
-    console.log('trxcode', trxCode);
-
-    const response = await DeleteOrder({ userid: userId!, data: trxCode });
+    console.log('trxcode:', id);
+    const response = await DeleteOrder({ userid: userId!, trxCode: id });
     SetTriggerState((prev) => !prev);
-    console.log(response);
+    window.location.reload();
   };
 
   // console.log('city:', cities);

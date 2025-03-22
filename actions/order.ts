@@ -1,7 +1,7 @@
 import apiCall from '@/base-api/api';
 import { orderTrack } from '@/types/orderTrack';
 import { endPoints } from '@/data/endPoints';
-import { Order, orderStatus, deleteOrder } from '@/types/orderType';
+import { Order, orderStatus } from '@/types/orderType';
 
 const BaseURL = process.env.NEXT_PUBLIC_API_URL;
 const url = `${BaseURL}/${endPoints.anOrder}`;
@@ -47,19 +47,18 @@ export const AddOrder = async (data: Order) => {
 
 export const DeleteOrder = async ({
   userid,
-  data,
+  trxCode,
 }: {
   userid: string;
-  data: deleteOrder;
+  trxCode: string;
 }) => {
-  const endPoint = `${BaseURL}/orders/${userid}/delete-order`;
+  const endPoint = `${BaseURL}/orders/${userid}/delete-order/${trxCode}`;
   console.log('delete:', endPoint);
-  console.log('data:', data);
+  console.log('trxCode:', trxCode);
 
   const response = await apiCall({
     url: endPoint,
     method: 'DELETE',
-    data: data,
   });
   console.log('serverResponse:', response);
   return response;
