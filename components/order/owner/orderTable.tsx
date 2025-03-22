@@ -164,7 +164,7 @@ export function DataTable<
           className="flex gap-2"
         >
           <Input
-            placeholder="Search by transaction code"
+            placeholder="Transaction code"
             value={
               (table
                 .getColumn('transactionCode')
@@ -174,10 +174,12 @@ export function DataTable<
               const value = event.target.value || undefined;
               table.getColumn('transactionCode')?.setFilterValue(value);
             }}
-            className="max-w-sm w-72"
+            className="w-36 md:w-36 lg:w-72 "
             required
           />
-          <Button type="submit">Search</Button>
+          <Button type="submit" className="text-xs">
+            Search
+          </Button>
         </form>
 
         <Select
@@ -188,7 +190,7 @@ export function DataTable<
               ?.setFilterValue(value === 'All Status' ? undefined : value)
           }
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[100px]  lg:w-[180px]">
             <SelectValue placeholder="All Status" />
           </SelectTrigger>
           <SelectContent>
@@ -206,7 +208,10 @@ export function DataTable<
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className="px-2 py-1 text-sm md:px-4 md:py-2 md:text-base" // Responsive padding and font size
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -216,7 +221,9 @@ export function DataTable<
                     </TableHead>
                   );
                 })}
-                <TableHead>Actions</TableHead>
+                <TableHead className="px-2 py-1 text-sm md:px-4 md:py-2 md:text-base">
+                  Actions
+                </TableHead>
               </TableRow>
             ))}
           </TableHeader>
@@ -228,22 +235,27 @@ export function DataTable<
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className="px-2 py-1 text-sm md:px-4 md:py-2 md:text-base" // Responsive padding and font size
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
                       )}
                     </TableCell>
                   ))}
-                  <TableCell>
+                  <TableCell className="px-2 py-1 text-sm md:px-4 md:py-2 md:text-base">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <span className="text-lg">⋮</span>{' '}
-                          {/* Three-dot button */}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 md:h-8 md:w-8"
+                        >
+                          <span className="text-lg">⋮</span>
                         </Button>
                       </DropdownMenuTrigger>
-
                       <DropdownMenuContent align="end" className="w-40">
                         <Link
                           href={`${redirectLink}/${row.original.transactionCode}`}
@@ -254,17 +266,16 @@ export function DataTable<
                             View
                           </DropdownMenuItem>
                         </Link>
-
                         {(role === 'OWNER' ||
                           role === 'ADMIN' ||
                           row.original.addedBy === name) && (
                           <DropdownMenuItem
                             className="cursor-pointer text-red-600 hover:bg-red-100"
                             onSelect={(e) => {
-                              e.preventDefault(); // Prevent the dropdown from closing
+                              e.preventDefault();
                               setOpenAlertDialogId(
                                 row.original.transactionCode
-                              ); // Open the AlertDialog for this row
+                              );
                             }}
                           >
                             <RiDeleteBin5Line className="mr-2 h-4 w-4" />
@@ -273,15 +284,13 @@ export function DataTable<
                         )}
                       </DropdownMenuContent>
                     </DropdownMenu>
-
-                    {/* AlertDialog for the row */}
                     <AlertDialog
                       open={openAlertDialogId === row.original.transactionCode}
                       onOpenChange={(open) => {
-                        if (!open) setOpenAlertDialogId(null); // Close the AlertDialog
+                        if (!open) setOpenAlertDialogId(null);
                       }}
                     >
-                      <AlertDialogContent>
+                      <AlertDialogContent className="w-[340px] md:w-full">
                         <AlertDialogHeader>
                           <AlertDialogTitle className="text-[#060A87]">
                             Are you absolutely sure?
@@ -296,8 +305,8 @@ export function DataTable<
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction
                             onClick={() => {
-                              handleDelete(row.original.transactionCode); // Perform the delete action
-                              setOpenAlertDialogId(null); // Close the AlertDialog
+                              handleDelete(row.original.transactionCode);
+                              setOpenAlertDialogId(null);
                             }}
                             className="bg-[#060A87]"
                           >
