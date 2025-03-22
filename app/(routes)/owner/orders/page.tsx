@@ -20,7 +20,9 @@ import { userType } from '@/types/user';
 import { v4 as uuidv4 } from 'uuid';
 import Loading from '@/components/loading';
 import { userProfile } from '@/actions/auth';
+import { useToast } from '@/hooks/use-toast';
 export default function Page() {
+  const { toast } = useToast();
   const [transformedOrder, setTransformedOrder] = useState<
     TransformedOrder[] | null
   >(null);
@@ -63,7 +65,7 @@ export default function Page() {
         setCurrentPage(response.currentPage);
         setTimeout(() => {
           setloading(false);
-        }, 1000);
+        }, 2000);
         const result = response.orders;
 
         console.log('fetched order:', result);
@@ -171,8 +173,19 @@ export default function Page() {
     console.log('about to delete:', id);
     console.log('trxcode:', id);
     const response = await DeleteOrder({ userid: userId!, trxCode: id });
-    SetTriggerState((prev) => !prev);
-    window.location.reload();
+    if (response.message === 'Order deleted successfully') {
+      toast({
+        title: 'Deleted Successfully',
+        description: `Transaction ${id} Deleted succesfully `,
+        variant: `success`,
+      });
+      setTransformedOrder((prevItems) =>
+        prevItems
+          ? prevItems.filter((item) => item.transactionCode !== id)
+          : null
+      );
+    }
+    SetTriggerState(!triggerstate);
   };
 
   // console.log('city:', cities);
