@@ -18,7 +18,6 @@ import { fetchCity } from '@/actions/cities';
 import { Plus } from 'lucide-react';
 import { userType } from '@/types/user';
 import { v4 as uuidv4 } from 'uuid';
-import Loading from '@/components/loading';
 import { userProfile } from '@/actions/auth';
 import { useToast } from '@/hooks/use-toast';
 export default function Page() {
@@ -232,12 +231,9 @@ export default function Page() {
           showRecipet={showRecipet}
           setShowRecipt={setShowRecipt}
         />
-        {loading ? (
-          <div className="flex justify-center items-center">
-            <Loading />
-          </div>
-        ) : transformedOrder ? (
+        {transformedOrder ? (
           <DataTable
+            loading={loading}
             redirectLink={redirectLink}
             totalPages={totalPages}
             setTotalPages={setTotalPages}
@@ -259,9 +255,28 @@ export default function Page() {
             handleSearch={handleSearch}
           />
         ) : (
-          <div className="flex justify-center items-center w-full h-full">
-            <p>Not Found</p>
-          </div>
+          <DataTable
+            loading={loading}
+            redirectLink={redirectLink}
+            totalPages={totalPages}
+            setTotalPages={setTotalPages}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+            pagenumber={pagenumber}
+            setPagenumber={setPagenumber}
+            role={role!}
+            name={name!}
+            columns={
+              columns as ColumnDef<
+                { transactionCode: string; id: string; addedBy: string },
+                unknown
+              >[]
+            }
+            data={[]}
+            totalEntries={0}
+            handleDelete={handleDelete}
+            handleSearch={handleSearch}
+          />
         )}
       </section>
     </section>

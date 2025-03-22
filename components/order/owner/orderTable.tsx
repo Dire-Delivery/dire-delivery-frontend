@@ -49,6 +49,7 @@ import {
 import Link from 'next/link';
 import { LuEye } from 'react-icons/lu';
 import { RiDeleteBin5Line } from 'react-icons/ri';
+import Loading from '@/components/loading';
 
 interface DataTableProps<
   TData extends { id: string; addedBy: string },
@@ -68,6 +69,7 @@ interface DataTableProps<
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   redirectLink: string;
+  loading: boolean;
 }
 
 export function DataTable<
@@ -78,6 +80,7 @@ export function DataTable<
   },
   TValue,
 >({
+  loading,
   columns,
   data,
   totalEntries,
@@ -228,7 +231,16 @@ export function DataTable<
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {loading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  <Loading />
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
@@ -324,7 +336,7 @@ export function DataTable<
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  No Orders Found.
                 </TableCell>
               </TableRow>
             )}
