@@ -186,7 +186,7 @@ export default function Page() {
   console.log('currenPage:', currentPage);
 
   return (
-    <section className="w-full px-2 md:px-8 py-4 bg-[#F1F2F8]">
+    <section className="w-full px-2 md:px-8 py-4 bg-[#F1F2F8] h-full">
       {/* Welcome Section */}
       <div className="h-fit justify-start items-center gap-9 inline-flex">
         <div className="flex-col justify-start items-start gap-2 inline-flex">
@@ -199,13 +199,13 @@ export default function Page() {
         </div>
       </div>
       <section className=" w-full border px-2 md:px-6 py-2 mt-3 bg-white rounded-2xl flex-col justify-between items-start inline-flex overflow-hidden">
-        <div className="w-full flex justify-between items-center mt-4 ">
+        <div className="w-full flex justify-between items-center mt-4 px-2 ">
           <h1 className="text-2xl font-bold">Orders</h1>
           <button
             onClick={() => setShowNewOrderModal(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
+            className="bg-blue-600 text-white px-2 md:px-4 py-1 md:py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 text-sm md:text-base"
           >
-            <Plus className="h-5 w-5" />
+            <Plus className="w-4 md:h-5 md:w-5" />
             Add New
             <p className="hidden md:block">Order</p>
           </button>
