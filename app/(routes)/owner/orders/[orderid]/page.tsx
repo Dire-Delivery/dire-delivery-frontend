@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { userProfile } from '@/actions/auth';
 import { orderDetail } from '@/types/orderType';
 import { userType } from '@/types/user';
+import { toast } from '@/hooks/use-toast';
 
 export default function OrderPage({
   params,
@@ -63,6 +64,11 @@ export default function OrderPage({
         data: data,
       });
       console.log('response of change:', response);
+      toast({
+        title: 'Status Changed Successfully',
+        description: `Transaction ${id} changed to ${status} succesfully `,
+        variant: `success`,
+      });
 
       setTriggerState(!triggerState);
     } catch (error) {

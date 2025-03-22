@@ -98,6 +98,8 @@ export function DataTable<
   const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
     null
   );
+  const [searchTransactionCode, setSearchTransactionCode] =
+    useState<string>('');
   const [columnVisibility, setColumnVisibility] = useState({}); // State for column visibility
 
   // Detect screen size
@@ -158,33 +160,20 @@ export function DataTable<
         <form
           onSubmit={(event) => {
             event.preventDefault();
-            const transactionCode =
-              (table
-                .getColumn('transactionCode')
-                ?.getFilterValue() as string) ?? '';
-            handleSearch(transactionCode);
+            handleSearch(searchTransactionCode); // 🔥 Use state instead of table filter
           }}
           className="flex gap-2"
         >
           <Input
             placeholder="Transaction code"
-            value={
-              (table
-                .getColumn('transactionCode')
-                ?.getFilterValue() as string) ?? ''
-            }
-            onChange={(event) => {
-              const value = event.target.value || undefined;
-              table.getColumn('transactionCode')?.setFilterValue(value);
-            }}
+            value={searchTransactionCode}
+            onChange={(event) => setSearchTransactionCode(event.target.value)}
             className="w-36 md:w-36 lg:w-72 "
-            required
           />
           <Button type="submit" className="text-xs">
             Search
           </Button>
         </form>
-
         <Select
           value={(table.getColumn('status')?.getFilterValue() as string) ?? ''}
           onValueChange={(value) =>
