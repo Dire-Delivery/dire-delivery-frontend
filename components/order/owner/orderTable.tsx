@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -10,6 +10,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { useMediaQuery } from 'usehooks-ts'; // Import useMediaQuery
 
 import {
   Table,
@@ -93,7 +94,46 @@ export function DataTable<
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
     null
-  ); // Track which row's AlertDialog is open
+  );
+  const [columnVisibility, setColumnVisibility] = useState({}); // State for column visibility
+
+  // Detect screen size
+  const isMobile = useMediaQuery('(max-width: 640px)'); // Mobile screens
+  const isTablet = useMediaQuery('(max-width: 1024px)'); // Tablet screens
+
+  // Update column visibility based on screen size
+  useEffect(() => {
+    if (isMobile) {
+      // For mobile: Show only senderName, reciverName, status, and actions
+      setColumnVisibility({
+        transactionCode: false,
+        senderName: true,
+        reciverName: true,
+        addedBy: false,
+        createdAt: false,
+        senderAddress: false,
+        reciverAddress: false,
+        status: true,
+        actions: true,
+      });
+    } else if (isTablet) {
+      // For tablet: Show transactionCode, senderName, reciverName, addedBy, status, and actions
+      setColumnVisibility({
+        transactionCode: true,
+        senderName: true,
+        reciverName: true,
+        addedBy: true,
+        createdAt: false,
+        senderAddress: false,
+        reciverAddress: false,
+        status: true,
+        actions: true,
+      });
+    } else {
+      // For desktop: Show all columns
+      setColumnVisibility({});
+    }
+  }, [isMobile, isTablet]);
 
   const table = useReactTable({
     data,
@@ -104,7 +144,9 @@ export function DataTable<
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnFilters,
+      columnVisibility, // Pass column visibility state to the table
     },
+    onColumnVisibilityChange: setColumnVisibility, // Update column visibility
   });
 
   return (
