@@ -41,7 +41,7 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Description:
                   </div>
                   <div className="grow shrink basis-0 text-zinc-500 text-sm font-medium font-['Inter'] leading-tight">
-                    {currentOrder.description}
+                    {currentOrder.orderDetails.item.description}
                   </div>
                 </div>
                 <div className="self-stretch h-6 px-1.5 py-0.5 justify-start items-center gap-2.5 inline-flex">
@@ -49,7 +49,7 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Weight
                   </div>
                   <div className="w-40 text-zinc-500 text-sm font-medium font-['Inter'] leading-tight">
-                    {currentOrder.weight}kg
+                    {currentOrder.orderDetails.item.weight}kg
                   </div>
                 </div>
                 <div className="self-stretch h-6 px-1.5 py-0.5 justify-start items-center gap-2.5 inline-flex">
@@ -57,7 +57,7 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Quantity
                   </div>
                   <div className="w-40 text-zinc-500 text-sm font-medium font-['Inter'] leading-tight">
-                    {currentOrder.quantity}
+                    {currentOrder.orderDetails.item.quantity}
                   </div>
                 </div>
               </div>
@@ -74,7 +74,7 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Full Name
                   </div>
                   <div className="grow shrink basis-0 text-zinc-500 text-sm font-medium font-['Inter'] leading-tight">
-                    {currentOrder.senderName}
+                    {currentOrder.orderDetails.sender.name}
                   </div>
                 </div>
                 <div className="self-stretch h-6 px-1.5 py-0.5 justify-start items-center gap-2.5 inline-flex">
@@ -82,7 +82,7 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Email
                   </div>
                   <div className="w-40 text-zinc-500 text-sm font-medium font-['Inter'] leading-tight">
-                    {currentOrder.senderEmail}
+                    {currentOrder.orderDetails.sender.email}
                   </div>
                 </div>
                 <div className="self-stretch h-6 px-1.5 py-0.5 justify-start items-center gap-2.5 inline-flex">
@@ -90,7 +90,7 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Phone Number
                   </div>
                   <div className="w-40 text-zinc-500 text-sm font-medium font-['Inter'] leading-tight">
-                    {currentOrder.senderPhoneNumber}
+                    {currentOrder.orderDetails.sender.phone}
                   </div>
                 </div>
                 <div className="self-stretch h-6 px-1.5 py-0.5 justify-start items-center gap-2.5 inline-flex">
@@ -98,7 +98,7 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Address
                   </div>
                   <div className="w-40 text-zinc-500 text-sm font-medium font-['Inter'] leading-tight">
-                    {currentOrder.senderAddress}
+                    {currentOrder.orderDetails.sender.address}
                   </div>
                 </div>
               </div>
@@ -115,7 +115,7 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Full Name
                   </div>
                   <div className="grow shrink basis-0 text-zinc-500 text-sm font-medium font-['Inter'] leading-tight">
-                    {currentOrder.reciverName}
+                    {currentOrder.orderDetails.receiver.name}
                   </div>
                 </div>
                 <div className="self-stretch h-6 px-1.5 py-0.5 justify-start items-center gap-2.5 inline-flex">
@@ -123,7 +123,7 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Email
                   </div>
                   <div className="w-40 text-zinc-500 text-sm font-medium font-['Inter'] leading-tight">
-                    {currentOrder.reciverEmail}
+                    {currentOrder.orderDetails.receiver.email}
                   </div>
                 </div>
                 <div className="self-stretch h-6 px-1.5 py-0.5 justify-start items-center gap-2.5 inline-flex">
@@ -131,7 +131,7 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Phone Number
                   </div>
                   <div className="w-40 text-zinc-500 text-sm font-medium font-['Inter'] leading-tight">
-                    {currentOrder.reciverPhoneNumber}
+                    {currentOrder.orderDetails.receiver.phone}
                   </div>
                 </div>
                 <div className="self-stretch h-6 px-1.5 py-0.5 justify-start items-center gap-2.5 inline-flex">
@@ -139,7 +139,7 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Address
                   </div>
                   <div className="w-40 text-zinc-500 text-sm font-medium font-['Inter'] leading-tight">
-                    {currentOrder.reciverAddress}
+                    {currentOrder.orderDetails.receiver.address}
                   </div>
                 </div>
               </div>
@@ -156,7 +156,7 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Transaction Id:
                   </div>
                   <div className="grow shrink basis-0 text-zinc-500 text-sm font-medium font-['Inter'] leading-tight">
-                    {currentOrder.transactionId}
+                    {currentOrder.orderDetails.order.transactionCode}
                   </div>
                 </div>
                 <div className="self-stretch h-6 px-1.5 py-0.5 justify-start items-center gap-2.5 inline-flex">
@@ -164,7 +164,7 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Total Price
                   </div>
                   <div className="w-40 text-zinc-500 text-sm font-medium font-['Inter'] leading-tight">
-                    {currentOrder.Price}
+                    {currentOrder.orderDetails.item.totalPrice}
                   </div>
                 </div>
                 <div className="self-stretch h-6 px-1.5 py-0.5 justify-start items-center gap-2.5 inline-flex">
@@ -172,7 +172,7 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Payment Method
                   </div>
                   <div className="w-40 text-zinc-500 text-sm font-medium font-['Inter'] leading-tight">
-                    {currentOrder.paymentMethod}
+                    {currentOrder.orderDetails.order.payment}
                   </div>
                 </div>
               </div>

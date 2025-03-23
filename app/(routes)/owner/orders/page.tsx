@@ -300,6 +300,7 @@ export default function Page() {
           </button>
         </div>
         <AddOrderDialogue
+          userId={userId!}
           showNewOrderModal={showNewOrderModal}
           setShowNewOrderModal={setShowNewOrderModal}
           showConfirmationModal={showConfirmationModal}
@@ -307,6 +308,8 @@ export default function Page() {
           cities={cities}
           showRecipet={showRecipet}
           setShowRecipt={setShowRecipt}
+          triggerstate={triggerstate}
+          SetTriggerState={SetTriggerState}
         />
         {transformedOrder ? (
           <DataTable

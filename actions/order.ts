@@ -1,10 +1,8 @@
 import apiCall from '@/base-api/api';
 import { orderTrack } from '@/types/orderTrack';
-import { endPoints } from '@/data/endPoints';
-import { Order, orderStatus } from '@/types/orderType';
+import { orderStatus, sendOrderType } from '@/types/orderType';
 
 const BaseURL = process.env.NEXT_PUBLIC_API_URL;
-const url = `${BaseURL}/${endPoints.anOrder}`;
 
 export const TrackOrder = async ({ id }: orderTrack) => {
   console.log('id:', id);
@@ -37,9 +35,15 @@ export const FetchOrder = async (id: string) => {
   return response;
 };
 
-export const AddOrder = async (data: Order) => {
+export const AddOrder = async ({
+  data,
+  userid,
+}: {
+  userid: string;
+  data: sendOrderType;
+}) => {
   console.log('addingData:', data);
-  const fetchURl = `${url}`;
+  const fetchURl = `${BaseURL}/orders/${userid}/create-order`;
   const response = await apiCall({ url: fetchURl, method: 'POST', data: data });
   console.log('postResponse:', response);
   return response;

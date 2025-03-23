@@ -1,6 +1,6 @@
 export type Order = {
   id: string;
-  employeeId: string;
+  employeeId?: string;
   senderId: string;
   receiverId: string;
   itemId: string;
@@ -183,4 +183,19 @@ export type orderStatus = {
 
 export type deleteOrder = {
   trxCode: string;
+};
+
+export type sendOrderType = {
+  senderName: string;
+  senderAddress: string;
+  senderPhoneNumber: string;
+  senderEmail: string;
+  reciverName: string;
+  reciverAddress: string;
+  reciverPhoneNumber: string;
+  reciverEmail: string;
+  weight: number;
+  description: string;
+  quantity: number;
+  paymentMethod: string;
 };
