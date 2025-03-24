@@ -175,36 +175,36 @@ export function PeopleDataTable<
             }
             <div className="w-full">
                 <div className="flex items-center py-4 gap-4">
-                    {/* <Input
-          placeholder="Search by name"
-          value={
-            (table.getColumn('senderName')?.getFilterValue() as string) ?? ''
-          }
-          onChange={(event) => {
-            const value = event.target.value || undefined;
-            table.getColumn('senderName')?.setFilterValue(value);
-            table.getColumn('reciverName')?.setFilterValue(value);
-          }}
-          className="max-w-sm"
-        /> */}
-                    {/* <Select
-          value={(table.getColumn('status')?.getFilterValue() as string) ?? ''}
-          onValueChange={(value) =>
-            table
-              .getColumn('status')
-              ?.setFilterValue(value === 'All Status' ? undefined : value)
-          }
-        >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="All Status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="All Status">All Status</SelectItem>
-            <SelectItem value="Delivered">Delivered</SelectItem>
-            <SelectItem value="Pending">Pending</SelectItem>
-            <SelectItem value="Picked Up">Picked Up</SelectItem>
-          </SelectContent>
-        </Select> */}
+                    <Input
+                        placeholder="Search by name"
+                        value={
+                            (table.getColumn('senderName')?.getFilterValue() as string) ?? ''
+                        }
+                        onChange={(event) => {
+                            const value = event.target.value || undefined;
+                            table.getColumn('senderName')?.setFilterValue(value);
+                            table.getColumn('reciverName')?.setFilterValue(value);
+                        }}
+                        className="max-w-sm"
+                    />
+                    <Select
+                        value={(table.getColumn('status')?.getFilterValue() as string) ?? ''}
+                        onValueChange={(value) =>
+                            table
+                                .getColumn('status')
+                                ?.setFilterValue(value === 'All Status' ? undefined : value)
+                        }
+                    >
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="All Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="All Status">All Status</SelectItem>
+                            <SelectItem value="Delivered">Delivered</SelectItem>
+                            <SelectItem value="Pending">Pending</SelectItem>
+                            <SelectItem value="Picked Up">Picked Up</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
                 <div className="rounded-md border">
                     <Table>
@@ -223,7 +223,8 @@ export function PeopleDataTable<
                                             </TableHead>
                                         );
                                     })}
-                                    {role == "owner" && <TableHead className='text-center'>{type == "employee" ? 'Promote to Admin' : 'Demote to Employee'}</TableHead>}
+                                    {role == "owner" && <TableHead className='text-center hidden xl:flex xl:items-center justify-center'>{type == "employee" ? 'Promote to Admin' : 'Demote to Employee'}</TableHead>}
+                                    {role == "owner" && <TableHead className='text-center xl:hidden'>{type == "employee" ? 'Promote' : 'Demote'}</TableHead>}
                                     <TableHead className='text-center'>Actions</TableHead>
                                 </TableRow>
                             ))}
@@ -236,7 +237,7 @@ export function PeopleDataTable<
                                         data-state={row.getIsSelected() && 'selected'}
                                     >
                                         {row.getVisibleCells().map((cell, index) => (
-                                            <TableCell key={cell.id} className={cn((index != 0 || (index == 0 && row.original.imgUrl)) && 'relative mx-auto text-center', index == 0 && row.original.imgUrl && "flex items-center h-full gap-3 pl-8", index == 0 && !row.original.imgUrl && "px-8")}>
+                                            <TableCell key={cell.id} className={cn((index != 0 || (index == 0 && row.original.imgUrl)) && 'relative mx-auto text-center', index == 0 && row.original.imgUrl && "flex items-center h-full gap-3 pl-8", index == 0 && !row.original.imgUrl && "pl-8")}>
                                                 {index == 0 && row.original.imgUrl &&
                                                     <Avatar className='w-8 h-auto'>
                                                         <AvatarImage src={row.original.imgUrl} />
@@ -256,7 +257,7 @@ export function PeopleDataTable<
                                                 setShowChangeRoleModal(true);
                                             }} className={cn('mx-auto bg-[#060A87] rounded-[10px] py-2 px-3 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5', type == 'admin' && 'bg-[#2F78EE] hover:bg-[#2F78EE]')}>
                                                 <FaUserLarge />
-                                                <div className='text-sm font-bold mb-[-3px]'>{type == "employee" ? 'Promote' : 'Demote'}</div>
+                                                <div className='text-sm font-bold mb-[-3px] hidden xl:block'>{type == "employee" ? 'Promote' : 'Demote'}</div>
                                                 {type == 'employee' && <div className='text-3xl font-normal text-center mt-[-3px]'>+</div>}
                                             </Button>
                                         </TableCell>}
@@ -271,7 +272,7 @@ export function PeopleDataTable<
 
                                                 <DropdownMenuContent align="end" className="w-40">
                                                     <DropdownMenuItem className="cursor-pointer" onClick={() => {
-                                                        
+
                                                         handleFind(row.original.id);
                                                     }}>
                                                         <LuEye className="mr-2 h-4 w-4" />
