@@ -69,6 +69,7 @@ interface DataTableProps<
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
   redirectLink: string;
   loading: boolean;
+  handlefilter: (status: string) => void;
 }
 
 export function DataTable<
@@ -91,6 +92,7 @@ export function DataTable<
   setCurrentPage,
   handleSearch,
   redirectLink,
+  handlefilter,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
@@ -166,18 +168,19 @@ export function DataTable<
             placeholder="Transaction code"
             value={searchTransactionCode}
             onChange={(event) => setSearchTransactionCode(event.target.value)}
-            className="w-36 md:w-36 lg:w-72 "
+            className="lg:w-72 "
           />
           <Button type="submit" className="text-xs">
             Search
           </Button>
         </form>
         <Select
-          value={(table.getColumn('status')?.getFilterValue() as string) ?? ''}
-          onValueChange={(value) =>
-            table
-              .getColumn('status')
-              ?.setFilterValue(value === 'All Status' ? undefined : value)
+          value=""
+          onValueChange={
+            (value) => handlefilter(value)
+            // table
+            //   .getColumn('status')
+            //   ?.setFilterValue(value === 'All Status' ? undefined : value)
           }
         >
           <SelectTrigger className="w-[100px]  lg:w-[180px]">

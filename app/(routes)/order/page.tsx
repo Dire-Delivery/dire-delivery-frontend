@@ -31,14 +31,13 @@ export default function Page() {
   useEffect(() => {
     if (transactionid) {
       setloading(true);
-      setTimeout(() => {
-        setloading(false);
-      }, 3000);
+      setTimeout(() => {}, 3000);
       const fetchtrackData = async () => {
         try {
           const response = await TrackOrder({ id: transactionid });
 
           if (response) {
+            setloading(false);
             setanOrder(response);
             setStatuses(Object.values(response.orderDetails.status));
             setFound(true);

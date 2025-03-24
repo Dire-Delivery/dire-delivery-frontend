@@ -8,7 +8,12 @@ import {
 interface TransformedOrder extends OriginalTransformedOrder {
   addedBy: string;
 }
-import { DeleteOrder, FetchOrder, FetchOrders } from '@/actions/order';
+import {
+  DeleteOrder,
+  FetchOrder,
+  FetchOrders,
+  FetchStatusOrder,
+} from '@/actions/order';
 import { columns } from '@/components/order/owner/column';
 import { ColumnDef } from '@tanstack/react-table';
 import { DataTable } from '@/components/order/owner/orderTable';
@@ -227,7 +232,90 @@ export default function OrderTabelView({ redirectLink }: props) {
       console.log(error);
     }
   };
-
+  const handleFilter = async (status: string) => {
+    try {
+      if (status === 'All Status') {
+        SetTriggerState(!triggerstate);
+        return;
+      }
+      const response = await FetchStatusOrder({
+        userid: user!.id,
+        pagenumber: pagenumber,
+        status: status,
+      });
+      const result = response;
+      console.log(result);
+      setTotalPages(response.totalPage);
+      setCurrentPage(response.currentPage);
+      setTransformedOrder(
+        result.orders.map((result: Order) => ({
+          transactionCode: result.orderDetails.order.transactionCode, // Use transactionCode instead of orderId
+          senderName: result.orderDetails.sender?.name || '',
+          reciverName: result.orderDetails.receiver?.name || '',
+          description: result.orderDetails.item?.description || '',
+          weight: result.orderDetails.item?.weight || 0,
+          quantity: result.orderDetails.item?.quantity || 0,
+          Price: result.orderDetails.item?.totalPrice || 0,
+          senderAddress: result.orderDetails.sender?.address || '',
+          reciverAddress: result.orderDetails.receiver?.address || '',
+          status: result.orderDetails.order.status || 'unknown', // Get first status
+          createdAt: result.orderDetails.order.createdAT || '',
+          updatedAt: result.updatedAt || '',
+          paymentMethod:
+            result.orderDetails.order?.payment === 0 ? 'Unpaid' : 'Paid', // Adjust payment method logic
+          statuses: {
+            pending: result.orderDetails.status?.find(
+              (s: { status: string }) => s.status === 'Pending'
+            )
+              ? {
+                  type: 'Pending',
+                  date: result.orderDetails.status.find(
+                    (s: { status: string }) => s.status === 'Pending'
+                  )!.date,
+                  location: result.orderDetails.status.find(
+                    (s: { status: string }) => s.status === 'Pending'
+                  )!.location,
+                }
+              : undefined,
+            delivered: result.orderDetails.status?.find(
+              (s: { status: string }) => s.status === 'Delivered'
+            )
+              ? {
+                  type: 'Delivered',
+                  date: result.orderDetails.status.find(
+                    (s: { status: string }) => s.status === 'Delivered'
+                  )!.date,
+                  location: result.orderDetails.status.find(
+                    (s: { status: string }) => s.status === 'Delivered'
+                  )!.location,
+                }
+              : undefined,
+            pickedUp: result.orderDetails.status?.find(
+              (s: { status: string }) => s.status === 'Picked up'
+            )
+              ? {
+                  type: 'Picked up',
+                  date: result.orderDetails.status.find(
+                    (s: { status: string }) => s.status === 'Picked up'
+                  )!.date,
+                  location: result.orderDetails.status.find(
+                    (s: { status: string }) => s.status === 'Picked up'
+                  )!.location,
+                }
+              : undefined,
+          },
+          senderPhoneNumber: result.orderDetails.sender?.phone || '',
+          reciverPhoneNumber: result.orderDetails.receiver?.phone || '',
+          senderEmail: result.orderDetails.sender?.email || '',
+          reciverEmail: result.orderDetails.receiver?.email || '',
+          addedBy: result.orderDetails.employeeInfo?.name || '',
+        }))
+      );
+      setloading(false);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleDelete = async (id: string) => {
     console.log('about to delete:', id);
     console.log('trxcode:', id);
@@ -290,6 +378,7 @@ export default function OrderTabelView({ redirectLink }: props) {
         />
         {transformedOrder ? (
           <DataTable
+            handlefilter={handleFilter}
             loading={loading}
             redirectLink={redirectLink}
             totalPages={totalPages}
@@ -313,6 +402,7 @@ export default function OrderTabelView({ redirectLink }: props) {
           />
         ) : (
           <DataTable
+            handlefilter={handleFilter}
             loading={loading}
             redirectLink={redirectLink}
             totalPages={totalPages}
