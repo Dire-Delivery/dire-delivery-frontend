@@ -7,7 +7,7 @@ type props = {
 
 export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
   return (
-    <section className="fixed inset-0 bg-[#060A87]/20  flex items-center justify-center z-50 p-2   overflow-scroll">
+    <section className="fixed inset-0 bg-[#060A87]/20  flex items-center justify-center z-50 p-2   overflow-y-scroll">
       <div className="bg-white rounded-lg p-6 w-fit mt-16 md:m-auto md:w-[480px]">
         <div className="flex justify-between items-center mb-4 w-full">
           <h2 className="text-xl text-[#060A87] font-semibold border-b border-[#060A87] pb-2 w-full">
@@ -41,7 +41,7 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Description:
                   </div>
                   <div className="grow shrink basis-0 text-zinc-500 text-sm font-medium font-['Manrope'] leading-tight">
-                    {currentOrder.orderDetails.item.description}
+                    {currentOrder.orderDetails.item.description || ''}
                   </div>
                 </div>
                 <div className="self-stretch h-6 px-1.5 py-0.5 justify-start items-center gap-2.5 inline-flex">

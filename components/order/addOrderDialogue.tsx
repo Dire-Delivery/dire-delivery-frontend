@@ -187,7 +187,7 @@ export default function AddOrderDialogue({
   return (
     <>
       {showNewOrderModal && (
-        <div className="fixed inset-0 bg-[#060A87] bg-opacity-30 flex items-center justify-center z-50 p-2 px-6 overflow-scroll">
+        <div className="fixed inset-0 bg-[#060A87] bg-opacity-30 flex items-center justify-center z-50 p-2 px-6 overflow-y-scroll">
           <div className="bg-white rounded-lg mt-96 md:m-auto p-3 lg:p-6 w-full h-fit max-w-2xl">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Add New Order</h2>
@@ -476,7 +476,7 @@ export default function AddOrderDialogue({
       )}
 
       {showConfirmationModal && (
-        <div className="fixed inset-0 bg-[#060A87]/20 flex items-center justify-center z-50 px-4 py-4 overflow-scroll">
+        <div className="fixed inset-0 bg-[#060A87]/20 flex items-center justify-center z-50 px-4 py-4 overflow-y-scroll">
           <div className="bg-white rounded-lg p-6 mt-28 md:m-auto w-full max-w-2xl">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Order Summary</h2>
