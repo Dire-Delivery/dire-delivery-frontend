@@ -172,7 +172,9 @@ export default function ConfirmModal({ currentOrder, setShowRecipt }: props) {
                     Payment Method
                   </div>
                   <div className="w-40 text-zinc-500 text-sm font-medium font-['Inter'] leading-tight">
-                    {currentOrder.orderDetails.order.payment}
+                    {currentOrder.orderDetails.order.payment === 1
+                      ? 'Now'
+                      : 'On Delivery'}
                   </div>
                 </div>
               </div>
