@@ -253,13 +253,14 @@ export default function SidebarLayout() {
                   />
                 </DialogTrigger>
                 <DialogContent
+                 onClick={logout}
                   className={cn(
-                    'bottom-16 left-40  bg-white py-3 px-3 rounded-md transition-all hover:bg-gray-200',
+                    'bottom-16 left-40  bg-white py-3 px-3 rounded-md transition-all hover:bg-gray-200 cursor-pointer',
                     state == 'collapsed' && 'left-14'
                   )}
                 >
                   <DialogHeader className="p-0">
-                    <DialogTitle className="flex gap-2 text-sm font-normal cursor-pointer" onClick={logout}>
+                    <DialogTitle className="flex gap-2 text-sm font-normal ">
                       <LuLogOut /> Logout
                     </DialogTitle>
                   </DialogHeader>
