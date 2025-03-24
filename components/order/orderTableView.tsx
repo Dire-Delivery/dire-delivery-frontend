@@ -18,20 +18,14 @@ import { fetchCity } from '@/actions/cities';
 import { Plus } from 'lucide-react';
 import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '@/hooks/use-toast';
+import { userProfile } from '@/actions/auth';
+import { userType } from '@/types/user';
 
 type props = {
-  role: string;
-  name: string;
-  userId: string;
   redirectLink: string;
 };
 
-export default function OrderTabelView({
-  role,
-  name,
-  userId,
-  redirectLink,
-}: props) {
+export default function OrderTabelView({ redirectLink }: props) {
   const { toast } = useToast();
   const [transformedOrder, setTransformedOrder] = useState<
     TransformedOrder[] | null
@@ -46,13 +40,28 @@ export default function OrderTabelView({
   const [totalPages, setTotalPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [triggerstate, SetTriggerState] = useState<boolean>(false);
+  const [user, setUser] = useState<userType | null>(null);
+
+  const role = user?.role;
+  const name = user?.name;
+  const userId = user?.id;
 
   useEffect(() => {
-    setloading(true);
     const fetchOrders = async () => {
+      const decoded = await userProfile();
+      const user = decoded as userType;
+      setUser(user);
+
+      const response = await fetchCity();
+      console.log('cities:', response);
+      setCities(response);
+
+      if (!user) {
+        return;
+      }
       try {
         const response = await FetchOrders({
-          userid: userId!,
+          userid: user.id!,
           pagenumber: pagenumber,
         });
 
@@ -136,20 +145,7 @@ export default function OrderTabelView({
       }
     };
     fetchOrders();
-  }, [userId, pagenumber, triggerstate]);
-
-  useEffect(() => {
-    const fetchCities = async () => {
-      try {
-        const response = await fetchCity();
-        console.log('cities:', response);
-        setCities(response);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchCities();
-  }, []);
+  }, [pagenumber, triggerstate, showRecipet]);
 
   const handleSearch = async (id: string) => {
     setloading(true);
@@ -232,13 +228,6 @@ export default function OrderTabelView({
     }
   };
 
-  // const handleFilter = async (status: string) => {
-  //   setloading(true):
-  //   try {
-  //     const response = await FetchOrders()
-  //   }
-  // }
-
   const handleDelete = async (id: string) => {
     console.log('about to delete:', id);
     console.log('trxcode:', id);
@@ -258,12 +247,6 @@ export default function OrderTabelView({
     SetTriggerState(!triggerstate);
   };
 
-  // console.log('city:', cities);
-  // console.log('user', user?.data);
-  // console.log(`orders:`, orders);
-  // console.log('orderArray:', orderTable);
-  // console.log('orderLength');
-  // console.log('orderLength', orderTable ? orderTable.length : 0);
   console.log('transformedOrder:', transformedOrder);
   console.log('totalPages:', totalPages);
   console.log('currenPage:', currentPage);

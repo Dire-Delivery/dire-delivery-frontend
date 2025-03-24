@@ -49,7 +49,6 @@ import {
 import Link from 'next/link';
 import { LuEye } from 'react-icons/lu';
 import { RiDeleteBin5Line } from 'react-icons/ri';
-import Loading from '@/components/loading';
 
 interface DataTableProps<
   TData extends { id: string; addedBy: string },
@@ -225,7 +224,7 @@ export function DataTable<
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  <Loading />
+                  loading
                 </TableCell>
               </TableRow>
             ) : table.getRowModel().rows?.length ? (

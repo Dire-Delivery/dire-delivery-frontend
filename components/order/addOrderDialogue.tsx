@@ -187,8 +187,8 @@ export default function AddOrderDialogue({
   return (
     <>
       {showNewOrderModal && (
-        <div className="fixed inset-0 bg-[#060A87] bg-opacity-30 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full h-fit max-w-2xl">
+        <div className="fixed inset-0 bg-[#060A87] bg-opacity-30 flex items-center justify-center z-50 p-2 px-6 overflow-scroll">
+          <div className="bg-white rounded-lg mt-96 md:m-auto p-3 lg:p-6 w-full h-fit max-w-2xl">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Add New Order</h2>
               <button onClick={() => handleClose()} title="Close">
@@ -201,8 +201,8 @@ export default function AddOrderDialogue({
                   <h1 className="text-lg  text-[#060a87] font-bold border-b pb-2">
                     Item Information
                   </h1>
-                  <div className="grid grid-cols-5 gap-6 mt-2 px-2">
-                    <div className="col-span-3">
+                  <div className="grid md:grid-cols-5 gap-1 md:gap-6 mt-2 px-2">
+                    <div className="md:col-span-3">
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Object Description
                       </label>
@@ -259,7 +259,7 @@ export default function AddOrderDialogue({
                   <h3 className="text-lg text-[#060a87] font-bold border-b pb-2">
                     Sender Information
                   </h3>
-                  <div className="grid grid-cols-2 gap-4 mt-2 px-2">
+                  <div className="grid md:grid-cols-2 gap-1 md:gap-4 mt-2 px-2">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Name
@@ -344,7 +344,7 @@ export default function AddOrderDialogue({
                   <h3 className="text-lg  text-[#060a87] font-bold border-b pb-2 mt-2">
                     Receiver Information
                   </h3>
-                  <div className="grid grid-cols-2 gap-4 mt-2 px-2">
+                  <div className="grid md:grid-cols-2 gap-1 md:gap-4 mt-2 px-2">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Name
@@ -476,8 +476,8 @@ export default function AddOrderDialogue({
       )}
 
       {showConfirmationModal && (
-        <div className="fixed inset-0 bg-[#060A87]/20 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
+        <div className="fixed inset-0 bg-[#060A87]/20 flex items-center justify-center z-50 px-4 py-4 overflow-scroll">
+          <div className="bg-white rounded-lg p-6 mt-28 md:m-auto w-full max-w-2xl">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Order Summary</h2>
               <button
@@ -488,7 +488,7 @@ export default function AddOrderDialogue({
               </button>
             </div>
 
-            <div className="border px-3 py-5 grid grid-cols-2 gap-10">
+            <div className="border px-3 py-5 grid md:grid-cols-2 gap-10">
               <div className="h-full">
                 <h3 className="font-bold text-lg mb-2 pb-2 border-b-2">
                   Item Details
@@ -549,7 +549,7 @@ export default function AddOrderDialogue({
               </div>
             </div>
 
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end mt-5 gap-2">
               <button
                 onClick={() => setShowConfirmationModal(false)}
                 className="px-4 py-2 border rounded-lg hover:bg-gray-50"
