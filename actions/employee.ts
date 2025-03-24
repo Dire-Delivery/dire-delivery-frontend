@@ -10,6 +10,7 @@ export const FetchEmployees = async (ownerId: string) => {
   const fetchURl = `${BaseUrl}/users/${ownerId}/EMPLOYEE`;
   //   console.log(`fetchUrl`, fetchURl);
   const response = await apiCall({ url: fetchURl });
+  console.log("the employees", response)
   return response;
 };
 

@@ -100,7 +100,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
 
 
   return (
-    <section className="w-full px-4 md:px-8 py-12">
+    <section className="w-full px-4 md:px-8 py-8">
       {/* Welcome Section */}
       <div className="h-fit justify-start items-center gap-9 inline-flex">
         <div className="flex-col justify-start items-start gap-2 inline-flex">
