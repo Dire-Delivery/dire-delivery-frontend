@@ -86,6 +86,8 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
         if (data) {
           setPersonInfo(data);
           setShowPerson(true);
+        } else {
+          toast.error(data);
         }
         console.log({data})
       } else {
