@@ -86,7 +86,6 @@ export function DataTable<
   totalEntries,
   handleDelete,
   role,
-  name,
   totalPages,
   setPagenumber,
   currentPage,
@@ -267,9 +266,7 @@ export function DataTable<
                             View
                           </DropdownMenuItem>
                         </Link>
-                        {(role === 'OWNER' ||
-                          role === 'ADMIN' ||
-                          row.original.addedBy === name) && (
+                        {(role === 'OWNER' || role === 'ADMIN') && (
                           <DropdownMenuItem
                             className="cursor-pointer text-red-600 hover:bg-red-100"
                             onSelect={(e) => {
