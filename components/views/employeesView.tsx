@@ -29,6 +29,7 @@ import { PiEyeClosedBold } from "react-icons/pi";
 import { PiEyeBold } from "react-icons/pi";
 import { userProfile, userToken } from '@/actions/auth';
 import { toast } from 'sonner';
+import { useMediaQuery } from 'usehooks-ts';
 
 export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
   const [employees, setEmployees] = useState<Person[]>([]);
@@ -41,6 +42,9 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
   const [showChangeRoleModal, setShowChangeRoleModal] = useState(false);
   const [refreshTableToggle, setRefreshTableToggle] = useState(false);
   const [personInfo, setPersonInfo] = useState<User>();
+
+  // Detect screen size
+  const isMobile = useMediaQuery('(max-width: 768px)'); // Tablet screens
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -100,9 +104,9 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
 
 
   return (
-    <section className="w-full px-4 md:px-8 py-8">
+    <section className="w-full px-1 md:px-8 py-8">
       {/* Welcome Section */}
-      <div className="h-fit justify-start items-center gap-9 inline-flex">
+      <div className="h-fit justify-start items-center gap-9 inline-flex mx-4 md:mx-0">
         <div className="flex-col justify-start items-start gap-2 inline-flex">
           <div className="self-stretch text-[#060A87] text-2xl md:text-3xl font-extrabold font-['Manrope'] leading-[36px]">
             Welcome Back, {type == "owner" ? "Owner" : "Admin"}!
@@ -112,7 +116,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           </div>
         </div>
       </div>
-      <section className=" w-full border px-6 py-2 mt-8 bg-white rounded-2xl flex-col justify-between items-start inline-flex overflow-hidden">
+      <section className=" w-full border px-2 md:px-6 md:py-2 mt-8 bg-white rounded-2xl flex-col justify-between items-start inline-flex overflow-hidden">
         {showPerson &&
           <Card className='w-full border-none shadow-none mt-0'>
             <CardHeader className='relative px-0 pt-0'>
@@ -188,11 +192,11 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           </Card>
 
         }
-        <div className="w-full flex justify-between items-center mt-4 ">
-          <h1 className="text-2xl font-bold">Employees</h1>
+        <div className="w-full flex justify-between items-center mt-2 md:mt-4 ">
+          <h1 className="text-2xl font-bold pl-2 md:pl-0">Employees</h1>
           <button
             onClick={() => setShowNewEmployeeModal(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700"
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 mr-2 mt-2 md:mr-0 md:mt-0"
           >
             <Plus className="h-5 w-5" />
             Add New
