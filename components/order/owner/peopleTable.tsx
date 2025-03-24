@@ -213,7 +213,7 @@ export function PeopleDataTable<
                                 <TableRow key={headerGroup.id}>
                                     {headerGroup.headers.map((header, index) => {
                                         return (
-                                            <TableHead key={header.id} className={cn('text-center', index == 0 && "text-start pl-12")}>
+                                            <TableHead key={header.id} className={cn('text-center', index == 0 && "text-start pl-8")}>
                                                 {header.isPlaceholder
                                                     ? null
                                                     : flexRender(
