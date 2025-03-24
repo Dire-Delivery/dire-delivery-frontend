@@ -55,81 +55,79 @@ export default function OrderTabelView({
           userid: userId!,
           pagenumber: pagenumber,
         });
-        console.log('respose:', response);
-        setTotalPages(response.totalPage);
-        setCurrentPage(response.currentPage);
-        setTimeout(() => {
+
+        if (response.message !== 'Route not found') {
           setloading(false);
-        }, 2000);
-        const result = response.orders;
-
-        console.log('fetched order:', result);
-
-        setTransformedOrder(
-          result.map((result: Order) => ({
-            id: uuidv4(),
-            transactionCode: result.orderDetails.order.transactionCode, // Use transactionCode instead of orderId
-            senderName: result.orderDetails.sender?.name || '',
-            reciverName: result.orderDetails.receiver?.name || '',
-            description: result.orderDetails.item?.description || '',
-            weight: result.orderDetails.item?.weight || 0,
-            quantity: result.orderDetails.item?.quantity || 0,
-            Price: result.orderDetails.item?.totalPrice || 0,
-            senderAddress: result.orderDetails.sender?.address || '',
-            reciverAddress: result.orderDetails.receiver?.address || '',
-            status: result.orderDetails.order.status || 'unknown', // Get first status
-            createdAt: result.orderDetails.order.createdAT || '',
-            updatedAt: result.updatedAt || '',
-            paymentMethod:
-              result.orderDetails.order?.payment === 0 ? 'Unpaid' : 'Paid', // Adjust payment method logic
-            statuses: {
-              pending: result.orderDetails.status?.find(
-                (s: { status: string }) => s.status === 'Pending'
-              )
-                ? {
-                    type: 'Pending',
-                    date: result.orderDetails.status.find(
-                      (s: { status: string }) => s.status === 'Pending'
-                    )!.date,
-                    location: result.orderDetails.status.find(
-                      (s: { status: string }) => s.status === 'Pending'
-                    )!.location,
-                  }
-                : undefined,
-              delivered: result.orderDetails.status?.find(
-                (s: { status: string }) => s.status === 'Delivered'
-              )
-                ? {
-                    type: 'Delivered',
-                    date: result.orderDetails.status.find(
-                      (s: { status: string }) => s.status === 'Delivered'
-                    )!.date,
-                    location: result.orderDetails.status.find(
-                      (s: { status: string }) => s.status === 'Delivered'
-                    )!.location,
-                  }
-                : undefined,
-              pickedUp: result.orderDetails.status?.find(
-                (s: { status: string }) => s.status === 'Picked up'
-              )
-                ? {
-                    type: 'Picked up',
-                    date: result.orderDetails.status.find(
-                      (s: { status: string }) => s.status === 'Picked up'
-                    )!.date,
-                    location: result.orderDetails.status.find(
-                      (s: { status: string }) => s.status === 'Picked up'
-                    )!.location,
-                  }
-                : undefined,
-            },
-            senderPhoneNumber: result.orderDetails.sender?.phone || '',
-            reciverPhoneNumber: result.orderDetails.receiver?.phone || '',
-            senderEmail: result.orderDetails.sender?.email || '',
-            reciverEmail: result.orderDetails.receiver?.email || '',
-            addedBy: result.orderDetails.employeeInfo?.name || '',
-          }))
-        );
+          setTotalPages(response.totalPage);
+          setCurrentPage(response.currentPage);
+          const result = response.orders;
+          console.log('fetched order:', result);
+          setTransformedOrder(
+            result.map((result: Order) => ({
+              id: uuidv4(),
+              transactionCode: result.orderDetails.order.transactionCode, // Use transactionCode instead of orderId
+              senderName: result.orderDetails.sender?.name || '',
+              reciverName: result.orderDetails.receiver?.name || '',
+              description: result.orderDetails.item?.description || '',
+              weight: result.orderDetails.item?.weight || 0,
+              quantity: result.orderDetails.item?.quantity || 0,
+              Price: result.orderDetails.item?.totalPrice || 0,
+              senderAddress: result.orderDetails.sender?.address || '',
+              reciverAddress: result.orderDetails.receiver?.address || '',
+              status: result.orderDetails.order.status || 'unknown', // Get first status
+              createdAt: result.orderDetails.order.createdAT || '',
+              updatedAt: result.updatedAt || '',
+              paymentMethod:
+                result.orderDetails.order?.payment === 0 ? 'Unpaid' : 'Paid', // Adjust payment method logic
+              statuses: {
+                pending: result.orderDetails.status?.find(
+                  (s: { status: string }) => s.status === 'Pending'
+                )
+                  ? {
+                      type: 'Pending',
+                      date: result.orderDetails.status.find(
+                        (s: { status: string }) => s.status === 'Pending'
+                      )!.date,
+                      location: result.orderDetails.status.find(
+                        (s: { status: string }) => s.status === 'Pending'
+                      )!.location,
+                    }
+                  : undefined,
+                delivered: result.orderDetails.status?.find(
+                  (s: { status: string }) => s.status === 'Delivered'
+                )
+                  ? {
+                      type: 'Delivered',
+                      date: result.orderDetails.status.find(
+                        (s: { status: string }) => s.status === 'Delivered'
+                      )!.date,
+                      location: result.orderDetails.status.find(
+                        (s: { status: string }) => s.status === 'Delivered'
+                      )!.location,
+                    }
+                  : undefined,
+                pickedUp: result.orderDetails.status?.find(
+                  (s: { status: string }) => s.status === 'Picked up'
+                )
+                  ? {
+                      type: 'Picked up',
+                      date: result.orderDetails.status.find(
+                        (s: { status: string }) => s.status === 'Picked up'
+                      )!.date,
+                      location: result.orderDetails.status.find(
+                        (s: { status: string }) => s.status === 'Picked up'
+                      )!.location,
+                    }
+                  : undefined,
+              },
+              senderPhoneNumber: result.orderDetails.sender?.phone || '',
+              reciverPhoneNumber: result.orderDetails.receiver?.phone || '',
+              senderEmail: result.orderDetails.sender?.email || '',
+              reciverEmail: result.orderDetails.receiver?.email || '',
+              addedBy: result.orderDetails.employeeInfo?.name || '',
+            }))
+          );
+        }
       } catch (error) {
         setTimeout(() => {
           setloading(false);
