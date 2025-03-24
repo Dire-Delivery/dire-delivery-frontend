@@ -17,6 +17,7 @@ import ConfirmModal from './confirmModal';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { AddOrder } from '@/actions/order';
+import { toast } from '@/hooks/use-toast';
 type props = {
   cities: city[];
   showNewOrderModal: boolean;
@@ -147,9 +148,19 @@ export default function AddOrderDialogue({
         quantity: 1,
         paymentMethod: '',
       });
+      toast({
+        title: 'added successfully',
+        description: 'Order added successfully',
+        variant: 'success',
+      });
       reset();
     } catch (error) {
       console.log(error);
+      toast({
+        title: 'Error adding Order',
+        description: 'Error while adding order',
+        variant: 'destructive',
+      });
     }
   };
   const handleClose = () => {
