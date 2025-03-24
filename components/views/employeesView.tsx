@@ -43,8 +43,6 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
   const [refreshTableToggle, setRefreshTableToggle] = useState(false);
   const [personInfo, setPersonInfo] = useState<User>();
 
-  // Detect screen size
-  const isMobile = useMediaQuery('(max-width: 768px)'); // Tablet screens
   useEffect(() => {
     const fetchOrders = async () => {
       try {

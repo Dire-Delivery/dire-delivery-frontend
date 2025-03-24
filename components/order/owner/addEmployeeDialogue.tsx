@@ -29,6 +29,7 @@ import { toast } from 'sonner';
 import { useState } from 'react';
 import { EmployeeLoginDetails } from '@/types/employeeType';
 import { useRouter } from 'next/navigation';
+import { useMediaQuery } from 'usehooks-ts';
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -61,6 +62,7 @@ export default function AddEmployeeDialogue({
   const { handleSubmit, reset } = form;
 
   const [newEmployeeLoginDetails, setNewEmployeeLoginDetails] = useState<EmployeeLoginDetails>({ email: '', password: '' })
+  const isMobile = useMediaQuery('(max-width: 768px)'); // Tablet screens
 
   async function onSubmit(values: z.infer<typeof addUserSchema>) {
     const { fName, lName, email, phoneNumber } = values;
@@ -134,7 +136,7 @@ export default function AddEmployeeDialogue({
                       <FormItem className="space-y-0 flex-1 md:space-y-2">
                         <FormLabel className="font-medium text-base text-[#060A87] md:text-lg">First Name <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
-                          <Input placeholder="Input your First Name" className="text-sm md:h-12 md:text-base placeholder-[#A0AEC0]" {...field} />
+                          <Input placeholder={isMobile ? "Abebe" : "Input your First Name"} className="text-sm md:h-12 md:text-base placeholder-[#A0AEC0]" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -147,7 +149,7 @@ export default function AddEmployeeDialogue({
                       <FormItem className="space-y-0 flex-1 md:space-y-2">
                         <FormLabel className="font-medium text-base text-[#060A87] md:text-lg" >Last Name <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
-                          <Input placeholder="Input your Last Name" className="text-sm md:h-12 md:text-base placeholder-[#A0AEC0]"  {...field} />
+                          <Input placeholder={isMobile ? "Kebede" : "Input your Last Name"} className="text-sm md:h-12 md:text-base placeholder-[#A0AEC0]"  {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -174,7 +176,7 @@ export default function AddEmployeeDialogue({
                     <FormItem>
                       <FormLabel className="font-medium text-base text-[#060A87] md:text-lg">Phone Number <span className="text-[#E03137]">*</span></FormLabel>
                       <FormControl>
-                        <Input type="text" placeholder="Enter your phoneNumber" {...field} className="text-sm md:h-12 md:text-base placeholder-[#A0AEC0]" />
+                        <Input type="text" placeholder="Enter your Phone Number" {...field} className="text-sm md:h-12 md:text-base placeholder-[#A0AEC0]" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
