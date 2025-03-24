@@ -8,7 +8,7 @@ import { getStatusColor } from '@/components/trackorder/factories';
 export const employeeColumns: ColumnDef<Order>[] = [
   {
     accessorKey: 'name',
-    header: 'Employee Name',
+    header: 'Name',
   },
   {
     accessorKey: 'email',
@@ -16,7 +16,7 @@ export const employeeColumns: ColumnDef<Order>[] = [
   },
   {
     accessorKey: 'phoneNumber',
-    header: 'Phone Number',
+    header: 'Phone',
   },
   {
     accessorKey: 'location',

@@ -234,7 +234,7 @@ export function PeopleDataTable<
                                 <TableRow key={headerGroup.id}>
                                     {headerGroup.headers.map((header, index) => {
                                         return (
-                                            <TableHead key={header.id} className={cn('text-center', index == 0 && "text-start pl-8")}>
+                                            <TableHead key={header.id} className={cn('text-center', index == 0 && "text-start pl-3 md:pl-8")}>
                                                 {header.isPlaceholder
                                                     ? null
                                                     : flexRender(
@@ -258,7 +258,7 @@ export function PeopleDataTable<
                                         data-state={row.getIsSelected() && 'selected'}
                                     >
                                         {row.getVisibleCells().map((cell, index) => (
-                                            <TableCell key={cell.id} className={cn((index != 0 || (index == 0 && row.original.imgUrl)) && 'relative mx-auto text-center', index == 0 && row.original.imgUrl && "flex items-center h-full gap-3 pl-8", index == 0 && !row.original.imgUrl && "pl-8")}>
+                                            <TableCell key={cell.id} className={cn((index != 0 || (index == 0 && row.original.imgUrl)) && 'relative mx-auto text-center', index == 0 && row.original.imgUrl && "flex items-center h-full gap-3 pl-8", index == 0 && !row.original.imgUrl && "pl-3 md:pl-8")}>
                                                 {index == 0 && row.original.imgUrl &&
                                                     <Avatar className='w-8 h-auto'>
                                                         <AvatarImage src={row.original.imgUrl} />
