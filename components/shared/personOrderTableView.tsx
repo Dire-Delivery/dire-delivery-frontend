@@ -374,7 +374,7 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
     console.log('currenPage:', currentPage);
 
     return (
-        <section className="w-full px-2 md:px-8 py-4 bg-[#F1F2F8] h-full">
+        <section className="w-full px-2 md:px-8 py-8 bg-[#F1F2F8] h-full">
             {/* Welcome Section */}
             <div className="h-fit justify-start items-center gap-9 inline-flex">
                 <div className="flex-col justify-start items-start gap-2 inline-flex">
@@ -382,7 +382,7 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
                         Welcome Back, {name}!
                     </div>
                     <div className="self-stretch text-[#495d85] text-sm md:text-base font-extrabold font-['Manrope'] leading-tight">
-                        Here’s your Orders Report
+                        Here’s your Employee Report
                     </div>
                 </div>
             </div>
@@ -412,8 +412,6 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
                                     <div className='font-medium text-[#696973] text-base'>Joined Date</div>
                                     <div className='font-semibold text-base'>2023-08-22</div>
                                 </div>
-
-
                                 <div>
                                     <div className='font-medium text-[#696973] text-base'>Email</div>
                                     <div className='font-semibold text-base'>{personInfo?.email}</div>

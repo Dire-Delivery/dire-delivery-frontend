@@ -15,7 +15,7 @@ import {
   User,
   UserPlus,
 } from 'lucide-react';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
 import { userProfile } from '@/actions/auth';
@@ -32,7 +32,7 @@ export default function OrderPage({
   const { orderid } = use(params);
   const [order, setOrder] = useState<orderDetail | null>(null);
   const [user, setUser] = useState<userType | null>(null);
-  // const router = useRouter();
+  const router = useRouter();
   const [triggerState, setTriggerState] = useState<boolean>(false);
 
   useEffect(() => {
@@ -95,14 +95,14 @@ export default function OrderPage({
         <div className="bg-white rounded-lg p-6 shadow-sm">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center justify-center">
-              <Link href={`/owner/orders`}>
+              <div onClick={() => {router.back()}}>
                 <Button
                   variant="ghost"
                   className="flex items-center gap-2 w-fit h-fit"
                 >
                   <ArrowLeft className="w-12 h-12" />
                 </Button>
-              </Link>
+              </div>
 
               <span className="text-xl font-bold">
                 {order.order.transactionCode}
