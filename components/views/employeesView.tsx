@@ -129,7 +129,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           <h1 className="text-2xl font-bold pl-2 md:pl-0">Employees</h1>
           <button
             onClick={() => setShowNewEmployeeModal(true)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 mr-2 mt-2 md:mr-0 md:mt-0"
+            className="bg-[#060A87] text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-[#060a87d5] mr-2 mt-2 md:mr-0 md:mt-0"
           >
             <Plus className="h-5 w-5" />
             Add New

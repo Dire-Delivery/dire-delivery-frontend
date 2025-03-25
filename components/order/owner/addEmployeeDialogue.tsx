@@ -204,7 +204,7 @@ export default function AddEmployeeDialogue({
                   </button>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                    className="px-4 py-2 bg-[#060A87] text-white rounded-lg hover:bg-[#060a87c7]"
                   >
                     Continue
                   </button>
