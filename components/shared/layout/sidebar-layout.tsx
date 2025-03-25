@@ -27,6 +27,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { LuChevronUp, LuLayoutGrid, LuLogOut } from 'react-icons/lu';
 import SidebarToggle from './sidebar-toggle';
+import { useMediaQuery } from 'usehooks-ts';
 
 const ownerItems = [
   {
@@ -84,13 +85,15 @@ const employeeItems = [
 
 export default function SidebarLayout() {
 
-  const { state } = useSidebar();
+  const { state, toggleSidebar } = useSidebar();
   const router = useRouter();
   const pathname = usePathname();
   const role = pathname.split('/')[1]; // Gets "owner", "admin", or "employee"
   const [selectedItem, setSelectedItem] = useState('');
 
   const refinedMenuItems = role == "owner" ? ownerItems : role == "admin" ? adminItems : role == "employee" ? employeeItems : []
+
+  const isMobile = useMediaQuery('(max-width: 768px)'); // Tablet screens
 
 
   useEffect(() => {
@@ -151,6 +154,11 @@ export default function SidebarLayout() {
         </div>
         <Link
           href="/owner"
+          onClick={() => {
+            if (isMobile) {
+              toggleSidebar()
+            }
+            }}
           className={cn(
             ' ml-5 mr-5 py-4 px-5 flex justify-between items-center rounded-[10px] font-bold bg-[#C7E7F6F5]',
             state == 'collapsed' && 'hidden'
@@ -172,9 +180,14 @@ export default function SidebarLayout() {
         </Link>
         <SidebarMenu className="gap-2 p-0 m-0">
           {refinedMenuItems.map((item, index) => (
-            <SidebarMenuItem key={index}>
+            <SidebarMenuItem key={index} >
               <Link
                 href={item.url}
+                onClick={() => {
+                  if (isMobile) {
+                    toggleSidebar()
+                  }
+                  }}
                 className={cn(
                   `flex items-center justify-start gap-3 py-3 transition-all duration-300 ease-in-out`,
                   selectedItem == item.title
