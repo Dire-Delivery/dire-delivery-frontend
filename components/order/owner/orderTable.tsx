@@ -192,7 +192,7 @@ export function DataTable<
             <SelectItem value="All Status">All Status</SelectItem>
             <SelectItem value="Delivered">Delivered</SelectItem>
             <SelectItem value="Pending">Pending</SelectItem>
-            <SelectItem value="Picked Up">Picked Up</SelectItem>
+            <SelectItem value="Picked up">Picked up</SelectItem>
           </SelectContent>
         </Select>
       </div>
