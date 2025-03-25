@@ -147,7 +147,7 @@ export default function PriceCitySettings({
       toast({
         title: 'Deleted unsuccessful',
         description: `City ${code} is not Deleted succesfully `,
-        variant: `success`,
+        variant: `destructive`,
       });
       console.log(error);
     }
@@ -163,12 +163,22 @@ export default function PriceCitySettings({
         userid: user!.id,
         constants: constatns!.id,
       });
+      toast({
+        title: 'Successfull',
+        description: `Price Set succesfull `,
+        variant: `success`,
+      });
       console.log('response:', response);
       setConfirmModal(false);
       setEditPrice(false);
       setTriggerState((prev) => !prev);
     } catch (error) {
       console.log(error);
+      toast({
+        title: 'Error',
+        description: `Error on Price Set `,
+        variant: `destructive`,
+      });
     }
   };
   return (
@@ -225,8 +235,7 @@ export default function PriceCitySettings({
                       </AlertDialogTitle>
                       <AlertDialogDescription>
                         This action cannot be undone. This will permanently
-                        delete your account and remove your data from our
-                        servers.
+                        Change the Price
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
