@@ -389,7 +389,10 @@ export function PeopleDataTable<
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => table.previousPage()}
+                            onClick={() => {
+                                setRefreshTableToggle(!refreshTableToggle)
+                                table.previousPage()
+                            }}
                             disabled={!table.getCanPreviousPage()}
                         >
                             Previous
@@ -434,7 +437,10 @@ export function PeopleDataTable<
                         <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => table.nextPage()}
+                            onClick={() => {
+                                setRefreshTableToggle(!refreshTableToggle)
+                                table.nextPage()
+                            }}
                             disabled={!table.getCanNextPage()}
                         >
                             Next
