@@ -352,11 +352,9 @@ export default function Dashboardview() {
       <div className="max-w-7xl mx-auto space-y-8">
         <div className="space-y-1">
           <h1 className="text-3xl font-bold text-indigo-900">
-            Welcome Back, owner!
+            Welcome Back, {name}!
           </h1>
-          <p className="text-slate-600">
-            Here&apos;s What&apos;s happening with your deliveries today
-          </p>
+          <p className="text-slate-600">Here&apos;s Your Report</p>
         </div>
 
         {/* Stats Row 1 */}

@@ -1,4 +1,7 @@
-export default function Page() {
-    return <h1>Employee Page</h1>;
-  }
-  
+'use client';
+
+import Dashboardview from '@/components/dashboard/dashboarview';
+
+export default function Dashboard() {
+  return <Dashboardview />;
+}
