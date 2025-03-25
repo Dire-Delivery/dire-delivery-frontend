@@ -5,9 +5,8 @@ import type React from 'react';
 import { useState, useEffect } from 'react';
 import { Pencil } from 'lucide-react';
 import { addCity, deleteCity, fetchCity } from '@/actions/cities';
-import { city } from '@/types/cities';
-import { DataTable } from './cityTable';
-import { v4 as uuidv4 } from 'uuid';
+import { city, cityaddFormSchema } from '@/types/cities';
+import { CityDataTable } from './cityTable';
 import { changePrice, fetchPrice } from '@/actions/price';
 // import { price } from '@/types/price';
 
@@ -25,6 +24,12 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { price } from '@/types/price';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { toast } from '@/hooks/use-toast';
+import { z } from 'zod';
+import { userType } from '@/types/user';
+import { userProfile } from '@/actions/auth';
 
 type Props = {
   setActiveTab: React.Dispatch<React.SetStateAction<string>>;
@@ -40,18 +45,23 @@ export default function PriceCitySettings({
 }: Props) {
   const [weight, setWeight] = useState('');
   const [calculatedPrice, setCalculatedPrice] = useState('0.00 birr');
-  const [newCity, setNewCity] = useState('');
   const [cities, setCities] = useState<city[]>([]);
   const [price, setPrice] = useState<number>();
   const [editPrice, setEditPrice] = useState<boolean>(false);
   const [newPrice, setNewPrice] = useState<number>(0);
   const [confirmModal, setConfirmModal] = useState<boolean>(false);
+  const [user, setUser] = useState<userType | null>(null);
+
   useEffect(() => {
     const fetchCities = async () => {
+      const decoded = await userProfile();
+      const user = decoded as userType;
+      setUser(user);
+
       try {
         const response = await fetchCity();
-        console.log('cities:', response);
-        setCities(response);
+        console.log('cities:', response.locations);
+        setCities(response.locations);
       } catch (error) {
         console.log(error);
       }
@@ -72,9 +82,46 @@ export default function PriceCitySettings({
       }
     };
     fetchaPrice();
-  }, [triggerState]);
+  }, [triggerState, price]);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm<z.infer<typeof cityaddFormSchema>>({
+    resolver: zodResolver(cityaddFormSchema),
+  });
+
+  const onSubmit: SubmitHandler<z.infer<typeof cityaddFormSchema>> = async (
+    data
+  ) => {
+    const cityData = {
+      ...data,
+    };
+    try {
+      const response = await addCity({ data: cityData, userid: user!.id });
+      console.log(response);
+      setActiveTab('price');
+      setTriggerState((prev) => !prev);
+      toast({
+        title: 'added successfully',
+        description: 'City added successfully',
+        variant: 'success',
+      });
+      reset();
+    } catch (error) {
+      toast({
+        title: 'Error adding City',
+        description: 'Error while adding order',
+        variant: 'destructive',
+      });
+      console.log(error);
+    }
+  };
 
   console.log('priceState:', price);
+  console.log('cities:', cities);
 
   const priceCalculator = (weight: number) => {
     const basePrice = price;
@@ -82,22 +129,6 @@ export default function PriceCitySettings({
       return basePrice!;
     } else {
       return basePrice! * weight;
-    }
-  };
-  const handleAddCity = async (city: string) => {
-    const randomId = uuidv4();
-    const cityData = {
-      id: randomId,
-      name: city,
-    };
-    console.log(cityData);
-    try {
-      const response = await addCity(cityData);
-      console.log(response);
-      setActiveTab('price');
-      setTriggerState((prev) => !prev);
-    } catch (error) {
-      console.log(error);
     }
   };
 
@@ -109,14 +140,24 @@ export default function PriceCitySettings({
     setCalculatedPrice(`${priceCalculator(weightNum).toFixed(2)} birr`);
   };
 
-  const handleDelete = async (id: string) => {
-    console.log('id:', id);
+  const handleDelete = async (code: string) => {
+    console.log('code:', code);
     try {
-      const response = await deleteCity(id);
+      const response = await deleteCity({ userid: user!.id, code });
       console.log(response);
+      toast({
+        title: 'Deleted Successfully',
+        description: `City ${code} Deleted succesfully `,
+        variant: `success`,
+      });
       setActiveTab('price');
       setTriggerState((prev) => !prev);
     } catch (error) {
+      toast({
+        title: 'Deleted unsuccessful',
+        description: `City ${code} is not Deleted succesfully `,
+        variant: `success`,
+      });
       console.log(error);
     }
   };
@@ -275,26 +316,46 @@ export default function PriceCitySettings({
             <h3 className="text-lg font-semibold mb-4 pb-2 border-b">
               Add Cities
             </h3>
-
-            <div className="mb-4">
-              <label className="block mb-2 font-medium">City</label>
-              <input
-                type="text"
-                className="input-field border rounded-md w-full p-2"
-                value={newCity}
-                onChange={(e) => setNewCity(e.target.value)}
-                placeholder="(ex. Dire Dawa)"
-              />
-            </div>
-
-            <div className="flex justify-end">
-              <button
-                className="primary-button bg-[#0a1172] p-2 rounded-sm px-4 text-white"
-                onClick={() => handleAddCity(newCity)}
-              >
-                Add city
-              </button>
-            </div>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <div className="mb-4">
+                <div>
+                  <label className="block mb-2 font-medium">City</label>
+                  <input
+                    type="text"
+                    className="input-field border rounded-md w-full p-2"
+                    {...register('name')}
+                    placeholder="(ex. Dire Dawa)"
+                  />
+                  {errors.name && (
+                    <p className="text-red-500 text-sm">
+                      {errors.name.message}
+                    </p>
+                  )}
+                </div>
+                <div>
+                  <label className="block mb-2 font-medium">City</label>
+                  <input
+                    type="text"
+                    className="input-field border rounded-md w-full p-2"
+                    {...register('code')}
+                    placeholder="(ex. DD)"
+                  />
+                  {errors.code && (
+                    <p className="text-red-500 text-sm">
+                      {errors.code.message}
+                    </p>
+                  )}
+                </div>
+                <div className="flex justify-end">
+                  <Button
+                    type="submit"
+                    className="primary-button bg-[#0a1172] p-2 rounded-sm px-4 text-white"
+                  >
+                    Add city
+                  </Button>
+                </div>
+              </div>
+            </form>
           </div>
         )}
         {/* Cities Working On */}
@@ -304,7 +365,7 @@ export default function PriceCitySettings({
           </h3>
           <p className="mb-4 text-sm">Here are Cities that we are working on</p>
 
-          <DataTable
+          <CityDataTable
             role={role}
             columns={columns}
             data={cities}

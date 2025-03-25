@@ -59,8 +59,8 @@ export default function OrderTabelView({ redirectLink }: props) {
       setUser(user);
 
       const response = await fetchCity();
-      console.log('cities:', response);
-      setCities(response);
+      console.log('cities:', response.locations);
+      setCities(response.locations);
 
       if (!user) {
         return;

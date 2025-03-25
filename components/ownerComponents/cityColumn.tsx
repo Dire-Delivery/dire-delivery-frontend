@@ -8,4 +8,8 @@ export const columns: ColumnDef<city>[] = [
     accessorKey: 'name',
     header: 'City',
   },
+  {
+    accessorKey: 'code',
+    header: 'Code',
+  },
 ];
