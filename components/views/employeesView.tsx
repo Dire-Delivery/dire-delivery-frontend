@@ -115,7 +115,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
         </div>
       </div>
       <section className=" w-full border px-2 md:px-6 md:py-2 mt-8 bg-white rounded-2xl flex-col justify-between items-start inline-flex overflow-hidden">
-        {showPerson &&
+        {/* {showPerson &&
           <Card className='w-full border-none shadow-none mt-0'>
             <CardHeader className='relative px-0 pt-0'>
               <MdOutlineClose className='absolute top-[7px] right-[-5px] cursor-pointer' onClick={() => {
@@ -189,7 +189,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
             </CardContent>
           </Card>
 
-        }
+        } */}
         <div className="w-full flex justify-between items-center mt-2 md:mt-4 ">
           <h1 className="text-2xl font-bold pl-2 md:pl-0">Employees</h1>
           <button
