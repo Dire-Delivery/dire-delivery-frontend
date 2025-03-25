@@ -70,6 +70,7 @@ interface DataTableProps<
   redirectLink: string;
   loading: boolean;
   handlefilter: (status: string) => void;
+  filterValue: string;
 }
 
 export function DataTable<
@@ -93,6 +94,7 @@ export function DataTable<
   handleSearch,
   redirectLink,
   handlefilter,
+  filterValue,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
@@ -175,7 +177,7 @@ export function DataTable<
           </Button>
         </form>
         <Select
-          value=""
+          value={filterValue}
           onValueChange={
             (value) => handlefilter(value)
             // table

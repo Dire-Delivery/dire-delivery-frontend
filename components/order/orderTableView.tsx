@@ -46,6 +46,7 @@ export default function OrderTabelView({ redirectLink }: props) {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [triggerstate, SetTriggerState] = useState<boolean>(false);
   const [user, setUser] = useState<userType | null>(null);
+  const [filterValue, setFilterValue] = useState<string>('All Status');
 
   const role = user?.role;
   const name = user?.name;
@@ -235,6 +236,7 @@ export default function OrderTabelView({ redirectLink }: props) {
   const handleFilter = async (status: string) => {
     try {
       if (status === 'All Status') {
+        setFilterValue(status);
         SetTriggerState(!triggerstate);
         return;
       }
@@ -245,8 +247,13 @@ export default function OrderTabelView({ redirectLink }: props) {
       });
       const result = response;
       console.log(result);
+      if (result.error === 'No Order could be found!') {
+        setFilterValue(status);
+        setTransformedOrder([]);
+      }
       setTotalPages(response.totalPage);
       setCurrentPage(response.currentPage);
+      setFilterValue(status);
       setTransformedOrder(
         result.orders.map((result: Order) => ({
           transactionCode: result.orderDetails.order.transactionCode, // Use transactionCode instead of orderId
@@ -378,6 +385,7 @@ export default function OrderTabelView({ redirectLink }: props) {
         />
         {transformedOrder ? (
           <DataTable
+            filterValue={filterValue}
             handlefilter={handleFilter}
             loading={loading}
             redirectLink={redirectLink}
@@ -402,6 +410,7 @@ export default function OrderTabelView({ redirectLink }: props) {
           />
         ) : (
           <DataTable
+            filterValue={filterValue}
             handlefilter={handleFilter}
             loading={loading}
             redirectLink={redirectLink}
