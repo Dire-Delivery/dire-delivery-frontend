@@ -31,3 +31,9 @@ export const FindPerson = async (ownerId: string ,personId: string) => {
   const response = await apiCall({ url: fetchURl });
   return response;
 };
+
+export const FindOrdersByPerson = async (ownerId: string ,personId: string, pageNumber: number) => {
+  const fetchURl = `${BaseUrl}/orders/${ownerId}/${personId}/orders-blame/${pageNumber}`;
+  const response = await apiCall({ url: fetchURl });
+  return response;
+};

@@ -51,7 +51,7 @@ import { RiDeleteBin5Line } from 'react-icons/ri';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { FaUserLarge } from "react-icons/fa6";
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { Person } from '@/types/employeeType';
 import { userProfile, userToken } from '@/actions/auth';
 import { PromoteEmployee } from '@/actions/employee';
@@ -98,6 +98,7 @@ export function PeopleDataTable<
 
     // Detect screen size
     const isTablet = useMediaQuery('(max-width: 1024px)'); // Tablet screens
+    const router = useRouter()
   
     // Update column visibility based on screen size
     useEffect(() => {
@@ -294,7 +295,8 @@ export function PeopleDataTable<
                                                 <DropdownMenuContent align="end" className="w-40">
                                                     <DropdownMenuItem className="cursor-pointer" onClick={() => {
 
-                                                        handleFind(row.original.id);
+                                                        // handleFind(row.original.id);
+                                                        router.push(`/${role}/${type}s/${row.original.id}`)
                                                     }}>
                                                         <LuEye className="mr-2 h-4 w-4" />
                                                         View
