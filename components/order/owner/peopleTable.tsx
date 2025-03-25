@@ -10,7 +10,7 @@ import {
     getPaginationRowModel,
     useReactTable,
 } from '@tanstack/react-table';
-import { useMediaQuery } from 'usehooks-ts'; 
+import { useMediaQuery } from 'usehooks-ts';
 import {
     Table,
     TableBody,
@@ -52,7 +52,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { FaUserLarge } from "react-icons/fa6";
 import { usePathname, useRouter } from 'next/navigation';
-import { Person } from '@/types/employeeType';
+import { Pagination, Person } from '@/types/employeeType';
 import { userProfile, userToken } from '@/actions/auth';
 import { PromoteEmployee } from '@/actions/employee';
 import { toast } from 'sonner';
@@ -69,6 +69,11 @@ interface EmployeeDataTableProps<TData extends Person, TValue> {
     setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
     showChangeRoleModal: boolean;
     setShowChangeRoleModal: React.Dispatch<React.SetStateAction<boolean>>;
+    pagination: Pagination;
+    setPagination: React.Dispatch<React.SetStateAction<Pagination>>;
+    pageCount: number;
+    setRefreshTableToggle: React.Dispatch<React.SetStateAction<boolean>>;
+    refreshTableToggle: boolean
 
 }
 
@@ -85,7 +90,12 @@ export function PeopleDataTable<
     setShowPerson,
     setShowPassword,
     showChangeRoleModal,
-    setShowChangeRoleModal
+    setShowChangeRoleModal,
+    pagination,
+    setPagination,
+    pageCount,
+    setRefreshTableToggle,
+    refreshTableToggle
 }: EmployeeDataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
@@ -99,21 +109,21 @@ export function PeopleDataTable<
     // Detect screen size
     const isTablet = useMediaQuery('(max-width: 1024px)'); // Tablet screens
     const router = useRouter()
-  
+
     // Update column visibility based on screen size
     useEffect(() => {
-    if (isTablet) {
-        setColumnVisibility({
-            name: true,
-            email: false,
-            phoneNumber: true,
-            location: false,
-        });
-      } else {
-        // For desktop: Show all columns
-        setColumnVisibility({});
-      }
-    }, [ isTablet]);
+        if (isTablet) {
+            setColumnVisibility({
+                name: true,
+                email: false,
+                phoneNumber: true,
+                location: false,
+            });
+        } else {
+            // For desktop: Show all columns
+            setColumnVisibility({});
+        }
+    }, [isTablet]);
 
     const table = useReactTable({
         data,
@@ -124,9 +134,15 @@ export function PeopleDataTable<
         getFilteredRowModel: getFilteredRowModel(),
         state: {
             columnFilters,
-            columnVisibility
+            columnVisibility,
+            pagination
         },
         onColumnVisibilityChange: setColumnVisibility,
+        onPaginationChange: setPagination,
+        pageCount: pageCount,
+        autoResetPageIndex: false,
+        manualPagination: true
+
     });
 
     const changeRole = async () => {
@@ -390,7 +406,10 @@ export function PeopleDataTable<
                                         }
                                         size="sm"
                                         className={cn(table.getState().pagination.pageIndex === i && 'bg-[#060A87] hover:bg-[#060A87]')}
-                                        onClick={() => table.setPageIndex(i)}
+                                        onClick={() => {
+                                            table.setPageIndex(i)
+                                            setRefreshTableToggle(!refreshTableToggle)
+                                        }}
                                     >
                                         {i + 1}
                                     </Button>
@@ -402,7 +421,10 @@ export function PeopleDataTable<
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                                        onClick={() => {
+                                            setRefreshTableToggle(!refreshTableToggle)
+                                            table.setPageIndex(table.getPageCount() - 1)
+                                        }}
                                     >
                                         {table.getPageCount()}
                                     </Button>

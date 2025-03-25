@@ -27,6 +27,11 @@ export type PromoteDate = {
   role: "ADMIN"
 }
 
+export type Pagination = {
+  pageIndex: number,
+  pageSize: number
+}
+
 // {
 //   "id": "7f9a52b5-0554-11f0-83cb-0260a62aad58",
 //   "name": "Nathnael Atarsdaf",

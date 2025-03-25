@@ -5,7 +5,7 @@ import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
 import { employeeColumns } from '@/components/order/owner/peopleColumn';
 import { PeopleDataTable } from '@/components/order/owner/peopleTable';
 import { city } from '@/types/cities';
-import { Person, EmployeeLoginDetails, User } from '@/types/employeeType';
+import { Person, EmployeeLoginDetails, User, Pagination } from '@/types/employeeType';
 import { ColumnDef } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
@@ -42,6 +42,11 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
   const [showChangeRoleModal, setShowChangeRoleModal] = useState(false);
   const [refreshTableToggle, setRefreshTableToggle] = useState(false);
   const [personInfo, setPersonInfo] = useState<User>();
+  const [pagination, setPagination] = useState<Pagination>({
+    pageIndex: 0, //initial page index
+    pageSize: 10, //default page size
+  });
+  const [pageCount, setPageCount] = useState(1);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -49,10 +54,11 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
         const userData = await userProfile();
         const token = await userToken();
         if (userData && token) {
-          const response = await FetchEmployees(userData.id);
+          const response = await FetchEmployees(userData.id, pagination.pageIndex + 1);
           console.log({ response });
           const convertedEmployeeFormat = convertToEmployeesFormat(response.users);
           setEmployees(convertedEmployeeFormat);
+          setPageCount(response.totalPage)
         } else {
           throw new Error("userData or token not found")
         }
@@ -99,6 +105,10 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    console.log("999999999999999999999999", pagination)
+  }, [pagination])
 
 
   return (
@@ -148,6 +158,11 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           type="employee"
           showChangeRoleModal={showChangeRoleModal}
           setShowChangeRoleModal={setShowChangeRoleModal}
+          pagination={pagination}
+          setPagination={setPagination}
+          pageCount={pageCount}
+          setRefreshTableToggle={setRefreshTableToggle}
+          refreshTableToggle={refreshTableToggle}
         />
       </section>
     </section>

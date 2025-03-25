@@ -6,8 +6,8 @@ import { Order } from '@/types/orderType';
 // const BaseURL = 'http://localhost:3002';
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export const FetchEmployees = async (ownerId: string) => {
-  const fetchURl = `${BaseUrl}/users/${ownerId}/EMPLOYEE`;
+export const FetchEmployees = async (ownerId: string, pageNumber: number) => {
+  const fetchURl = `${BaseUrl}/users/${ownerId}/EMPLOYEE/${pageNumber}`;
   //   console.log(`fetchUrl`, fetchURl);
   const response = await apiCall({ url: fetchURl });
   console.log("the employees", response)
