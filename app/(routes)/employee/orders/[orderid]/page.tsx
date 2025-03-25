@@ -1,8 +1,11 @@
-import { FetchOrder } from '@/actions/order';
+'use client'; // Mark this component as a client component
+
+import { useEffect, useState } from 'react';
+import { use } from 'react'; // Import the `use` function
+import { FetchOrder, updateOrderStatus } from '@/actions/order';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@radix-ui/react-radio-group';
 import {
   ArrowLeft,
   FileText,
@@ -15,28 +18,81 @@ import {
 import { notFound } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
+import { userProfile } from '@/actions/auth';
+import { orderDetail } from '@/types/orderType';
+import { userType } from '@/types/user';
+import { toast } from '@/hooks/use-toast';
 
-export default async function OrderPage({
+export default function OrderPage({
   params,
 }: {
-  params: Promise<{ orderid: string }>
+  params: Promise<{ orderid: string }>;
 }) {
-  const { orderid } = await params
-  const id = orderid;
-  console.log(id);
+  // Unwrap the `params` Promise using `React.use()`
+  const { orderid } = use(params);
+  const [order, setOrder] = useState<orderDetail | null>(null);
+  const [user, setUser] = useState<userType | null>(null);
+  // const router = useRouter();
+  const [triggerState, setTriggerState] = useState<boolean>(false);
 
-  const response = await FetchOrder(id);
-  const order = response[0];
-  console.log(order);
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await FetchOrder(orderid);
+        const userData = await userProfile();
+        setUser(userData as userType);
+        setOrder(response.orderDetails);
+      } catch (error) {
+        console.error('Error fetching order:', error);
+        notFound();
+      }
+    };
 
-  if (!order) return notFound(); // Handles cases where the order isn't found
+    fetchData();
+  }, [orderid, triggerState]);
+
+  console.log('order:', order);
+
+  const handlestatus = async (id: string, status: string) => {
+    const data = {
+      trxCode: id,
+      status: status,
+    };
+    try {
+      const response = await updateOrderStatus({
+        userid: user!.id,
+        data: data,
+      });
+      console.log('response of change:', response);
+      toast({
+        title: 'Status Changed Successfully',
+        description: `Transaction ${id} changed to ${status} succesfully `,
+        variant: `success`,
+      });
+
+      setTriggerState(!triggerState);
+    } catch (error) {
+      console.error('Error updating order status:', error);
+      toast({
+        title: 'Error',
+        description: 'Error while updating Status ',
+        variant: `destructive`,
+      });
+    }
+
+    console.log('status data', data);
+  };
+
+  if (!order) {
+    return <div>Loading...</div>; // Or some loading spinner
+  }
 
   return (
     <section className="w-full h-dvh px-8 py-4 bg-[#F1F2F8]">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-indigo-900">
-            Welcome Back, Owner!
+            Welcome Back, {user?.name}!
           </h1>
           <p className="text-gray-600">Here&apos;s Orders Report</p>
         </div>
@@ -44,7 +100,7 @@ export default async function OrderPage({
         <div className="bg-white rounded-lg p-6 shadow-sm">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center justify-center">
-              <Link href={`/owner/orders`}>
+              <Link href={`/employee/orders`}>
                 <Button
                   variant="ghost"
                   className="flex items-center gap-2 w-fit h-fit"
@@ -53,7 +109,9 @@ export default async function OrderPage({
                 </Button>
               </Link>
 
-              <span className="text-xl font-bold">{order.transactionId}</span>
+              <span className="text-xl font-bold">
+                {order.order.transactionCode}
+              </span>
             </div>
 
             <Button className="bg-indigo-900 hover:bg-indigo-800">
@@ -74,16 +132,22 @@ export default async function OrderPage({
                 <div className="space-y-4">
                   <div>
                     <p className="text-sm font-medium">Description</p>
-                    <p className="text-sm text-gray-500">{order.description}</p>
+                    <p className="text-sm text-gray-500">
+                      {order.item.description}
+                    </p>
                   </div>
                   <div className="flex justify-between">
                     <div>
                       <p className="text-sm font-medium">Weight</p>
-                      <p className="text-sm text-gray-500">{order.weight}kg</p>
+                      <p className="text-sm text-gray-500">
+                        {order.item.weight}kg
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Quantity</p>
-                      <p className="text-sm text-gray-500">{order.quantity}</p>
+                      <p className="text-sm text-gray-500">
+                        {order.item.quantity}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -104,13 +168,13 @@ export default async function OrderPage({
                     <div>
                       <p className="text-sm font-medium">Transaction Number</p>
                       <p className="text-sm text-gray-500">
-                        {order.transactionId}
+                        {order.order.transactionCode}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Order Date</p>
                       <p className="text-sm text-gray-500">
-                        {formatDate(order.createdAt)}
+                        {formatDate(order.order.createdAT)}
                       </p>
                     </div>
                   </div>
@@ -118,13 +182,13 @@ export default async function OrderPage({
                     <div>
                       <p className="text-sm font-medium">Total Price</p>
                       <p className="text-sm text-gray-500">
-                        {order.Price} birr
+                        {order.item.totalPrice} birr
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Payment Method</p>
                       <p className="text-sm text-gray-500">
-                        {order.paymentMethod}
+                        {order.order.payment === 1 ? 'Now' : 'On Delivery'}
                       </p>
                     </div>
                   </div>
@@ -141,20 +205,50 @@ export default async function OrderPage({
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <RadioGroup className="space-y-3">
+                <form className="space-y-3">
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="pending" id="pending" />
+                    <input
+                      title="pending"
+                      type="radio"
+                      id="pending"
+                      name="status"
+                      value="Pending"
+                      checked={order.order.status === 'Pending'}
+                      onChange={() =>
+                        handlestatus(order.order.transactionCode, 'Pending')
+                      }
+                    />
                     <Label htmlFor="pending">Pending</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="delivered" id="delivered" />
+                    <input
+                      title="delivered"
+                      type="radio"
+                      id="delivered"
+                      name="status"
+                      value="Delivered"
+                      checked={order.order.status === 'Delivered'}
+                      onChange={() =>
+                        handlestatus(order.order.transactionCode, 'Delivered')
+                      }
+                    />
                     <Label htmlFor="delivered">Delivered</Label>
                   </div>
                   <div className="flex items-center space-x-2">
-                    <RadioGroupItem value="pickedup" id="pickedup" />
+                    <input
+                      title="Picked Up"
+                      type="radio"
+                      id="pickedup"
+                      name="status"
+                      value="Picked Up"
+                      checked={order.order.status === 'Picked up'}
+                      onChange={() =>
+                        handlestatus(order.order.transactionCode, 'Picked up')
+                      }
+                    />
                     <Label htmlFor="pickedup">Picked Up</Label>
                   </div>
-                </RadioGroup>
+                </form>
               </CardContent>
             </Card>
 
@@ -172,13 +266,13 @@ export default async function OrderPage({
                     <div>
                       <p className="text-sm font-medium">Full Name</p>
                       <p className="text-sm text-gray-500">
-                        {order.senderName}
+                        {order.sender.name}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Phone Number</p>
                       <p className="text-sm text-gray-500">
-                        {order.senderPhoneNumber}
+                        {order.sender.phone}
                       </p>
                     </div>
                   </div>
@@ -186,13 +280,13 @@ export default async function OrderPage({
                     <div>
                       <p className="text-sm font-medium">Address</p>
                       <p className="text-sm text-gray-500">
-                        {order.senderAddress}
+                        {order.sender.address}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Email</p>
                       <p className="text-sm text-gray-500">
-                        {order.senderEmail}
+                        {order.sender.email}
                       </p>
                     </div>
                   </div>
@@ -214,13 +308,13 @@ export default async function OrderPage({
                     <div>
                       <p className="text-sm font-medium">Full Name</p>
                       <p className="text-sm text-gray-500">
-                        {order.reciverName}
+                        {order.receiver.name}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Phone Number</p>
                       <p className="text-sm text-gray-500">
-                        {order.reciverPhoneNumber}
+                        {order.receiver.phone}
                       </p>
                     </div>
                   </div>
@@ -228,13 +322,13 @@ export default async function OrderPage({
                     <div>
                       <p className="text-sm font-medium">Address</p>
                       <p className="text-sm text-gray-500">
-                        {order.reciverAddress}
+                        {order.receiver.address}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Email</p>
                       <p className="text-sm text-gray-500">
-                        {order.reciverEmail}
+                        {order.receiver.email}
                       </p>
                     </div>
                   </div>
@@ -255,22 +349,28 @@ export default async function OrderPage({
                   <div className="flex justify-between">
                     <div>
                       <p className="text-sm font-medium">Full Name</p>
-                      <p className="text-sm text-gray-500">{order.addedBy}</p>
+                      <p className="text-sm text-gray-500">
+                        {order.employeeInfo.name}
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Phone Number</p>
-                      <p className="text-sm text-gray-500">1</p>
+                      <p className="text-sm text-gray-500">
+                        {order.employeeInfo.phone}
+                      </p>
                     </div>
                   </div>
                   <div className="flex justify-between">
                     <div>
                       <p className="text-sm font-medium">Address</p>
-                      <p className="text-sm text-gray-500">Addis Ababa</p>
+                      <p className="text-sm text-gray-500">
+                        {order.employeeInfo.location}
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Email</p>
                       <p className="text-sm text-gray-500">
-                        jhonmydoe@gmail.com
+                        {order.employeeInfo.email}
                       </p>
                     </div>
                   </div>

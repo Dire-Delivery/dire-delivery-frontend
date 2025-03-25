@@ -15,18 +15,22 @@ import {
 import { notFound } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 import Link from 'next/link';
+import { userProfile } from '@/actions/auth';
 
 export default async function OrderPage({
   params,
 }: {
-  params: Promise<{ orderid: string }>
+  params: Promise<{ orderid: string }>;
 }) {
-  const { orderid } = await params
+  const { orderid } = await params;
   const id = orderid;
   console.log(id);
 
   const response = await FetchOrder(id);
-  const order = response[0];
+  const user = await userProfile();
+  console.log('user:', user);
+
+  const order = response.orderDetails;
   console.log(order);
 
   if (!order) return notFound(); // Handles cases where the order isn't found
@@ -44,7 +48,7 @@ export default async function OrderPage({
         <div className="bg-white rounded-lg p-6 shadow-sm">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center justify-center">
-              <Link href={`/owner/orders`}>
+              <Link href={`/admin/orders`}>
                 <Button
                   variant="ghost"
                   className="flex items-center gap-2 w-fit h-fit"
@@ -53,7 +57,9 @@ export default async function OrderPage({
                 </Button>
               </Link>
 
-              <span className="text-xl font-bold">{order.transactionId}</span>
+              <span className="text-xl font-bold">
+                {order.order.transactionCode}
+              </span>
             </div>
 
             <Button className="bg-indigo-900 hover:bg-indigo-800">
@@ -74,16 +80,22 @@ export default async function OrderPage({
                 <div className="space-y-4">
                   <div>
                     <p className="text-sm font-medium">Description</p>
-                    <p className="text-sm text-gray-500">{order.description}</p>
+                    <p className="text-sm text-gray-500">
+                      {order.item.description}
+                    </p>
                   </div>
                   <div className="flex justify-between">
                     <div>
                       <p className="text-sm font-medium">Weight</p>
-                      <p className="text-sm text-gray-500">{order.weight}kg</p>
+                      <p className="text-sm text-gray-500">
+                        {order.item.weight}kg
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Quantity</p>
-                      <p className="text-sm text-gray-500">{order.quantity}</p>
+                      <p className="text-sm text-gray-500">
+                        {order.item.quantity}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -104,13 +116,13 @@ export default async function OrderPage({
                     <div>
                       <p className="text-sm font-medium">Transaction Number</p>
                       <p className="text-sm text-gray-500">
-                        {order.transactionId}
+                        {order.order.transactionCode}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Order Date</p>
                       <p className="text-sm text-gray-500">
-                        {formatDate(order.createdAt)}
+                        {formatDate(order.order.createdAT)}
                       </p>
                     </div>
                   </div>
@@ -118,13 +130,13 @@ export default async function OrderPage({
                     <div>
                       <p className="text-sm font-medium">Total Price</p>
                       <p className="text-sm text-gray-500">
-                        {order.Price} birr
+                        {order.item.totalPrice} birr
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Payment Method</p>
                       <p className="text-sm text-gray-500">
-                        {order.paymentMethod}
+                        {order.order.payment === 1 ? 'Now' : 'On Delivery'}
                       </p>
                     </div>
                   </div>
@@ -172,13 +184,13 @@ export default async function OrderPage({
                     <div>
                       <p className="text-sm font-medium">Full Name</p>
                       <p className="text-sm text-gray-500">
-                        {order.senderName}
+                        {order.sender.name}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Phone Number</p>
                       <p className="text-sm text-gray-500">
-                        {order.senderPhoneNumber}
+                        {order.sender.phone}
                       </p>
                     </div>
                   </div>
@@ -186,13 +198,13 @@ export default async function OrderPage({
                     <div>
                       <p className="text-sm font-medium">Address</p>
                       <p className="text-sm text-gray-500">
-                        {order.senderAddress}
+                        {order.sender.address}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Email</p>
                       <p className="text-sm text-gray-500">
-                        {order.senderEmail}
+                        {order.sender.email}
                       </p>
                     </div>
                   </div>
@@ -214,13 +226,13 @@ export default async function OrderPage({
                     <div>
                       <p className="text-sm font-medium">Full Name</p>
                       <p className="text-sm text-gray-500">
-                        {order.reciverName}
+                        {order.receiver.name}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Phone Number</p>
                       <p className="text-sm text-gray-500">
-                        {order.reciverPhoneNumber}
+                        {order.receiver.phone}
                       </p>
                     </div>
                   </div>
@@ -228,13 +240,13 @@ export default async function OrderPage({
                     <div>
                       <p className="text-sm font-medium">Address</p>
                       <p className="text-sm text-gray-500">
-                        {order.reciverAddress}
+                        {order.receiver.address}
                       </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Email</p>
                       <p className="text-sm text-gray-500">
-                        {order.reciverEmail}
+                        {order.receiver.email}
                       </p>
                     </div>
                   </div>
@@ -255,22 +267,28 @@ export default async function OrderPage({
                   <div className="flex justify-between">
                     <div>
                       <p className="text-sm font-medium">Full Name</p>
-                      <p className="text-sm text-gray-500">{order.addedBy}</p>
+                      <p className="text-sm text-gray-500">
+                        {order.employeeInfo.name}
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Phone Number</p>
-                      <p className="text-sm text-gray-500">1</p>
+                      <p className="text-sm text-gray-500">
+                        {order.employeeInfo.phone}
+                      </p>
                     </div>
                   </div>
                   <div className="flex justify-between">
                     <div>
                       <p className="text-sm font-medium">Address</p>
-                      <p className="text-sm text-gray-500">Addis Ababa</p>
+                      <p className="text-sm text-gray-500">
+                        {order.employeeInfo.location}
+                      </p>
                     </div>
                     <div>
                       <p className="text-sm font-medium">Email</p>
                       <p className="text-sm text-gray-500">
-                        jhonmydoe@gmail.com
+                        {order.employeeInfo.email}
                       </p>
                     </div>
                   </div>

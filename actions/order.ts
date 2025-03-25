@@ -1,10 +1,8 @@
 import apiCall from '@/base-api/api';
 import { orderTrack } from '@/types/orderTrack';
-import { endPoints } from '@/data/endPoints';
-import { Order } from '@/types/orderType';
+import { orderStatus, sendOrderType } from '@/types/orderType';
 
 const BaseURL = process.env.NEXT_PUBLIC_API_URL;
-const url = `${BaseURL}/${endPoints.anOrder}`;
 
 export const TrackOrder = async ({ id }: orderTrack) => {
   console.log('id:', id);
@@ -14,10 +12,18 @@ export const TrackOrder = async ({ id }: orderTrack) => {
   return response;
 };
 
-export const FetchOrders = async () => {
-  const fetchURl = `${url}`;
+export const FetchOrders = async ({
+  userid,
+  pagenumber,
+}: {
+  userid: string;
+  pagenumber: number;
+}) => {
+  const fetchURl = `${BaseURL}/orders/${userid}/all-orders/${pagenumber}`;
   console.log(`fetchUrl`, fetchURl);
   const response = await apiCall({ url: fetchURl });
+  console.log('serverrespose:', response);
+
   return response;
 };
 
@@ -28,36 +34,67 @@ export const FetchOrder = async (id: string) => {
   const response = await apiCall({ url: fetchURl });
   return response;
 };
+export const FetchStatusOrder = async ({
+  status,
+  userid,
+  pagenumber,
+}: {
+  userid: string;
+  status: string;
+  pagenumber: number;
+}) => {
+  console.log('status:', status);
+  const fetchUrl = `${BaseURL}/orders/${userid}/filter-order-status/${status}/${pagenumber}`;
+  const response = await apiCall({ url: fetchUrl });
+  return response;
+};
 
-export const AddOrder = async (data: Order) => {
+export const AddOrder = async ({
+  data,
+  userid,
+}: {
+  userid: string;
+  data: sendOrderType;
+}) => {
   console.log('addingData:', data);
-  const fetchURl = `${url}`;
+  const fetchURl = `${BaseURL}/orders/${userid}/create-order`;
   const response = await apiCall({ url: fetchURl, method: 'POST', data: data });
   console.log('postResponse:', response);
   return response;
 };
 
-export const DeleteOrder = async (id: string) => {
-  console.log('Deleting', id);
-  const fetchURl = `${url}/${id}`;
-  console.log('Delete URL', fetchURl);
+export const DeleteOrder = async ({
+  userid,
+  trxCode,
+}: {
+  userid: string;
+  trxCode: string;
+}) => {
+  const endPoint = `${BaseURL}/orders/${userid}/delete-order/${trxCode}`;
+  console.log('delete:', endPoint);
+  console.log('trxCode:', trxCode);
 
-  try {
-    const response = await apiCall({ url: fetchURl, method: 'DELETE' });
+  const response = await apiCall({
+    url: endPoint,
+    method: 'DELETE',
+  });
+  console.log('serverResponse:', response);
+  return response;
+};
 
-    // Handle the response based on its type
-    if (typeof response === 'string') {
-      console.log('Delete response (non-JSON):', response);
-      return { success: true, message: response };
-    } else {
-      console.log('Delete response (JSON):', response);
-      return response;
-    }
-  } catch (error) {
-    console.error('Error deleting order:', error);
-    return {
-      success: false,
-      message: 'An error occurred while deleting the order.',
-    };
-  }
+export const updateOrderStatus = async ({
+  userid,
+  data,
+}: {
+  userid: string;
+  data: orderStatus;
+}) => {
+  const endPoint = `${BaseURL}/orders/${userid}/update-status`;
+  console.log('data:', data);
+  console.log('userid:', userid);
+  console.log('endpoint:', endPoint);
+
+  const response = await apiCall({ url: endPoint, method: 'POST', data: data });
+  console.log('serverResponse:', response);
+  return response;
 };

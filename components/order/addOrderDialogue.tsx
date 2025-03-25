@@ -12,14 +12,12 @@ import {
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { addFormSchema } from '@/types/order';
 import { useState } from 'react';
-import { Order } from '@/types/orderType';
-import { formatDate } from '@/lib/utils';
-import { generateTransactionId } from '@/lib/utils';
-import { v4 as uuidv4 } from 'uuid';
+import { Order, sendOrderType } from '@/types/orderType';
 import ConfirmModal from './confirmModal';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { AddOrder } from '@/actions/order';
+import { toast } from '@/hooks/use-toast';
 type props = {
   cities: city[];
   showNewOrderModal: boolean;
@@ -28,6 +26,9 @@ type props = {
   setShowConfirmationModal: React.Dispatch<React.SetStateAction<boolean>>;
   showRecipet: boolean;
   setShowRecipt: React.Dispatch<React.SetStateAction<boolean>>;
+  userId: string;
+  triggerstate: boolean;
+  SetTriggerState: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function AddOrderDialogue({
@@ -38,44 +39,70 @@ export default function AddOrderDialogue({
   setShowConfirmationModal,
   showRecipet,
   setShowRecipt,
+  userId,
 }: props) {
-  const [currentOrder, setCurrentOrder] = useState<Order>({
-    id: '',
-    createdAt: '',
-    addedBy: 'Eyosi',
+  const [currentOrder, setCurrentOrder] = useState<sendOrderType>({
     senderName: '',
-    reciverName: '',
-    description: '',
     senderAddress: '',
-    reciverAddress: '',
-    paymentMethod: undefined,
     senderPhoneNumber: '',
-    reciverPhoneNumber: '',
     senderEmail: '',
+    reciverName: '',
+    reciverAddress: '',
+    reciverPhoneNumber: '',
     reciverEmail: '',
     weight: 0,
+    description: '',
     quantity: 1,
-    transactionId: '',
-    status: '',
+    paymentMethod: '',
   });
   const [recieptOrder, setReipetOrder] = useState<Order>({
     id: '',
-    createdAt: '',
-    addedBy: 'Eyosi',
-    senderName: '',
-    reciverName: '',
-    description: '',
-    senderAddress: '',
-    reciverAddress: '',
-    paymentMethod: undefined,
-    senderPhoneNumber: '',
-    reciverPhoneNumber: '',
-    senderEmail: '',
-    reciverEmail: '',
-    weight: 0,
-    quantity: 1,
-    transactionId: '',
+    senderId: '',
+    receiverId: '',
+    itemId: '',
+    isPaid: 0,
     status: '',
+    createdAt: '',
+    updatedAt: '',
+    orderDetails: {
+      sender: {
+        name: '',
+        phone: '',
+        address: '',
+        email: '',
+      },
+      receiver: {
+        name: '',
+        phone: '',
+        address: '',
+        email: '',
+      },
+      status: [
+        {
+          status: '',
+          date: '',
+          location: '',
+        },
+      ],
+      item: {
+        description: '',
+        weight: 0,
+        quantity: 0,
+        totalPrice: 0,
+      },
+      order: {
+        payment: 0,
+        transactionCode: '',
+        status: '',
+        createdAT: '',
+      },
+      employeeInfo: {
+        name: '',
+        email: '',
+        phone: '',
+        location: '',
+      },
+    },
   });
   const {
     register,
@@ -87,31 +114,13 @@ export default function AddOrderDialogue({
   } = useForm<z.infer<typeof addFormSchema>>({
     resolver: zodResolver(addFormSchema),
   });
-  const priceCalculator = (weight: number) => {
-    const basePrice = 200;
-    if (weight <= 1 && weight > 0) {
-      return basePrice;
-    } else {
-      return basePrice * weight;
-    }
-  };
 
   const onSubmit: SubmitHandler<z.infer<typeof addFormSchema>> = async (
     data
   ) => {
     console.log('Form data submitted:', data); // Log form data
-    const totalPrice = priceCalculator(data.weight);
-    const date = new Date();
-    const randomTransaction = generateTransactionId();
-    const randomId = uuidv4();
     const orderData = {
       ...data,
-      id: randomId,
-      createdAt: formatDate(date.toLocaleDateString()),
-      transactionId: randomTransaction,
-      status: 'Pending',
-      Price: totalPrice,
-      addedBy: 'Eyosi',
     };
     console.log('Order data:', orderData); // Log order data
     setCurrentOrder(orderData);
@@ -120,54 +129,54 @@ export default function AddOrderDialogue({
   };
   const submitting = async () => {
     try {
-      const response = await AddOrder(currentOrder);
+      const response = await AddOrder({ userid: userId, data: currentOrder });
       console.log('responseFromadd', response);
-      setReipetOrder(currentOrder);
+      setReipetOrder(response);
       setShowConfirmationModal(false);
       setShowRecipt(true);
       setCurrentOrder({
-        id: '',
-        createdAt: '',
-        addedBy: 'Eyosi',
         senderName: '',
-        reciverName: '',
-        description: '',
         senderAddress: '',
-        reciverAddress: '',
-        paymentMethod: undefined,
         senderPhoneNumber: '',
-        reciverPhoneNumber: '',
         senderEmail: '',
+        reciverName: '',
+        reciverAddress: '',
+        reciverPhoneNumber: '',
         reciverEmail: '',
         weight: 0,
+        description: '',
         quantity: 1,
-        transactionId: '',
-        status: '',
+        paymentMethod: '',
+      });
+      toast({
+        title: 'added successfully',
+        description: 'Order added successfully',
+        variant: 'success',
       });
       reset();
     } catch (error) {
       console.log(error);
+      toast({
+        title: 'Error adding Order',
+        description: 'Error while adding order',
+        variant: 'destructive',
+      });
     }
   };
   const handleClose = () => {
     setCurrentOrder({
-      id: '',
-      createdAt: '',
-      addedBy: 'Eyosi',
       senderName: '',
-      reciverName: '',
-      description: '',
       senderAddress: '',
-      reciverAddress: '',
-      paymentMethod: undefined,
       senderPhoneNumber: '',
-      reciverPhoneNumber: '',
       senderEmail: '',
+      reciverName: '',
+      reciverAddress: '',
+      reciverPhoneNumber: '',
       reciverEmail: '',
       weight: 0,
+      description: '',
       quantity: 1,
-      transactionId: '',
-      status: '',
+      paymentMethod: '',
     });
     setShowNewOrderModal(false);
     reset();
@@ -178,8 +187,8 @@ export default function AddOrderDialogue({
   return (
     <>
       {showNewOrderModal && (
-        <div className="fixed inset-0 bg-[#060A87] bg-opacity-30 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full h-fit max-w-2xl">
+        <div className="fixed inset-0 bg-[#060A87] bg-opacity-30 flex items-center justify-center z-50 p-2 px-6 overflow-y-scroll">
+          <div className="bg-white rounded-lg mt-96 md:m-auto p-3 lg:p-6 w-full h-fit max-w-2xl">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Add New Order</h2>
               <button onClick={() => handleClose()} title="Close">
@@ -192,8 +201,8 @@ export default function AddOrderDialogue({
                   <h1 className="text-lg  text-[#060a87] font-bold border-b pb-2">
                     Item Information
                   </h1>
-                  <div className="grid grid-cols-5 gap-6 mt-2 px-2">
-                    <div className="col-span-3">
+                  <div className="grid md:grid-cols-5 gap-1 md:gap-6 mt-2 px-2">
+                    <div className="md:col-span-3">
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Object Description
                       </label>
@@ -250,7 +259,7 @@ export default function AddOrderDialogue({
                   <h3 className="text-lg text-[#060a87] font-bold border-b pb-2">
                     Sender Information
                   </h3>
-                  <div className="grid grid-cols-2 gap-4 mt-2 px-2">
+                  <div className="grid md:grid-cols-2 gap-1 md:gap-4 mt-2 px-2">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Name
@@ -335,7 +344,7 @@ export default function AddOrderDialogue({
                   <h3 className="text-lg  text-[#060a87] font-bold border-b pb-2 mt-2">
                     Receiver Information
                   </h3>
-                  <div className="grid grid-cols-2 gap-4 mt-2 px-2">
+                  <div className="grid md:grid-cols-2 gap-1 md:gap-4 mt-2 px-2">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">
                         Name
@@ -445,26 +454,7 @@ export default function AddOrderDialogue({
                     )}
                   </div>
                 </div>
-                <div className="h-12 py-1.5 justify-start items-center gap-1.5 inline-flex">
-                  <div className="text-[#060a87] text-2xl font-bold leading-tight">
-                    Total:
-                  </div>
-                  <div className="w-[280px] h-9 justify-start items-center gap-2 flex">
-                    <div className="grow shrink basis-0 flex-col justify-start items-start gap-1.5 inline-flex">
-                      <div className="self-stretch pl-3 pr-14 py-2 rounded-md border border-slate-200 justify-start items-center inline-flex">
-                        <div className="grow shrink basis-0 px-1.5 flex-col justify-end items-start gap-2.5 inline-flex">
-                          <div className="text-black text-lg font-bold leading-[18px]">
-                            {priceCalculator(watch('weight') || 0).toFixed(2)}{' '}
-                            birr
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
                 <div className="flex justify-end gap-4 mt-2">
-                  <div></div>
-
                   <button
                     type="button"
                     onClick={() => setShowNewOrderModal(false)}
@@ -486,8 +476,8 @@ export default function AddOrderDialogue({
       )}
 
       {showConfirmationModal && (
-        <div className="fixed inset-0 bg-[#060A87]/20 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 w-full max-w-2xl">
+        <div className="fixed inset-0 bg-[#060A87]/20 flex items-center justify-center z-50 px-4 py-4 overflow-y-scroll">
+          <div className="bg-white rounded-lg p-6 mt-28 md:m-auto w-full max-w-2xl">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Order Summary</h2>
               <button
@@ -498,7 +488,7 @@ export default function AddOrderDialogue({
               </button>
             </div>
 
-            <div className="border px-3 py-5 grid grid-cols-2 gap-10">
+            <div className="border px-3 py-5 grid md:grid-cols-2 gap-10">
               <div className="h-full">
                 <h3 className="font-bold text-lg mb-2 pb-2 border-b-2">
                   Item Details
@@ -557,25 +547,9 @@ export default function AddOrderDialogue({
                   </p>
                 </div>
               </div>
-
-              <div className="h-full">
-                <h3 className="font-bold text-lg mb-2 pb-2 border-b-2">
-                  Payment Detail
-                </h3>
-                <div className="px-3 flex flex-col gap-1">
-                  <p>
-                    <strong>Transaction Id:</strong>{' '}
-                    {currentOrder.transactionId}
-                  </p>
-                  <p>
-                    <strong>Total Price:</strong>{' '}
-                    {priceCalculator(currentOrder.weight!).toFixed(2)} birr
-                  </p>
-                </div>
-              </div>
             </div>
 
-            <div className="flex justify-end gap-2">
+            <div className="flex justify-end mt-5 gap-2">
               <button
                 onClick={() => setShowConfirmationModal(false)}
                 className="px-4 py-2 border rounded-lg hover:bg-gray-50"
@@ -595,7 +569,7 @@ export default function AddOrderDialogue({
 
       {showRecipet && (
         <ConfirmModal
-          currentOrder={{ ...recieptOrder, id: uuidv4() }}
+          currentOrder={recieptOrder}
           setShowRecipt={setShowRecipt}
         />
       )}

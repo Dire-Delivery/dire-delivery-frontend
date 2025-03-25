@@ -7,8 +7,8 @@ import { getStatusColor } from '@/components/trackorder/factories';
 
 export const columns: ColumnDef<Order>[] = [
   {
-    accessorKey: 'transactionId',
-    header: 'TransactionId',
+    accessorKey: 'transactionCode',
+    header: 'TransactionCode',
   },
   {
     accessorKey: 'senderName',
@@ -42,9 +42,7 @@ export const columns: ColumnDef<Order>[] = [
     accessorKey: 'status',
     header: 'Status',
     cell: ({ row }) => {
-      const formatted = getStatusColor(
-        (row.getValue('status') as string).toLowerCase()
-      );
+      const formatted = getStatusColor(row.getValue('status') as string);
       return (
         <div
           className={`w-20 h-fit rounded-xl flex items-center justify-center z-10 ${formatted}`}

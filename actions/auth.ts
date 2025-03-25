@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function setCookies(data: any, expiration = 60 * 60 * 24 * 1000) {
   const cookieStore = await cookies();
 

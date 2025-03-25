@@ -9,7 +9,7 @@ export default function handlePrint(order: Order): void {
   printWindow.document.write(`
       <html>
         <head>
-          <title>Order Ticket - ${order.transactionId}</title>
+          <title>Order Ticket - ${order.orderDetails.order.transactionCode}</title>
           <style>
             body { font-family: Arial, sans-serif; padding: 20px; }
             .header { text-align: center; margin-bottom: 20px; }
@@ -21,20 +21,20 @@ export default function handlePrint(order: Order): void {
         <body>
           <div class="header">
             <h1>Dire Delivery</h1>
-            <h2>Order Ticket - ${order.transactionId}</h2>
+            <h2>Order Ticket - ${order.orderDetails.order.transactionCode}</h2>
           </div>
           <div class="details">
-            <div class="detail-row"><strong>Date:</strong> ${order.createdAt}</div>
-            <div class="detail-row"><strong>From:</strong> ${order.senderName}</div>
-            <div class="detail-row"><strong>Address:</strong> ${order.senderAddress}</div>
-            <div class="detail-row"><strong>To:</strong> ${order.reciverName}</div>
-            <div class="detail-row"><strong>Address:</strong> ${order.reciverAddress}</div>
-            <div class="detail-row"><strong>Description:</strong> ${order.description}</div>
-            <div class="detail-row"><strong>Weight:</strong> ${order.weight}kg</div>
-            <div class="detail-row"><strong>Quantity:</strong> ${order.quantity}</div>
-            <div class="detail-row"><strong>Total Price:</strong> $${order.Price}</div>
-            <div class="detail-row"><strong>Payment Method:</strong> ${order.paymentMethod}</div>
-            <div class="detail-row"><strong>Status:</strong> ${order.status}</div>
+            <div class="detail-row"><strong>Date:</strong> ${order.orderDetails.order.createdAT}</div>
+            <div class="detail-row"><strong>From:</strong> ${order.orderDetails.sender.name}</div>
+            <div class="detail-row"><strong>Address:</strong> ${order.orderDetails.sender.address}</div>
+            <div class="detail-row"><strong>To:</strong> ${order.orderDetails.receiver.name}</div>
+            <div class="detail-row"><strong>Address:</strong> ${order.orderDetails.receiver.address}</div>
+            <div class="detail-row"><strong>Description:</strong> ${order.orderDetails.item.description}</div>
+            <div class="detail-row"><strong>Weight:</strong> ${order.orderDetails.item.weight}kg</div>
+            <div class="detail-row"><strong>Quantity:</strong> ${order.orderDetails.item.quantity}</div>
+            <div class="detail-row"><strong>Total Price:</strong> $${order.orderDetails.item.totalPrice}</div>
+            <div class="detail-row"><strong>Payment Method:</strong> ${order.orderDetails.order.payment}</div>
+            <div class="detail-row"><strong>Status:</strong> ${order.orderDetails.order.status}</div>
           </div>
           <div class="footer">
             <p>Thank you for choosing Dire Delivery!</p>
