@@ -5,7 +5,7 @@ import type React from 'react';
 import { useState, useEffect } from 'react';
 import { Pencil } from 'lucide-react';
 import { addCity, deleteCity, fetchCity } from '@/actions/cities';
-import { city, cityaddFormSchema } from '@/types/cities';
+import { city, cityaddFormSchema, PriceInfoType } from '@/types/cities';
 import { CityDataTable } from './cityTable';
 import { changePrice, fetchPrice } from '@/actions/price';
 // import { price } from '@/types/price';
@@ -23,7 +23,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { price } from '@/types/price';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toast } from '@/hooks/use-toast';
@@ -47,41 +46,36 @@ export default function PriceCitySettings({
   const [calculatedPrice, setCalculatedPrice] = useState('0.00 birr');
   const [cities, setCities] = useState<city[]>([]);
   const [price, setPrice] = useState<number>();
+  const [constatns, setconstants] = useState<PriceInfoType>();
   const [editPrice, setEditPrice] = useState<boolean>(false);
   const [newPrice, setNewPrice] = useState<number>(0);
   const [confirmModal, setConfirmModal] = useState<boolean>(false);
   const [user, setUser] = useState<userType | null>(null);
 
   useEffect(() => {
-    const fetchCities = async () => {
+    const fetchPriceandCities = async () => {
       const decoded = await userProfile();
       const user = decoded as userType;
       setUser(user);
 
       try {
         const response = await fetchCity();
-        console.log('cities:', response.locations);
         setCities(response.locations);
       } catch (error) {
         console.log(error);
       }
-    };
 
-    fetchCities();
-  }, [triggerState]);
-
-  useEffect(() => {
-    const fetchaPrice = async () => {
       try {
         const response = await fetchPrice();
-        console.log('price:', response);
-        setPrice(response.item.basePrice);
+        setconstants(response);
+        setPrice(response.price);
         setNewPrice(price!);
       } catch (error) {
         console.log(error);
       }
     };
-    fetchaPrice();
+
+    fetchPriceandCities();
   }, [triggerState, price]);
 
   const {
@@ -119,9 +113,6 @@ export default function PriceCitySettings({
       console.log(error);
     }
   };
-
-  console.log('priceState:', price);
-  console.log('cities:', cities);
 
   const priceCalculator = (weight: number) => {
     const basePrice = price;
@@ -164,12 +155,14 @@ export default function PriceCitySettings({
   const handlePriceChange = async () => {
     console.log('newPrice:', newPrice);
     const newPriceSet = {
-      item: {
-        basePrice: newPrice,
-      },
+      price: newPrice,
     };
     try {
-      const response = await changePrice(newPriceSet as price);
+      const response = await changePrice({
+        data: newPriceSet,
+        userid: user!.id,
+        constants: constatns!.id,
+      });
       console.log('response:', response);
       setConfirmModal(false);
       setEditPrice(false);
@@ -346,7 +339,7 @@ export default function PriceCitySettings({
                     </p>
                   )}
                 </div>
-                <div className="flex justify-end">
+                <div className="flex justify-end mt-2">
                   <Button
                     type="submit"
                     className="primary-button bg-[#0a1172] p-2 rounded-sm px-4 text-white"

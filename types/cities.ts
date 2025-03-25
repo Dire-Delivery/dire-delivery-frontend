@@ -11,7 +11,7 @@ export const cityaddFormSchema = z.object({
 });
 // export type addFormSchema = z.infer<typeof formSchema>;
 
-export type PriceInfo = {
+export type PriceInfoType = {
   id: number;
   price: number;
   supportTel: string;
@@ -23,6 +23,6 @@ export type Location = {
 };
 
 export type constants = {
-  price: PriceInfo;
+  price: PriceInfoType;
   locations: Location[];
 };
