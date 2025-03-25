@@ -30,6 +30,7 @@ import { useState } from 'react';
 import { EmployeeLoginDetails } from '@/types/employeeType';
 import { useRouter } from 'next/navigation';
 import { useMediaQuery } from 'usehooks-ts';
+import { cn } from '@/lib/utils';
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
@@ -104,13 +105,22 @@ export default function AddEmployeeDialogue({
   };
 
   const handleCopy = async () => {
+    const copyText = `Email: ${newEmployeeLoginDetails.email} \nPassword: ${newEmployeeLoginDetails.password}`;
+  
     try {
-      const copyText = `Email: ${newEmployeeLoginDetails.email} \nPassword: ${newEmployeeLoginDetails.password}`
       await navigator.clipboard.writeText(copyText);
       toast.success("Successfully copied to clipboard");
-
     } catch (err) {
-      console.error("Failed to copy:", err);
+  
+      // Fallback method for older mobile browsers
+      const textArea = document.createElement("textarea");
+      textArea.value = copyText;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand("copy"); // Deprecated but still works as a fallback
+      document.body.removeChild(textArea);
+  
+      toast.success("Copied to clipboard");
     }
   };
 
@@ -210,20 +220,20 @@ export default function AddEmployeeDialogue({
 
       {showConfirmationModal &&
         <div className="fixed inset-0 bg-[#060A87] bg-opacity-30 flex items-center justify-center z-50">
-          <Card className='py-10 px-32 gap-12'>
+          <Card className=' gap-12 mx-10 my-3 md:mx-0 md:my-0 md:py-10 md:px-32'>
             <CardHeader>
-              <CardTitle className='text-[#060A87] font-bold text-2xl mx-auto'>Employee Added Successfully</CardTitle>
+              <CardTitle className='text-[#060A87] font-bold text-2xl mx-auto text-center '>Employee Added Successfully</CardTitle>
             </CardHeader>
             <CardContent className='flex flex-col gap-12 pt-12 '>
               <div className='flex justify-center'>
                 <Image src={done} alt="done" />
               </div>
-              <div className='border-[#7B7B7B63] border-[1px] p-3 pl-6 rounded-[2px] flex gap-20'>
+              <div className={cn('border-[#7B7B7B63] border-[1px] p-3 pl-6 rounded-[2px] flex', isMobile ? 'justify-between text-sm' : 'text-lg gap-20')}>
                 <div>
-                  <div className='text-[#060A87] font-bold text-lg'>
+                  <div className='text-[#060A87] font-bold'>
                     Email: <span className='text-[#4A4A4F]'>{newEmployeeLoginDetails.email}</span>
                   </div>
-                  <div className='text-[#060A87] font-bold text-lg'>
+                  <div className='text-[#060A87] font-bold'>
                     Password: <span className='text-[#4A4A4F]'>{newEmployeeLoginDetails.password}</span>
                   </div>
                 </div>
