@@ -284,7 +284,7 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
             console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",result);
             setTotalPages(response.totalPage);
             setCurrentPage(response.currentPage);
-            const filteredData = result.orders.filter((order: any) => order.orderDetails.employeeInfo.email == personInfo?.email).map((result: Order) => ({
+            const filteredData = result.orders?.filter((order: any) => order.orderDetails.employeeInfo.email == personInfo?.email).map((result: Order) => ({
                 transactionCode: result.orderDetails.order.transactionCode, // Use transactionCode instead of orderId
                 senderName: result.orderDetails.sender?.name || '',
                 reciverName: result.orderDetails.receiver?.name || '',
