@@ -17,13 +17,16 @@ export default async function apiCall({
   method?: string;
   data?: unknown;
 }) {
+  const token = await userToken();
+
   try {
-    const token = await userToken();
+    console.log('token', token);
+
     const response = await fetch(url, {
       method: method,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: token ? `Bearer ${token}` : '', // Add token here if needed
+        Authorization: `Bearer ${token || ''}`, // Add token here if needed
       },
       body: method !== 'GET' ? JSON.stringify(data) : undefined,
     });

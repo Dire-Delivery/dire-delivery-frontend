@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   type ColumnDef,
   type ColumnFiltersState,
@@ -10,6 +10,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from '@tanstack/react-table';
+import { useMediaQuery } from 'usehooks-ts'; // Import useMediaQuery
 
 import {
   Table,
@@ -49,34 +50,97 @@ import Link from 'next/link';
 import { LuEye } from 'react-icons/lu';
 import { RiDeleteBin5Line } from 'react-icons/ri';
 
-interface DataTableProps<TData extends { id: string }, TValue> {
+interface DataTableProps<
+  TData extends { id: string; addedBy: string },
+  TValue,
+> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   totalEntries: number;
-  handleDelete: (id: string) => void;
   role: string;
   name: string;
+  handleDelete: (id: string) => void;
+  handleSearch: (id: string) => void;
+  pagenumber: number;
+  setPagenumber: React.Dispatch<React.SetStateAction<number>>;
+  totalPages: number;
+  setTotalPages: React.Dispatch<React.SetStateAction<number>>;
+  currentPage: number;
+  setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
+  redirectLink: string;
+  loading: boolean;
+  handlefilter: (status: string) => void;
+  filterValue: string;
 }
 
 export function DataTable<
   TData extends {
-    addedBy: string;
-    transactionId: string;
+    transactionCode: string;
     id: string;
+    addedBy: string;
   },
   TValue,
 >({
+  loading,
   columns,
   data,
   totalEntries,
   handleDelete,
-  name,
   role,
+  totalPages,
+  setPagenumber,
+  currentPage,
+  setCurrentPage,
+  handleSearch,
+  redirectLink,
+  handlefilter,
+  filterValue,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
     null
-  ); // Track which row's AlertDialog is open
+  );
+  const [searchTransactionCode, setSearchTransactionCode] =
+    useState<string>('');
+  const [columnVisibility, setColumnVisibility] = useState({}); // State for column visibility
+
+  // Detect screen size
+  const isMobile = useMediaQuery('(max-width: 640px)'); // Mobile screens
+  const isTablet = useMediaQuery('(max-width: 1024px)'); // Tablet screens
+
+  // Update column visibility based on screen size
+  useEffect(() => {
+    if (isMobile) {
+      // For mobile: Show only senderName, reciverName, status, and actions
+      setColumnVisibility({
+        transactionCode: false,
+        senderName: true,
+        reciverName: true,
+        addedBy: false,
+        createdAt: false,
+        senderAddress: false,
+        reciverAddress: false,
+        status: true,
+        actions: true,
+      });
+    } else if (isTablet) {
+      // For tablet: Show transactionCode, senderName, reciverName, addedBy, status, and actions
+      setColumnVisibility({
+        transactionCode: true,
+        senderName: true,
+        reciverName: true,
+        addedBy: true,
+        createdAt: false,
+        senderAddress: false,
+        reciverAddress: false,
+        status: true,
+        actions: true,
+      });
+    } else {
+      // For desktop: Show all columns
+      setColumnVisibility({});
+    }
+  }, [isMobile, isTablet]);
 
   const table = useReactTable({
     data,
@@ -87,40 +151,48 @@ export function DataTable<
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       columnFilters,
+      columnVisibility, // Pass column visibility state to the table
     },
+    onColumnVisibilityChange: setColumnVisibility, // Update column visibility
   });
 
   return (
     <div className="w-full">
       <div className="flex items-center py-4 gap-4">
-        <Input
-          placeholder="Search by name"
-          value={
-            (table.getColumn('senderName')?.getFilterValue() as string) ?? ''
-          }
-          onChange={(event) => {
-            const value = event.target.value || undefined;
-            table.getColumn('senderName')?.setFilterValue(value);
-            table.getColumn('reciverName')?.setFilterValue(value);
+        <form
+          onSubmit={(event) => {
+            event.preventDefault();
+            handleSearch(searchTransactionCode); // 🔥 Use state instead of table filter
           }}
-          className="max-w-sm"
-        />
+          className="flex gap-2"
+        >
+          <Input
+            placeholder="Transaction code"
+            value={searchTransactionCode}
+            onChange={(event) => setSearchTransactionCode(event.target.value)}
+            className="lg:w-72 "
+          />
+          <Button type="submit" className="text-xs">
+            Search
+          </Button>
+        </form>
         <Select
-          value={(table.getColumn('status')?.getFilterValue() as string) ?? ''}
-          onValueChange={(value) =>
-            table
-              .getColumn('status')
-              ?.setFilterValue(value === 'All Status' ? undefined : value)
+          value={filterValue}
+          onValueChange={
+            (value) => handlefilter(value)
+            // table
+            //   .getColumn('status')
+            //   ?.setFilterValue(value === 'All Status' ? undefined : value)
           }
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[100px]  lg:w-[180px]">
             <SelectValue placeholder="All Status" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="All Status">All Status</SelectItem>
             <SelectItem value="Delivered">Delivered</SelectItem>
             <SelectItem value="Pending">Pending</SelectItem>
-            <SelectItem value="Picked Up">Picked Up</SelectItem>
+            <SelectItem value="Picked up">Picked up</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -131,7 +203,10 @@ export function DataTable<
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
                   return (
-                    <TableHead key={header.id}>
+                    <TableHead
+                      key={header.id}
+                      className="px-2 py-1 text-sm md:px-4 md:py-2 md:text-base" // Responsive padding and font size
+                    >
                       {header.isPlaceholder
                         ? null
                         : flexRender(
@@ -141,37 +216,53 @@ export function DataTable<
                     </TableHead>
                   );
                 })}
-                <TableHead>Actions</TableHead>
+                <TableHead className="px-2 py-1 text-sm md:px-4 md:py-2 md:text-base">
+                  Actions
+                </TableHead>
               </TableRow>
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {loading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
+                  loading
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell
+                      key={cell.id}
+                      className="px-2 py-1 text-sm md:px-4 md:py-2 md:text-base" // Responsive padding and font size
+                    >
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext()
                       )}
                     </TableCell>
                   ))}
-                  <TableCell>
+                  <TableCell className="px-2 py-1 text-sm md:px-4 md:py-2 md:text-base">
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
-                          <span className="text-lg">⋮</span>{' '}
-                          {/* Three-dot button */}
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-6 w-6 md:h-8 md:w-8"
+                        >
+                          <span className="text-lg">⋮</span>
                         </Button>
                       </DropdownMenuTrigger>
-
                       <DropdownMenuContent align="end" className="w-40">
                         <Link
-                          href={`/owner/orders/${row.original.transactionId}`}
+                          href={`${redirectLink}/${row.original.transactionCode}`}
                           passHref
                         >
                           <DropdownMenuItem className="cursor-pointer">
@@ -179,15 +270,14 @@ export function DataTable<
                             View
                           </DropdownMenuItem>
                         </Link>
-
-                        {(row.original.addedBy == name ||
-                          role === 'ADMIN' ||
-                          role === 'OWNER') && (
+                        {(role === 'OWNER' || role === 'ADMIN') && (
                           <DropdownMenuItem
                             className="cursor-pointer text-red-600 hover:bg-red-100"
                             onSelect={(e) => {
-                              e.preventDefault(); // Prevent the dropdown from closing
-                              setOpenAlertDialogId(row.original.transactionId); // Open the AlertDialog for this row
+                              e.preventDefault();
+                              setOpenAlertDialogId(
+                                row.original.transactionCode
+                              );
                             }}
                           >
                             <RiDeleteBin5Line className="mr-2 h-4 w-4" />
@@ -196,15 +286,13 @@ export function DataTable<
                         )}
                       </DropdownMenuContent>
                     </DropdownMenu>
-
-                    {/* AlertDialog for the row */}
                     <AlertDialog
-                      open={openAlertDialogId === row.original.transactionId}
+                      open={openAlertDialogId === row.original.transactionCode}
                       onOpenChange={(open) => {
-                        if (!open) setOpenAlertDialogId(null); // Close the AlertDialog
+                        if (!open) setOpenAlertDialogId(null);
                       }}
                     >
-                      <AlertDialogContent>
+                      <AlertDialogContent className="w-[340px] md:w-full">
                         <AlertDialogHeader>
                           <AlertDialogTitle className="text-[#060A87]">
                             Are you absolutely sure?
@@ -219,8 +307,8 @@ export function DataTable<
                           <AlertDialogCancel>Cancel</AlertDialogCancel>
                           <AlertDialogAction
                             onClick={() => {
-                              handleDelete(row.original.id); // Perform the delete action
-                              setOpenAlertDialogId(null); // Close the AlertDialog
+                              handleDelete(row.original.transactionCode);
+                              setOpenAlertDialogId(null);
                             }}
                             className="bg-[#060A87]"
                           >
@@ -238,7 +326,7 @@ export function DataTable<
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  No Orders Found.
                 </TableCell>
               </TableRow>
             )}
@@ -246,53 +334,72 @@ export function DataTable<
         </Table>
       </div>
       <div className="flex items-center justify-between space-x-2 py-4">
-        <div className=" hidden md:block text-sm text-muted-foreground">
+        {/* Showing Entries */}
+        <div className="hidden md:block text-sm text-muted-foreground">
           Showing {table.getRowModel().rows.length} of {totalEntries} entries
         </div>
+
+        {/* Pagination Controls */}
         <div className="flex items-center space-x-2">
+          {/* Previous Button */}
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
+            onClick={() => {
+              const newPage = Math.max(1, currentPage - 1); // Ensure page doesn't go below 1
+              setCurrentPage(newPage); // Update currentPage
+              setPagenumber(newPage); // Update pagenumber for fetching
+            }}
+            disabled={currentPage === 1} // Disable if on the first page
           >
             Previous
           </Button>
+
+          {/* Page Numbers */}
           <div className="flex items-center space-x-1">
-            {Array.from({ length: Math.min(5, table.getPageCount()) }).map(
-              (_, i) => (
+            {Array.from({ length: Math.min(5, totalPages) }).map((_, i) => {
+              const page = i + 1;
+              return (
                 <Button
-                  key={i}
-                  variant={
-                    table.getState().pagination.pageIndex === i
-                      ? 'default'
-                      : 'outline'
-                  }
+                  key={page}
+                  variant={currentPage === page ? 'default' : 'outline'}
                   size="sm"
-                  onClick={() => table.setPageIndex(i)}
+                  onClick={() => {
+                    setCurrentPage(page); // Update currentPage
+                    setPagenumber(page); // Update pagenumber for fetching
+                  }}
                 >
-                  {i + 1}
+                  {page}
                 </Button>
-              )
-            )}
-            {table.getPageCount() > 5 && (
+              );
+            })}
+            {totalPages > 5 && (
               <>
                 <span>...</span>
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+                  onClick={() => {
+                    setCurrentPage(totalPages); // Go to the last page
+                    setPagenumber(totalPages); // Update pagenumber for fetching
+                  }}
                 >
-                  {table.getPageCount()}
+                  {totalPages}
                 </Button>
               </>
             )}
           </div>
+
+          {/* Next Button */}
           <Button
             variant="outline"
             size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
+            onClick={() => {
+              const newPage = Math.min(totalPages, currentPage + 1); // Ensure page doesn't exceed totalPages
+              setCurrentPage(newPage); // Update currentPage
+              setPagenumber(newPage); // Update pagenumber for fetching
+            }}
+            disabled={currentPage === totalPages} // Disable if on the last page
           >
             Next
           </Button>

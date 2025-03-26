@@ -73,6 +73,11 @@ export default function OrderPage({
       setTriggerState(!triggerState);
     } catch (error) {
       console.error('Error updating order status:', error);
+      toast({
+        title: 'Error',
+        description: 'Error while updating Status ',
+        variant: `destructive`,
+      });
     }
 
     console.log('status data', data);
@@ -87,7 +92,7 @@ export default function OrderPage({
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-indigo-900">
-            Welcome Back, Owner!
+            Welcome Back, {user?.name}!
           </h1>
           <p className="text-gray-600">Here&apos;s Orders Report</p>
         </div>
@@ -95,7 +100,7 @@ export default function OrderPage({
         <div className="bg-white rounded-lg p-6 shadow-sm">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center justify-center">
-              <Link href={`/owner/orders`}>
+              <Link href={`/employee/orders`}>
                 <Button
                   variant="ghost"
                   className="flex items-center gap-2 w-fit h-fit"
