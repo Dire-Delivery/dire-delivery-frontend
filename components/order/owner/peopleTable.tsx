@@ -73,7 +73,8 @@ interface EmployeeDataTableProps<TData extends Person, TValue> {
     setPagination: React.Dispatch<React.SetStateAction<Pagination>>;
     pageCount: number;
     setRefreshTableToggle: React.Dispatch<React.SetStateAction<boolean>>;
-    refreshTableToggle: boolean
+    refreshTableToggle: boolean;
+    handleSearch: (name: string) => void;
 
 }
 
@@ -95,7 +96,8 @@ export function PeopleDataTable<
     setPagination,
     pageCount,
     setRefreshTableToggle,
-    refreshTableToggle
+    refreshTableToggle,
+    handleSearch
 }: EmployeeDataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
@@ -160,22 +162,6 @@ export function PeopleDataTable<
         } catch (error) {
             console.log(error);
         }
-    }
-
-    const handleSearch = async (name: string) => {
-        // try {
-        //     const userData = await userProfile();
-        //     const token = await userToken();
-        //     if (userData && token) {
-        //         const response = await PromoteEmployee(userData.id, selectedPerson.id);
-        //         toast.success(response.message)
-        //         setShowChangeRoleModal(false);
-        //     } else {
-        //         throw new Error("userData or token not found")
-        //     }
-        // } catch (error) {
-        //     console.log(error);
-        // }
     }
 
     return (

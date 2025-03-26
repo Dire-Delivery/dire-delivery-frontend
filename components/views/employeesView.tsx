@@ -1,5 +1,5 @@
 'use client';
-import { DeletePerson, FetchEmployees, FindPerson, } from '@/actions/employee';
+import { DeletePerson, FetchEmployees, FindPerson, SearchByName, } from '@/actions/employee';
 import AddOrderDialogue from '@/components/order/addOrderDialogue';
 import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
 import { employeeColumns } from '@/components/order/owner/peopleColumn';
@@ -47,6 +47,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
     pageSize: 10, //default page size
   });
   const [pageCount, setPageCount] = useState(1);
+  const [showFilteredData, setShowFilteredData] = useState(false)
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -66,7 +67,10 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
         console.log(error);
       }
     };
-    fetchOrders();
+    if (!showFilteredData) {
+      fetchOrders();
+    }
+    
   }, [showConfirmationModal, showChangeRoleModal, refreshTableToggle]);
 
   const handleDelete = async (id: string) => {
@@ -97,7 +101,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
         } else {
           toast.error(data);
         }
-        console.log({data})
+        console.log({ data })
       } else {
         throw new Error("userData or token not found")
       }
@@ -106,9 +110,27 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
     }
   };
 
-  useEffect(() => {
-    console.log("999999999999999999999999", pagination)
-  }, [pagination])
+  const handleSearch = async (name: string) => {
+    try {
+      if (!name) {
+        setShowFilteredData(false);
+      }
+      const userData = await userProfile();
+      const token = await userToken();
+      if (userData && token) {
+        const response = await SearchByName(userData.id, name);
+        const convertedEmployeeFormat = convertToEmployeesFormat(response);
+        setShowFilteredData(true);
+        console.log("................................", convertedEmployeeFormat)
+        setEmployees(convertedEmployeeFormat);
+        setRefreshTableToggle(!refreshTableToggle);
+      } else {
+        throw new Error("userData or token not found")
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
 
   return (
@@ -163,6 +185,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           pageCount={pageCount}
           setRefreshTableToggle={setRefreshTableToggle}
           refreshTableToggle={refreshTableToggle}
+          handleSearch={handleSearch}
         />
       </section>
     </section>
