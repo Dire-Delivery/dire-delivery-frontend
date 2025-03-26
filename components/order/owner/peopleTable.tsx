@@ -109,6 +109,7 @@ export function PeopleDataTable<
     // Detect screen size
     const isTablet = useMediaQuery('(max-width: 1024px)'); // Tablet screens
     const router = useRouter()
+    const [searchName, setSearchName] = useState("");
 
     // Update column visibility based on screen size
     useEffect(() => {
@@ -159,6 +160,22 @@ export function PeopleDataTable<
         } catch (error) {
             console.log(error);
         }
+    }
+
+    const handleSearch = async (name: string) => {
+        // try {
+        //     const userData = await userProfile();
+        //     const token = await userToken();
+        //     if (userData && token) {
+        //         const response = await PromoteEmployee(userData.id, selectedPerson.id);
+        //         toast.success(response.message)
+        //         setShowChangeRoleModal(false);
+        //     } else {
+        //         throw new Error("userData or token not found")
+        //     }
+        // } catch (error) {
+        //     console.log(error);
+        // }
     }
 
     return (
@@ -212,6 +229,25 @@ export function PeopleDataTable<
 
             }
             <div className="w-full">
+                <div className="flex items-center py-4 gap-4">
+                    <form
+                        onSubmit={(event) => {
+                            event.preventDefault();
+                            handleSearch(searchName); // 🔥 Use state instead of table filter
+                        }}
+                        className="flex gap-2"
+                    >
+                        <Input
+                            placeholder="Name"
+                            value={searchName}
+                            onChange={(event) => setSearchName(event.target.value)}
+                            className="lg:w-72 "
+                        />
+                        <Button type="submit" className="text-xs">
+                            Search
+                        </Button>
+                    </form>
+                </div>
                 <div className="flex items-center py-4 gap-4">
                     {/* <Input
                         placeholder="Search by name"

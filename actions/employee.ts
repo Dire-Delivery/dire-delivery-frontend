@@ -37,3 +37,10 @@ export const FindOrdersByPerson = async (ownerId: string ,personId: string, page
   const response = await apiCall({ url: fetchURl });
   return response;
 };
+
+export const SearchByName = async (ownerId: string ,personId: string, pageNumber: number) => {
+  const fetchURl = `${BaseUrl}/users/${ownerId}/search-by-name`;
+  const response = await apiCall({ url: fetchURl });
+  return response;
+};
+

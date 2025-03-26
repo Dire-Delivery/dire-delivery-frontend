@@ -403,26 +403,26 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
 
                         <div className='flex h-full gap-4  py-2 rounded-sm' >
                             {/* <div className='font-bold text-xl py-2  px-0.5'>Basic Information</div> */}
-                            <div className='flex h-full px-3 gap-8'>
+                            <div className='flex h-full flex-wrap px-3 gap-8 '>
                                 <div>
-                                    <div className='font-medium text-[#696973] text-base'>Phone</div>
-                                    <div className='font-semibold text-base'>{personInfo?.phone ? personInfo?.phone : "-"}</div>
+                                    <div className='font-medium text-[#696973] text-sm md:text-base'>Phone</div>
+                                    <div className='font-semibold text-sm md:text-base'>{personInfo?.phone ? personInfo?.phone : "-"}</div>
                                 </div>
                                 <div>
-                                    <div className='font-medium text-[#696973] text-base'>Joined Date</div>
-                                    <div className='font-semibold text-base'>2023-08-22</div>
+                                    <div className='font-medium text-[#696973] text-sm md:text-base'>Joined Date</div>
+                                    <div className='font-semibold text-sm md:text-base'>2023-08-22</div>
                                 </div>
                                 <div>
-                                    <div className='font-medium text-[#696973] text-base'>Email</div>
-                                    <div className='font-semibold text-base'>{personInfo?.email}</div>
+                                    <div className='font-medium text-[#696973] text-sm md:text-base'>Email</div>
+                                    <div className='font-semibold text-sm md:text-base'>{personInfo?.email}</div>
                                 </div>
                                 <div>
-                                    <div className='font-medium text-[#696973] text-base'>Location</div>
-                                    <div className='font-semibold text-base'>{personInfo?.location ? personInfo?.location : "-"}</div>
+                                    <div className='font-medium text-[#696973] text-sm md:text-base'>Location</div>
+                                    <div className='font-semibold text-sm md:text-base'>{personInfo?.location ? personInfo?.location : "-"}</div>
                                 </div>
                                 <div>
-                                    <div className='font-medium text-[#696973] text-base'>Roll</div>
-                                    <div className='font-semibold text-base'>{personInfo?.role}</div>
+                                    <div className='font-medium text-[#696973] text-sm md:text-base'>Roll</div>
+                                    <div className='font-semibold text-sm md:text-base'>{personInfo?.role}</div>
                                 </div>
 
                             </div>
