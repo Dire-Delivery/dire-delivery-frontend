@@ -1,17 +1,22 @@
 import apiCall from '@/base-api/api';
-import { endPoints } from '@/data/endPoints';
 import { city } from '@/types/cities';
 
-const BaseURL = 'http://localhost:3001';
-const url = `${BaseURL}/${endPoints.aCity}`;
+const BaseURL = process.env.NEXT_PUBLIC_API_URL;
+
 export const fetchCity = async () => {
-  const fetchURl = `${url}`;
+  const fetchURl = `${BaseURL}/orders/pre-order`;
   const response = await apiCall({ url: fetchURl });
   return response;
 };
 
-export const addCity = async (data: city) => {
-  const fetchURl = `${url}`;
+export const addCity = async ({
+  data,
+  userid,
+}: {
+  data: city;
+  userid: string;
+}) => {
+  const fetchURl = `${BaseURL}/constants/${userid}/add-location`;
   const response = await apiCall({
     url: fetchURl,
     method: 'POST',
@@ -20,8 +25,14 @@ export const addCity = async (data: city) => {
   return response;
 };
 
-export const deleteCity = async (id: string) => {
-  const fetchURl = `${url}/${id}`;
+export const deleteCity = async ({
+  code,
+  userid,
+}: {
+  code: string;
+  userid: string;
+}) => {
+  const fetchURl = `${BaseURL}/constants/${userid}/delete-location/${code}`;
   const response = await apiCall({ url: fetchURl, method: 'DELETE' });
   return response;
 };

@@ -18,7 +18,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '../ui/button';
 import { RiDeleteBin5Line } from 'react-icons/ri';
-interface DataTableProps<TData extends { id: string }, TValue> {
+interface DataTableProps<TData extends { code: string }, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
   totalEntries: number;
@@ -26,7 +26,7 @@ interface DataTableProps<TData extends { id: string }, TValue> {
   role: string;
 }
 
-export function DataTable<TData extends { id: string }, TValue>({
+export function CityDataTable<TData extends { code: string }, TValue>({
   role,
   columns,
   data,
@@ -84,7 +84,7 @@ export function DataTable<TData extends { id: string }, TValue>({
                     <TableCell>
                       <Button
                         className="cursor-pointer text-white  bg-red-700 hover:bg-red-100"
-                        onClick={() => handleDelete(row.original.id)}
+                        onClick={() => handleDelete(row.original.code)}
                       >
                         <RiDeleteBin5Line className="h-5 w-5" />
                       </Button>
