@@ -281,73 +281,74 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
                 status: status,
             });
             const result = response;
-            console.log(result);
+            console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",result);
             setTotalPages(response.totalPage);
             setCurrentPage(response.currentPage);
-            setTransformedOrder(
-                result.orders.map((result: Order) => ({
-                    transactionCode: result.orderDetails.order.transactionCode, // Use transactionCode instead of orderId
-                    senderName: result.orderDetails.sender?.name || '',
-                    reciverName: result.orderDetails.receiver?.name || '',
-                    description: result.orderDetails.item?.description || '',
-                    weight: result.orderDetails.item?.weight || 0,
-                    quantity: result.orderDetails.item?.quantity || 0,
-                    Price: result.orderDetails.item?.totalPrice || 0,
-                    senderAddress: result.orderDetails.sender?.address || '',
-                    reciverAddress: result.orderDetails.receiver?.address || '',
-                    status: result.orderDetails.order.status || 'unknown', // Get first status
-                    createdAt: result.orderDetails.order.createdAT || '',
-                    updatedAt: result.updatedAt || '',
-                    paymentMethod:
-                        result.orderDetails.order?.payment === 0 ? 'Unpaid' : 'Paid', // Adjust payment method logic
-                    statuses: {
-                        pending: result.orderDetails.status?.find(
-                            (s: { status: string }) => s.status === 'Pending'
-                        )
-                            ? {
-                                type: 'Pending',
-                                date: result.orderDetails.status.find(
-                                    (s: { status: string }) => s.status === 'Pending'
-                                )!.date,
-                                location: result.orderDetails.status.find(
-                                    (s: { status: string }) => s.status === 'Pending'
-                                )!.location,
-                            }
-                            : undefined,
-                        delivered: result.orderDetails.status?.find(
-                            (s: { status: string }) => s.status === 'Delivered'
-                        )
-                            ? {
-                                type: 'Delivered',
-                                date: result.orderDetails.status.find(
-                                    (s: { status: string }) => s.status === 'Delivered'
-                                )!.date,
-                                location: result.orderDetails.status.find(
-                                    (s: { status: string }) => s.status === 'Delivered'
-                                )!.location,
-                            }
-                            : undefined,
-                        pickedUp: result.orderDetails.status?.find(
-                            (s: { status: string }) => s.status === 'Picked up'
-                        )
-                            ? {
-                                type: 'Picked up',
-                                date: result.orderDetails.status.find(
-                                    (s: { status: string }) => s.status === 'Picked up'
-                                )!.date,
-                                location: result.orderDetails.status.find(
-                                    (s: { status: string }) => s.status === 'Picked up'
-                                )!.location,
-                            }
-                            : undefined,
-                    },
-                    senderPhoneNumber: result.orderDetails.sender?.phone || '',
-                    reciverPhoneNumber: result.orderDetails.receiver?.phone || '',
-                    senderEmail: result.orderDetails.sender?.email || '',
-                    reciverEmail: result.orderDetails.receiver?.email || '',
-                    addedBy: result.orderDetails.employeeInfo?.name || '',
-                }))
+            const filteredData = result.orders.filter((order: any) => order.orderDetails.employeeInfo.email == personInfo?.email).map((result: Order) => ({
+                transactionCode: result.orderDetails.order.transactionCode, // Use transactionCode instead of orderId
+                senderName: result.orderDetails.sender?.name || '',
+                reciverName: result.orderDetails.receiver?.name || '',
+                description: result.orderDetails.item?.description || '',
+                weight: result.orderDetails.item?.weight || 0,
+                quantity: result.orderDetails.item?.quantity || 0,
+                Price: result.orderDetails.item?.totalPrice || 0,
+                senderAddress: result.orderDetails.sender?.address || '',
+                reciverAddress: result.orderDetails.receiver?.address || '',
+                status: result.orderDetails.order.status || 'unknown', // Get first status
+                createdAt: result.orderDetails.order.createdAT || '',
+                updatedAt: result.updatedAt || '',
+                paymentMethod:
+                    result.orderDetails.order?.payment === 0 ? 'Unpaid' : 'Paid', // Adjust payment method logic
+                statuses: {
+                    pending: result.orderDetails.status?.find(
+                        (s: { status: string }) => s.status === 'Pending'
+                    )
+                        ? {
+                            type: 'Pending',
+                            date: result.orderDetails.status.find(
+                                (s: { status: string }) => s.status === 'Pending'
+                            )!.date,
+                            location: result.orderDetails.status.find(
+                                (s: { status: string }) => s.status === 'Pending'
+                            )!.location,
+                        }
+                        : undefined,
+                    delivered: result.orderDetails.status?.find(
+                        (s: { status: string }) => s.status === 'Delivered'
+                    )
+                        ? {
+                            type: 'Delivered',
+                            date: result.orderDetails.status.find(
+                                (s: { status: string }) => s.status === 'Delivered'
+                            )!.date,
+                            location: result.orderDetails.status.find(
+                                (s: { status: string }) => s.status === 'Delivered'
+                            )!.location,
+                        }
+                        : undefined,
+                    pickedUp: result.orderDetails.status?.find(
+                        (s: { status: string }) => s.status === 'Picked up'
+                    )
+                        ? {
+                            type: 'Picked up',
+                            date: result.orderDetails.status.find(
+                                (s: { status: string }) => s.status === 'Picked up'
+                            )!.date,
+                            location: result.orderDetails.status.find(
+                                (s: { status: string }) => s.status === 'Picked up'
+                            )!.location,
+                        }
+                        : undefined,
+                },
+                senderPhoneNumber: result.orderDetails.sender?.phone || '',
+                reciverPhoneNumber: result.orderDetails.receiver?.phone || '',
+                senderEmail: result.orderDetails.sender?.email || '',
+                reciverEmail: result.orderDetails.receiver?.email || '',
+                addedBy: result.orderDetails.employeeInfo?.name || '',
+            })
             );
+            console.log(">..................", filteredData)
+            setTransformedOrder(filteredData);
             setloading(false);
         } catch (error) {
             console.log(error);
