@@ -48,7 +48,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
   });
   const [pageCount, setPageCount] = useState(1);
   const [showFilteredData, setShowFilteredData] = useState(false);
-  const [pageOneFetch, setPageOneFetch] = useState<Person[]>();
+  const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -59,11 +59,9 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           const response = await FetchEmployees(userData.id, pagination.pageIndex + 1);
           console.log({ response });
           const convertedEmployeeFormat = convertToEmployeesFormat(response.users);
-          if (response.currentPage == "1") {
-            setPageOneFetch(convertedEmployeeFormat)
-          }
+          setPageCount(response.totalPage);
           setEmployees(convertedEmployeeFormat);
-          setPageCount(response.totalPage)
+
         } else {
           throw new Error("userData or token not found")
         }
@@ -71,8 +69,29 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
         console.log(error);
       }
     };
+
+    const handleSearch = async () => {
+      try {
+        const userData = await userProfile();
+        const token = await userToken();
+        if (userData && token) {
+          const response = await SearchByName(userData.id, searchInput, pagination.pageIndex + 1);
+          console.log({response})
+          const convertedEmployeeFormat = convertToEmployeesFormat(response.users);
+          setPageCount(response.totalPage)
+          setEmployees(convertedEmployeeFormat);
+
+        } else {
+          throw new Error("userData or token not found")
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
     if (!showFilteredData) {
       fetchOrders();
+    } else {
+      handleSearch();
     }
 
   }, [showConfirmationModal, showChangeRoleModal, refreshTableToggle]);
@@ -84,7 +103,6 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
       if (userData && token) {
         const response = await DeletePerson(userData.id, id);
         toast.success(response.message)
-        setShowFilteredData(false)
         setRefreshTableToggle(!refreshTableToggle);
       } else {
         throw new Error("userData or token not found")
@@ -115,38 +133,13 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
     }
   };
 
-  const handleSearch = async (name: string) => {
-    try {
-      if (!name) {
-        setShowFilteredData(false);
-      }
-      const userData = await userProfile();
-      const token = await userToken();
-      if (userData && token) {
-        const response = await SearchByName(userData.id, name);
-        const convertedEmployeeFormat = convertToEmployeesFormat(response);
-        setShowFilteredData(true);
-        setEmployees(convertedEmployeeFormat);
-        setPagination({
-          pageIndex: 0,
-          pageSize: 10, 
-        })
-        setRefreshTableToggle(!refreshTableToggle);
-      } else {
-        throw new Error("userData or token not found")
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   const checkEmpty = async (name: string) => {
-    console.log("...........................",{name, pageOneFetch})
-    if (!name && pageOneFetch) {
-      setEmployees(pageOneFetch);
+    console.log("...........................", { name })
+    if (!name) {
+      setShowFilteredData(false);
       setPagination({
         pageIndex: 0,
-        pageSize: 10, 
+        pageSize: 10,
       })
       setRefreshTableToggle(!refreshTableToggle);
     }
@@ -206,9 +199,10 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           pageCount={pageCount}
           setRefreshTableToggle={setRefreshTableToggle}
           refreshTableToggle={refreshTableToggle}
-          handleSearch={handleSearch}
           checkEmpty={checkEmpty}
           setShowFilteredData={setShowFilteredData}
+          searchInput={searchInput}
+          setSearchInput={setSearchInput}
         />
       </section>
     </section>

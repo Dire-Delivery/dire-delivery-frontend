@@ -74,9 +74,10 @@ interface EmployeeDataTableProps<TData extends Person, TValue> {
     pageCount: number;
     setRefreshTableToggle: React.Dispatch<React.SetStateAction<boolean>>;
     refreshTableToggle: boolean;
-    handleSearch: (name: string) => void;
     checkEmpty: (name: string) => void;
     setShowFilteredData: React.Dispatch<React.SetStateAction<boolean>>;
+    searchInput: string;
+    setSearchInput: React.Dispatch<React.SetStateAction<string>>;
 
 }
 
@@ -99,9 +100,10 @@ export function PeopleDataTable<
     pageCount,
     setRefreshTableToggle,
     refreshTableToggle,
-    handleSearch,
     checkEmpty,
-    setShowFilteredData
+    setShowFilteredData,
+    searchInput,
+    setSearchInput
 }: EmployeeDataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
@@ -115,7 +117,6 @@ export function PeopleDataTable<
     // Detect screen size
     const isTablet = useMediaQuery('(max-width: 1024px)'); // Tablet screens
     const router = useRouter()
-    const [searchName, setSearchName] = useState("");
 
     // Update column visibility based on screen size
     useEffect(() => {
@@ -224,15 +225,18 @@ export function PeopleDataTable<
                     <form
                         onSubmit={(event) => {
                             event.preventDefault();
-                            handleSearch(searchName); // 🔥 Use state instead of table filter
+                            if (searchInput) {
+                                setShowFilteredData(true);
+                                setRefreshTableToggle(!refreshTableToggle);
+                            }
                         }}
                         className="flex gap-2"
                     >
                         <Input
                             placeholder="Name"
-                            value={searchName}
+                            value={searchInput}
                             onChange={(event) => {
-                                setSearchName(event.target.value)
+                                setSearchInput(event.target.value)
                                 checkEmpty(event.target.value)
                             }}
                             className="lg:w-72 focus:outline-none focus:border-none focus-visible:ring-[#060A87]"
@@ -420,7 +424,6 @@ export function PeopleDataTable<
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                                setShowFilteredData(false)
                                 setRefreshTableToggle(!refreshTableToggle)
                                 table.previousPage()
                             }}
@@ -442,7 +445,6 @@ export function PeopleDataTable<
                                         className={cn(table.getState().pagination.pageIndex === i && 'bg-[#060A87] hover:bg-[#060A87]')}
                                         onClick={() => {
                                             table.setPageIndex(i)
-                                            setShowFilteredData(false)
                                             setRefreshTableToggle(!refreshTableToggle)
                                         }}
                                     >
@@ -457,7 +459,6 @@ export function PeopleDataTable<
                                         variant="outline"
                                         size="sm"
                                         onClick={() => {
-                                            setShowFilteredData(false)
                                             setRefreshTableToggle(!refreshTableToggle)
                                             table.setPageIndex(table.getPageCount() - 1)
                                         }}
@@ -471,7 +472,6 @@ export function PeopleDataTable<
                             variant="outline"
                             size="sm"
                             onClick={() => {
-                                setShowFilteredData(false)
                                 setRefreshTableToggle(!refreshTableToggle)
                                 table.nextPage()
                                 
