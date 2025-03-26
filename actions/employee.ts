@@ -20,6 +20,12 @@ export const PromoteEmployee = async (ownerId: string ,employeeId: string) => {
   return response;
 };
 
+export const DemoteEmployee = async (ownerId: string ,employeeId: string) => {
+  const fetchURl = `${BaseUrl}/users/${ownerId}/change-role`;
+  const response = await apiCall({ url: fetchURl, method: 'POST', data: {userId: employeeId, role: "EMPLOYEE"} });
+  return response;
+};
+
 export const DeletePerson = async (ownerId: string ,personId: string) => {
   const fetchURl = `${BaseUrl}/users/${ownerId}/delete-user/${personId}`;
   const response = await apiCall({ url: fetchURl, method: 'Delete' });

@@ -160,6 +160,7 @@ export function PeopleDataTable<
                 const response = await PromoteEmployee(userData.id, selectedPerson.id);
                 toast.success(response.message)
                 setShowChangeRoleModal(false);
+                
             } else {
                 throw new Error("userData or token not found")
             }

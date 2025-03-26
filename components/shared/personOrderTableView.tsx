@@ -25,14 +25,16 @@ import { v4 as uuidv4 } from 'uuid';
 import { useToast } from '@/hooks/use-toast';
 import { userProfile, userToken } from '@/actions/auth';
 import { userType } from '@/types/user';
-import { FindOrdersByPerson, FindPerson } from '@/actions/employee';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { DemoteEmployee, FindOrdersByPerson, FindPerson, PromoteEmployee } from '@/actions/employee';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card';
 import { MdOutlineClose } from 'react-icons/md';
 import { Button } from '../ui/button';
 import { FaUserLarge } from 'react-icons/fa6';
 import { cn } from '@/lib/utils';
 import { PiEyeBold } from 'react-icons/pi';
 import { User } from '@/types/employeeType';
+import { toast } from 'sonner';
+import { LuX } from 'react-icons/lu';
 
 type props = {
     redirectLink: string;
@@ -56,6 +58,7 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
     const [triggerstate, SetTriggerState] = useState<boolean>(false);
     const [user, setUser] = useState<userType | null>(null);
     const [personInfo, setPersonInfo] = useState<User>();
+    const [showChangeRoleModal, setShowChangeRoleModal] = useState(false);
 
     const role = user?.role;
     const name = user?.name;
@@ -184,7 +187,7 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
             }
         }
         fetchPerson();
-    }, [])
+    }, [showChangeRoleModal])
 
     const handleSearch = async (id: string) => {
         setloading(true);
@@ -373,8 +376,77 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
     console.log('totalPages:', totalPages);
     console.log('currenPage:', currentPage);
 
+    const changeRole = async () => {
+        try {
+            const userData = await userProfile();
+            const token = await userToken();
+            if (userData && token && personInfo) {
+                if (personInfo.role == "ADMIN") {
+                    const response = await DemoteEmployee(userData.id, employeeId);
+                } else {
+                    const response = await PromoteEmployee(userData.id, employeeId);
+                }
+
+                setShowChangeRoleModal(false);
+
+
+            } else {
+                throw new Error("userData or token not found")
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <section className="w-full px-2 md:px-8 py-8 bg-[#F1F2F8] h-full">
+            {showChangeRoleModal &&
+                <div className="fixed inset-0 bg-[#060A87] bg-opacity-30 flex items-center justify-center z-50">
+                    <Card className='relative px-8'>
+                        <CardHeader>
+                            <LuX className='absolute top-4 right-4 cursor-pointer' onClick={() => {
+                                setShowChangeRoleModal(false)
+                            }} />
+                            <CardTitle className='text-[#060A87] font-bold text-2xl mx-auto'>Are your sure you want to {personInfo?.role == "EMPLOYEE" ? "Promote" : "Demote"} them?</CardTitle>
+                        </CardHeader>
+                        <CardContent className=' '>
+                            <div>
+                                <div className='text-[#060A87] font-bold text-lg'>
+                                    Name: <span className='text-[#4A4A4F]'>{personInfo?.name}</span>
+                                </div>
+                                <div className='text-[#060A87] font-bold text-lg'>
+                                    Email: <span className='text-[#4A4A4F]'>{personInfo?.email}</span>
+                                </div>
+                            </div>
+                        </CardContent>
+                        <CardFooter className=''>
+                            <div className="flex w-full justify-center gap-8 mt-2">
+                                <div className="flex justify-end gap-4 mt-2">
+                                    <div></div>
+
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setShowChangeRoleModal(false)
+
+                                        }}
+                                        className="px-4 py-2 border rounded-lg hover:bg-gray-50"
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        onClick={() => changeRole()}
+                                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                                    >
+                                        Confirm
+                                    </button>
+                                </div>
+                            </div>
+                        </CardFooter>
+                    </Card>
+                </div>
+
+            }
             {/* Welcome Section */}
             <div className="h-fit justify-start items-center gap-9 inline-flex">
                 <div className="flex-col justify-start items-start gap-2 inline-flex">
@@ -391,13 +463,13 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
                     <CardHeader className='relative px-0 py-0'>
                         <CardTitle className='w-full flex justify-between items-center '>
                             <div className='font-bold text-2xl'>{personInfo?.name}</div>
-                            <Button className={cn('bg-[#060A87] rounded-[10px] w-36 h-10 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5 ')}>
+                            <Button className={cn('bg-[#060A87] rounded-[10px] w-40 h-10 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5 ')} onClick={() => setShowChangeRoleModal(true)}>
                                 <FaUserLarge size={20} />
-                                <div className='text-base font-bold mb-[-3px]'>Promote</div>
+                                <div className='text-base font-bold mb-[-3px]'>{personInfo?.role == "EMPLOYEE" ? "PROMOTE": "DEMOTE"}</div>
                                 <div className='text-2xl font-normal text-center mt-[-3px] ml-2'>+</div>
                             </Button>
                         </CardTitle>
- 
+
                     </CardHeader>
                     <CardContent className='w-full flex gap-12 p-0'>
 
