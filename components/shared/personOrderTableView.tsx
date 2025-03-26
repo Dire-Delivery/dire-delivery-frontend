@@ -482,7 +482,7 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
                                 </div>
                                 <div>
                                     <div className='font-medium text-[#696973] text-sm md:text-base'>Joined Date</div>
-                                    <div className='font-semibold text-sm md:text-base'>2023-08-22</div>
+                                    <div className='font-semibold text-sm md:text-base'>{personInfo?.joinedAt.split(" ")[0]}</div>
                                 </div>
                                 <div>
                                     <div className='font-medium text-[#696973] text-sm md:text-base'>Email</div>

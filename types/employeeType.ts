@@ -20,6 +20,7 @@ export type User = {
   image: string | null;
   location: string | null;
   phone: string | null;
+  joinedAt: string;
 }
 
 export type PromoteDate = {
