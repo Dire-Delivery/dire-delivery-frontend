@@ -47,7 +47,8 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
     pageSize: 10, //default page size
   });
   const [pageCount, setPageCount] = useState(1);
-  const [showFilteredData, setShowFilteredData] = useState(false)
+  const [showFilteredData, setShowFilteredData] = useState(false);
+  const [pageOneFetch, setPageOneFetch] = useState<Person[]>();
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -58,6 +59,9 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           const response = await FetchEmployees(userData.id, pagination.pageIndex + 1);
           console.log({ response });
           const convertedEmployeeFormat = convertToEmployeesFormat(response.users);
+          if (response.currentPage == "1") {
+            setPageOneFetch(convertedEmployeeFormat)
+          }
           setEmployees(convertedEmployeeFormat);
           setPageCount(response.totalPage)
         } else {
@@ -70,7 +74,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
     if (!showFilteredData) {
       fetchOrders();
     }
-    
+
   }, [showConfirmationModal, showChangeRoleModal, refreshTableToggle]);
 
   const handleDelete = async (id: string) => {
@@ -80,6 +84,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
       if (userData && token) {
         const response = await DeletePerson(userData.id, id);
         toast.success(response.message)
+        setShowFilteredData(false)
         setRefreshTableToggle(!refreshTableToggle);
       } else {
         throw new Error("userData or token not found")
@@ -121,14 +126,29 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
         const response = await SearchByName(userData.id, name);
         const convertedEmployeeFormat = convertToEmployeesFormat(response);
         setShowFilteredData(true);
-        console.log("................................", convertedEmployeeFormat)
         setEmployees(convertedEmployeeFormat);
+        setPagination({
+          pageIndex: 0,
+          pageSize: 10, 
+        })
         setRefreshTableToggle(!refreshTableToggle);
       } else {
         throw new Error("userData or token not found")
       }
     } catch (error) {
       console.log(error);
+    }
+  }
+
+  const checkEmpty = async (name: string) => {
+    console.log("...........................",{name, pageOneFetch})
+    if (!name && pageOneFetch) {
+      setEmployees(pageOneFetch);
+      setPagination({
+        pageIndex: 0,
+        pageSize: 10, 
+      })
+      setRefreshTableToggle(!refreshTableToggle);
     }
   }
 
@@ -148,7 +168,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
       </div>
       <section className=" w-full border px-2 md:px-6 md:py-2 mt-8 bg-white rounded-2xl flex-col justify-between items-start inline-flex overflow-hidden">
         <div className="w-full flex justify-between items-center mt-2 md:mt-4 ">
-          <h1 className="text-2xl font-bold pl-2 md:pl-0">Employees</h1>
+          <h1 className="text-2xl font-bold pl-2 md:pl-0 text-[#060A87]">Employees</h1>
           <button
             onClick={() => setShowNewEmployeeModal(true)}
             className="bg-[#060A87] text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-[#060a87d5] mr-2 mt-2 md:mr-0 md:mt-0"
@@ -163,6 +183,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           showConfirmationModal={showConfirmationModal}
           setShowConfirmationModal={setShowConfirmationModal}
           cities={cities}
+          setShowFilteredData={setShowFilteredData}
         />
         <PeopleDataTable
           columns={
@@ -186,6 +207,8 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           setRefreshTableToggle={setRefreshTableToggle}
           refreshTableToggle={refreshTableToggle}
           handleSearch={handleSearch}
+          checkEmpty={checkEmpty}
+          setShowFilteredData={setShowFilteredData}
         />
       </section>
     </section>

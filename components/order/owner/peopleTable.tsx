@@ -75,6 +75,8 @@ interface EmployeeDataTableProps<TData extends Person, TValue> {
     setRefreshTableToggle: React.Dispatch<React.SetStateAction<boolean>>;
     refreshTableToggle: boolean;
     handleSearch: (name: string) => void;
+    checkEmpty: (name: string) => void;
+    setShowFilteredData: React.Dispatch<React.SetStateAction<boolean>>;
 
 }
 
@@ -97,7 +99,9 @@ export function PeopleDataTable<
     pageCount,
     setRefreshTableToggle,
     refreshTableToggle,
-    handleSearch
+    handleSearch,
+    checkEmpty,
+    setShowFilteredData
 }: EmployeeDataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
@@ -226,10 +230,13 @@ export function PeopleDataTable<
                         <Input
                             placeholder="Name"
                             value={searchName}
-                            onChange={(event) => setSearchName(event.target.value)}
-                            className="lg:w-72 "
+                            onChange={(event) => {
+                                setSearchName(event.target.value)
+                                checkEmpty(event.target.value)
+                            }}
+                            className="lg:w-72 focus:outline-none focus:border-none focus-visible:ring-[#060A87]"
                         />
-                        <Button type="submit" className="text-xs">
+                        <Button type="submit" className="text-xs bg-[#060A87]">
                             Search
                         </Button>
                     </form>
@@ -412,6 +419,7 @@ export function PeopleDataTable<
                             variant="outline"
                             size="sm"
                             onClick={() => {
+                                setShowFilteredData(false)
                                 setRefreshTableToggle(!refreshTableToggle)
                                 table.previousPage()
                             }}
@@ -433,6 +441,7 @@ export function PeopleDataTable<
                                         className={cn(table.getState().pagination.pageIndex === i && 'bg-[#060A87] hover:bg-[#060A87]')}
                                         onClick={() => {
                                             table.setPageIndex(i)
+                                            setShowFilteredData(false)
                                             setRefreshTableToggle(!refreshTableToggle)
                                         }}
                                     >
@@ -447,6 +456,7 @@ export function PeopleDataTable<
                                         variant="outline"
                                         size="sm"
                                         onClick={() => {
+                                            setShowFilteredData(false)
                                             setRefreshTableToggle(!refreshTableToggle)
                                             table.setPageIndex(table.getPageCount() - 1)
                                         }}
@@ -460,8 +470,10 @@ export function PeopleDataTable<
                             variant="outline"
                             size="sm"
                             onClick={() => {
+                                setShowFilteredData(false)
                                 setRefreshTableToggle(!refreshTableToggle)
                                 table.nextPage()
+                                
                             }}
                             disabled={!table.getCanNextPage()}
                         >

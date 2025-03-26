@@ -40,6 +40,7 @@ type props = {
   setShowNewEmployeeModal: React.Dispatch<React.SetStateAction<boolean>>;
   showConfirmationModal: boolean;
   setShowConfirmationModal: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowFilteredData: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function AddEmployeeDialogue({
@@ -48,6 +49,7 @@ export default function AddEmployeeDialogue({
   setShowNewEmployeeModal,
   showConfirmationModal,
   setShowConfirmationModal,
+  setShowFilteredData
 }: props) {
   const form = useForm<z.infer<typeof addUserSchema>>({
     resolver: zodResolver(addUserSchema),
@@ -86,6 +88,7 @@ export default function AddEmployeeDialogue({
       console.log("the message", response.message)
 
       if (response.message == "employee successfully created") {
+        setShowFilteredData(false)
         setShowNewEmployeeModal(false);
         reset();
         setShowConfirmationModal(true);
