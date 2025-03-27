@@ -1,3 +1,11 @@
+'use client';
+
+import UsersView from "@/components/views/usersView";
+
 export default function Page() {
-  return <h1>admins Page</h1>;
+    return (
+      <>
+        <UsersView type="owner" view="admin"/>
+      </>
+    );
 }

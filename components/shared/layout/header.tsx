@@ -32,7 +32,7 @@ function Header() {
   }
 
   return (
-    <div className="px-6 h-20 flex items-center bg-[#060A87] w-screen md:hidden">
+    <div className="px-6 h-20 flex items-center bg-[#060A87] w-full md:hidden">
       {/* <SidebarTrigger /> */}
       <SidebarToggleHeader />
       <div className="flex gap-1 items-center justify-center ml-auto">
@@ -50,11 +50,12 @@ function Header() {
           </DialogTrigger>
           <DialogContent
             className={cn(
-              'top-16 right-4  bg-white py-3 px-3 rounded-md transition-all hover:bg-gray-200',
+              'top-16 right-4  bg-white py-3 px-3 rounded-md transition-all cursor-pointer hover:bg-gray-200',
             )}
+            onClick={logout}
           >
             <DialogHeader className="p-0">
-              <DialogTitle className="flex gap-2 text-sm font-normal cursor-pointer" onClick={logout}>
+              <DialogTitle className="flex gap-2 text-sm font-normal" >
                 <LuLogOut /> Logout
               </DialogTitle>
             </DialogHeader>

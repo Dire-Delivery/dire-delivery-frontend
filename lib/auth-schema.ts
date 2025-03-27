@@ -19,7 +19,12 @@ export const formSchema = z.object({
 });
 
 export const addUserSchema = z.object({
-  name: z
+  fName: z
+    .string()
+    .min(2, { message: 'Name must be at least 2 characters long' })
+    .max(50, { message: 'Name cannot exceed 50 characters' }),
+
+  lName: z
     .string()
     .min(2, { message: 'Name must be at least 2 characters long' })
     .max(50, { message: 'Name cannot exceed 50 characters' }),
@@ -33,7 +38,7 @@ export const addUserSchema = z.object({
   phoneNumber: z
     .string()
     .min(8, { message: 'Password must be at least 8 characters long' })
-    .max(15, { message: 'Password cannot exceed 50 characters' }),
+    .max(50, { message: 'Password cannot exceed 50 characters' }),
 });
 
 export const addDetailsSchema = z
@@ -53,7 +58,21 @@ export const addDetailsSchema = z
     newPassword: z
       .string()
       .min(8, { message: 'Password must be at least 8 characters long' })
-      .max(15, { message: 'Password cannot exceed 15 characters' }),
+      .max(50, { message: 'Password cannot exceed 50 characters' }),
+
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: 'Passwords must match',
+    path: ['confirmPassword'], // Attach error to confirmPassword field
+  });
+
+export const resetPasswordSchema = z
+  .object({
+    newPassword: z
+      .string()
+      .min(8, { message: 'Password must be at least 8 characters long' })
+      .max(50, { message: 'Password cannot exceed 50 characters' }),
 
     confirmPassword: z.string(),
   })

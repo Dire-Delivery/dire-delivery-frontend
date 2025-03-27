@@ -1,3 +1,10 @@
-export default function Page() {
-  return <h1>Employees Page</h1>;
+import UsersView from "@/components/views/usersView";
+
+function EmployeesPageOwner() {
+  return (
+    <>
+      <UsersView type="owner" view="employee"/>
+    </>
+  );
 }
+export default EmployeesPageOwner;
