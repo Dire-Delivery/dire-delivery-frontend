@@ -15,6 +15,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { toast } from "sonner";
 
 
 export default function AddDetails() {
@@ -40,13 +41,18 @@ export default function AddDetails() {
     const userData = await userProfile();
     const token = await userToken();
 
+    console.log("trying to sub", {userData, token})
+
     if (userData && token) {
       const data = await AddDetailsFetch(userData.id, addDetails);
-      console.log("the data",data)
+      console.log("the data", data)
 
-      if (data) {
-        setCookies(data)
-        if (data.payload.role == "ADMIN") {
+      if (data && !data.error) {
+        toast.success(data.message)
+        setCookies(data);
+        if (data.payload.role == "OWNER") {
+          redirect("/owner")
+        } else if (data.payload.role == "ADMIN") {
           redirect("/admin")
         } else if (data.payload.role == "EMPLOYEE") {
           redirect("/employee")
@@ -54,6 +60,8 @@ export default function AddDetails() {
           console.error("unknown role error")
           // add toast for unknown role error
         }
+      } else {
+        toast.error(data.message)
       }
     }
   }
@@ -125,7 +133,7 @@ export default function AddDetails() {
                       <FormItem className="space-y-0 flex-1 md:space-y-2">
                         <FormLabel className="font-medium text-base text-[#111827] md:text-lg">New Password <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
-                          <PasswordInput placeholder="new password" className="h-10 border-[#27A376] text-sm md:h-12 md:text-base placeholder-[#A0AEC0]" {...field}/>
+                          <PasswordInput placeholder="new password" className="h-10 border-[#27A376] text-sm md:h-12 md:text-base placeholder-[#A0AEC0]" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -138,7 +146,7 @@ export default function AddDetails() {
                       <FormItem className="space-y-0 flex-1 md:text-lg md:space-y-2">
                         <FormLabel className="font-medium text-base text-[#111827]">Confirm Password <span className="text-[#E03137]">*</span></FormLabel>
                         <FormControl>
-                        <PasswordInput placeholder="confirm password" className="h-10 border-[#27A376] text-sm placeholder-[#A0AEC0] md:h-12 md:text-base" {...field}/>
+                          <PasswordInput placeholder="confirm password" className="h-10 border-[#27A376] text-sm placeholder-[#A0AEC0] md:h-12 md:text-base" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

@@ -57,19 +57,19 @@ export default function SignIn() {
     console.log({ data }, typeof data.payload)
 
     if (data && !data.error) {
-      toast.error(data.message)
+      toast.success(data.message)
       setCookies(data);
-      if (rememberMe) {
-        try {
-          await RememberMe(data.payload.id); 
-
-        } catch (error) {
-          console.log(error);
-        }
-      }
       if (typeof data.payload == 'string') {
         redirect("/add-details")
       } else {
+        if (rememberMe) {
+          try {
+            await RememberMe(data.payload.id); 
+  
+          } catch (error) {
+            console.log(error);
+          }
+        }
         if (data.payload.role == "OWNER") {
           redirect("/owner")
         } else if (data.payload.role == "ADMIN") {
