@@ -243,7 +243,7 @@ export default function OrderPage({
                       value="Picked-up"
                       checked={order.order.status === 'Picked-up'}
                       onChange={() =>
-                        handlestatus(order.order.transactionCode, 'Picked up')
+                        handlestatus(order.order.transactionCode, 'Picked-up')
                       }
                     />
                     <Label htmlFor="pickedup">Picked Up</Label>

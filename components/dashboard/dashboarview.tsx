@@ -371,25 +371,25 @@ export default function Dashboardview() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             title="Total Employees"
-            value={dashboarTotals.totalEmployees}
+            value={dashboarTotals.totalEmployees ?? 0}
             icon={<Users className="h-6 w-6 text-white" />}
             color="bg-blue-400"
           />
           <StatCard
             title="Total Admins"
-            value={dashboarTotals.totalAdmins}
+            value={dashboarTotals.totalAdmins ?? 0}
             icon={<Shield className="h-6 w-6 text-white" />}
             color="bg-purple-400"
           />
           <StatCard
             title="Delivered Items"
-            value={dashboarTotals.totalDelivered}
+            value={dashboarTotals.totalDelivered ?? 0}
             icon={<Truck className="h-6 w-6 text-white" />}
             color="bg-red-400"
           />
           <StatCard
             title="Pending Items"
-            value={dashboarTotals.totalPending}
+            value={dashboarTotals.totalPending ?? 0}
             icon={<Clock className="h-6 w-6 text-white" />}
             color="bg-yellow-400"
           />
@@ -399,7 +399,7 @@ export default function Dashboardview() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             title="Total Orders"
-            value={dashboarTotals.totalOrders}
+            value={dashboarTotals.totalOrders ?? 0}
             icon={<Package className="h-6 w-6 text-white" />}
             color="bg-emerald-400"
           />
@@ -417,7 +417,7 @@ export default function Dashboardview() {
           />
           <StatCard
             title="Picked Up Items"
-            value={dashboarTotals.totalPickedup}
+            value={dashboarTotals.totalPickedup ?? 0}
             icon={<Users className="h-6 w-6 text-white" />}
             color="bg-purple-400"
           />
