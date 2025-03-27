@@ -3,7 +3,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { AddDetailsFetch, setCookies, userProfile, userToken } from "@/actions/auth";
+import { AddDetailsFetch, ResetPassword, setCookies, userProfile, userToken } from "@/actions/auth";
 import { PasswordInput } from "@/components/log-in/password-input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -12,12 +12,13 @@ import { addDetailsSchema, resetPasswordSchema } from "@/lib/auth-schema";
 import addDetails from "@/public/images/add-details.png";
 import AddDetailsMobile from "@/public/images/details-mobile-version.svg";
 import Image from "next/image";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { use } from 'react';
 import backgroundImage from "@/public/images/resetBackground.png";
 import plane from '@/public/Icons/black Plane.svg';
+import { toast } from "sonner";
 
 export default function Page({
     params,
@@ -26,6 +27,7 @@ export default function Page({
 }) {
     const { forgotPwdToken } = use(params);
     const redirectLink = '/owner/orders';
+    const router = useRouter()
 
     const form = useForm<z.infer<typeof resetPasswordSchema>>({
         resolver: zodResolver(resetPasswordSchema),
@@ -37,29 +39,21 @@ export default function Page({
 
     async function onSubmit(values: z.infer<typeof resetPasswordSchema>) {
         const { newPassword } = values;
-        const addDetails = {
+        const passwordDetails = {
             password: newPassword
         }
 
-        // const userData = await userProfile();
-        // const token = await userToken();
+    try {
+        const response = await ResetPassword(passwordDetails, forgotPwdToken);
+        toast.success(response.message)
 
-        // if (userData && token) {
-        //     const data = await AddDetailsFetch(userData.id);
-        //     console.log("the data", data)
+        if (response.message == "Password reset successfully!") {
+            router.push('/log-in')
+        }
 
-        //     if (data) {
-        //         setCookies(data)
-        //         if (data.payload.role == "ADMIN") {
-        //             redirect("/admin")
-        //         } else if (data.payload.role == "EMPLOYEE") {
-        //             redirect("/employee")
-        //         } else {
-        //             console.error("unknown role error")
-        //             // add toast for unknown role error
-        //         }
-        //     }
-        // }
+    } catch (error) {
+      console.log(error);
+    }
     }
 
     return (

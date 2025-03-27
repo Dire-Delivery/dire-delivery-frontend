@@ -23,3 +23,7 @@ type loginDetails = {
 type ForgotPasswordData = {
   email: string
 }
+
+type ResetPasswordData = {
+  password: string
+}
