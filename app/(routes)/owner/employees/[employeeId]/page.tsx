@@ -1,6 +1,5 @@
 'use client';
 
-import OrderTabelView from '@/components/order/orderTableView';
 import PersonOrderTabelView from '@/components/shared/personOrderTableView';
 import { use } from 'react';
 

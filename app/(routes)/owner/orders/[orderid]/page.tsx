@@ -1,11 +1,14 @@
 'use client'; // Mark this component as a client component
 
-import { useEffect, useState } from 'react';
-import { use } from 'react'; // Import the `use` function
+import { userProfile } from '@/actions/auth';
 import { FetchOrder, updateOrderStatus } from '@/actions/order';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { toast } from '@/hooks/use-toast';
+import { formatDate } from '@/lib/utils';
+import { orderDetail } from '@/types/orderType';
+import { userType } from '@/types/user';
 import {
   ArrowLeft,
   FileText,
@@ -16,12 +19,7 @@ import {
   UserPlus,
 } from 'lucide-react';
 import { notFound, useRouter } from 'next/navigation';
-import { formatDate } from '@/lib/utils';
-import Link from 'next/link';
-import { userProfile } from '@/actions/auth';
-import { orderDetail } from '@/types/orderType';
-import { userType } from '@/types/user';
-import { toast } from '@/hooks/use-toast';
+import { use, useEffect, useState } from 'react';
 
 export default function OrderPage({
   params,

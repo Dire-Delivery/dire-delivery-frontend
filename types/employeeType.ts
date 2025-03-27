@@ -1,16 +1,16 @@
 export type Person = {
-    id: string;
-    name: string;
-    email: string;
-    phoneNumber: string | null;
-    location: string | null;
-    imgUrl: string | null;
-  }
-  
+  id: string;
+  name: string;
+  email: string;
+  phoneNumber: string | null;
+  location: string | null;
+  imgUrl: string | null;
+};
+
 export type EmployeeLoginDetails = {
   email: string;
   password: string;
-}
+};
 
 export type User = {
   id: string;
@@ -21,17 +21,17 @@ export type User = {
   location: string | null;
   phone: string | null;
   joinedAt: string;
-}
+};
 
 export type PromoteDate = {
   userId: string;
-  role: "ADMIN"
-}
+  role: 'ADMIN';
+};
 
 export type Pagination = {
-  pageIndex: number,
-  pageSize: number
-}
+  pageIndex: number;
+  pageSize: number;
+};
 
 // {
 //   "id": "7f9a52b5-0554-11f0-83cb-0260a62aad58",

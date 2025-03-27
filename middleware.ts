@@ -57,7 +57,10 @@ export async function middleware(request: NextRequest) {
     }
 
     // Redirect to role-specific dashboard if already logged in and visiting /log-in
-    if (!request.nextUrl.pathname.startsWith('/add-details') && !request.nextUrl.pathname.startsWith('/auth')) {
+    if (
+      !request.nextUrl.pathname.startsWith('/add-details') &&
+      !request.nextUrl.pathname.startsWith('/auth')
+    ) {
       if (
         userData.role === 'OWNER' &&
         !request.nextUrl.pathname.startsWith('/owner')

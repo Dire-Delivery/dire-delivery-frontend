@@ -31,11 +31,11 @@ export default async function apiCall({
       body: method !== 'GET' ? JSON.stringify(data) : undefined,
     });
     // Check if the response is JSON
-    console.log({response, data, token, method, url})
+    console.log({ response, data, token, method, url });
     const contentType = response.headers.get('Content-Type');
     if (contentType && contentType.includes('application/json')) {
       const responseData = await response.json();
-      console.log("the response data", responseData)
+      console.log('the response data', responseData);
       // if (!response.ok && !responseData.token && !responseData.message) {
       //   console.log("error thrown");
       //   throw new Error(responseData?.error?.message || 'Something went wrong');
@@ -43,7 +43,7 @@ export default async function apiCall({
       return responseData;
     } else {
       // Handle non-JSON responses (e.g., plain text)
-      console.log("..........", "none json")
+      console.log('..........', 'none json');
       const text = await response.text();
       if (!response.ok) {
         throw new Error(text || 'Something went wrong');

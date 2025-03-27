@@ -20,14 +20,14 @@ export const formSchema = z.object({
 
 export const addUserSchema = z.object({
   fName: z
-  .string()
-  .min(2, { message: 'Name must be at least 2 characters long' })
-  .max(50, { message: 'Name cannot exceed 50 characters' }),
+    .string()
+    .min(2, { message: 'Name must be at least 2 characters long' })
+    .max(50, { message: 'Name cannot exceed 50 characters' }),
 
-lName: z
-  .string()
-  .min(2, { message: 'Name must be at least 2 characters long' })
-  .max(50, { message: 'Name cannot exceed 50 characters' }),
+  lName: z
+    .string()
+    .min(2, { message: 'Name must be at least 2 characters long' })
+    .max(50, { message: 'Name cannot exceed 50 characters' }),
 
   email: z
     .string()
@@ -67,7 +67,7 @@ export const addDetailsSchema = z
     path: ['confirmPassword'], // Attach error to confirmPassword field
   });
 
-  export const resetPasswordSchema = z
+export const resetPasswordSchema = z
   .object({
     newPassword: z
       .string()

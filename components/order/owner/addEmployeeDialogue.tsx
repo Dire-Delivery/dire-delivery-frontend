@@ -1,41 +1,33 @@
 'use client';
 
-import { city } from '@/types/cities';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { X } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { v4 as uuidv4 } from 'uuid';
-import * as z from 'zod';
-import ConfirmModal from '../confirmModal';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import done from "@/public/images/done.svg"
+  CardTitle
+} from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import done from "@/public/images/done.svg";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { X } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
 
 
 import { AddUserFetch, userProfile, userToken } from "@/actions/auth";
-import { addUserSchema } from "@/lib/auth-schema";
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { addUserSchema } from "@/lib/auth-schema";
+import { cn } from '@/lib/utils';
+import { EmployeeLoginDetails } from '@/types/employeeType';
 import Image from 'next/image';
+import { useState } from 'react';
 import { AiOutlineCopy } from "react-icons/ai";
 import { toast } from 'sonner';
-import { useState } from 'react';
-import { EmployeeLoginDetails } from '@/types/employeeType';
-import { useRouter } from 'next/navigation';
 import { useMediaQuery } from 'usehooks-ts';
-import { cn } from '@/lib/utils';
-
-const BaseUrl = process.env.NEXT_PUBLIC_API_URL
 
 type props = {
-  cities: city[];
   showNewEmployeeModal: boolean;
   setShowNewEmployeeModal: React.Dispatch<React.SetStateAction<boolean>>;
   showConfirmationModal: boolean;
@@ -44,7 +36,6 @@ type props = {
 };
 
 export default function AddEmployeeDialogue({
-  cities,
   showNewEmployeeModal,
   setShowNewEmployeeModal,
   showConfirmationModal,
@@ -60,9 +51,8 @@ export default function AddEmployeeDialogue({
       phoneNumber: "",
     },
   })
-  const router = useRouter()
 
-  const { handleSubmit, reset } = form;
+  const { reset } = form;
 
   const [newEmployeeLoginDetails, setNewEmployeeLoginDetails] = useState<EmployeeLoginDetails>({ email: '', password: '' })
   const isMobile = useMediaQuery('(max-width: 768px)'); // Tablet screens
@@ -113,7 +103,7 @@ export default function AddEmployeeDialogue({
     try {
       await navigator.clipboard.writeText(copyText);
       toast.success("Successfully copied to clipboard");
-    } catch (err) {
+    } catch {
   
       // Fallback method for older mobile browsers
       const textArea = document.createElement("textarea");

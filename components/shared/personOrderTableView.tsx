@@ -1,40 +1,33 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { userProfile, userToken } from '@/actions/auth';
+import { DemoteEmployee, FindOrdersByPerson, FindPerson, PromoteEmployee } from '@/actions/employee';
+import {
+    DeleteOrder,
+    FetchOrder,
+    FetchStatusOrder
+} from '@/actions/order';
+import { columns } from '@/components/order/owner/column';
+import { DataTable } from '@/components/order/owner/orderTable';
+import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
+import { User } from '@/types/employeeType';
 import {
     Order,
     TransformedOrder as OriginalTransformedOrder,
 } from '@/types/orderType';
+import { userType } from '@/types/user';
+import { ColumnDef } from '@tanstack/react-table';
+import { useEffect, useState } from 'react';
+import { FaUserLarge } from 'react-icons/fa6';
+import { LuX } from 'react-icons/lu';
+import { v4 as uuidv4 } from 'uuid';
+import { Button } from '../ui/button';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card';
+import { OrderType } from '@/types/orderStatus';
 
 interface TransformedOrder extends OriginalTransformedOrder {
     addedBy: string;
 }
-import {
-    DeleteOrder,
-    FetchOrder,
-    FetchOrders,
-    FetchStatusOrder,
-} from '@/actions/order';
-import { columns } from '@/components/order/owner/column';
-import { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from '@/components/order/owner/orderTable';
-import AddOrderDialogue from '@/components/order/addOrderDialogue';
-import { city } from '@/types/cities';
-import { fetchCity } from '@/actions/cities';
-import { Plus } from 'lucide-react';
-import { v4 as uuidv4 } from 'uuid';
-import { useToast } from '@/hooks/use-toast';
-import { userProfile, userToken } from '@/actions/auth';
-import { userType } from '@/types/user';
-import { DemoteEmployee, FindOrdersByPerson, FindPerson, PromoteEmployee } from '@/actions/employee';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '../ui/card';
-import { MdOutlineClose } from 'react-icons/md';
-import { Button } from '../ui/button';
-import { FaUserLarge } from 'react-icons/fa6';
-import { cn } from '@/lib/utils';
-import { PiEyeBold } from 'react-icons/pi';
-import { User } from '@/types/employeeType';
-import { toast } from 'sonner';
-import { LuX } from 'react-icons/lu';
 
 type props = {
     redirectLink: string;
@@ -46,11 +39,6 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
     const [transformedOrder, setTransformedOrder] = useState<
         TransformedOrder[] | null
     >(null);
-    const [cities, setCities] = useState<city[]>([]);
-    const [showNewOrderModal, setShowNewOrderModal] = useState<boolean>(false);
-    const [showConfirmationModal, setShowConfirmationModal] =
-        useState<boolean>(false);
-    const [showRecipet, setShowRecipt] = useState<boolean>(false);
     const [pagenumber, setPagenumber] = useState<number>(1);
     const [loading, setloading] = useState<boolean>(true);
     const [totalPages, setTotalPages] = useState<number>(1);
@@ -69,10 +57,6 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
             const decoded = await userProfile();
             const user = decoded as userType;
             setUser(user);
-
-            const response = await fetchCity();
-            console.log('cities:', response);
-            setCities(response);
 
             if (!user) {
                 return;
@@ -165,7 +149,7 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
             }
         };
         fetchOrders();
-    }, [pagenumber, triggerstate, showRecipet]);
+    }, [pagenumber, triggerstate]);
 
     useEffect(() => {
         const fetchPerson = async () => {
@@ -284,7 +268,7 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
             console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",result);
             setTotalPages(response.totalPage);
             setCurrentPage(response.currentPage);
-            const filteredData = result.orders?.filter((order: any) => order.orderDetails.employeeInfo.email == personInfo?.email).map((result: Order) => ({
+            const filteredData = result.orders?.filter((order: OrderType) => order.orderDetails.employeeInfo.email == personInfo?.email).map((result: Order) => ({
                 transactionCode: result.orderDetails.order.transactionCode, // Use transactionCode instead of orderId
                 senderName: result.orderDetails.sender?.name || '',
                 reciverName: result.orderDetails.receiver?.name || '',
@@ -383,9 +367,9 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
             const token = await userToken();
             if (userData && token && personInfo) {
                 if (personInfo.role == "ADMIN") {
-                    const response = await DemoteEmployee(userData.id, employeeId);
+                    await DemoteEmployee(userData.id, employeeId);
                 } else {
-                    const response = await PromoteEmployee(userData.id, employeeId);
+                    await PromoteEmployee(userData.id, employeeId);
                 }
 
                 setShowChangeRoleModal(false);

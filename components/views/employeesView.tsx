@@ -1,47 +1,23 @@
 'use client';
-import { DeletePerson, FetchEmployees, FindPerson, SearchByName, } from '@/actions/employee';
-import AddOrderDialogue from '@/components/order/addOrderDialogue';
+import { userProfile, userToken } from '@/actions/auth';
+import { DeletePerson, FetchEmployees, SearchByName } from '@/actions/employee';
 import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
 import { employeeColumns } from '@/components/order/owner/peopleColumn';
 import { PeopleDataTable } from '@/components/order/owner/peopleTable';
-import { city } from '@/types/cities';
-import { Person, EmployeeLoginDetails, User, Pagination } from '@/types/employeeType';
+import { convertToEmployeesFormat } from '@/lib/utils';
+import { Pagination, Person } from '@/types/employeeType';
 import { ColumnDef } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import { Button } from '@/components/ui/button';
-import { cn, convertToEmployeesFormat } from '@/lib/utils';
-import { FaUserLarge } from 'react-icons/fa6';
-import { MdOutlineClose } from "react-icons/md";
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import person from '@/public/images/person.png'
-import Image from 'next/image';
-import { PasswordInput } from '@/components/log-in/password-input';
-import { PiEyeClosedBold } from "react-icons/pi";
-import { PiEyeBold } from "react-icons/pi";
-import { userProfile, userToken } from '@/actions/auth';
 import { toast } from 'sonner';
-import { useMediaQuery } from 'usehooks-ts';
 
 export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
   const [employees, setEmployees] = useState<Person[]>([]);
-  const [cities, setCities] = useState<city[]>([]);
   const [showNewEmployeeModal, setShowNewEmployeeModal] = useState<boolean>(false);
   const [showConfirmationModal, setShowConfirmationModal] =
     useState<boolean>(false);
-  const [showPerson, setShowPerson] = useState<boolean>(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [showChangeRoleModal, setShowChangeRoleModal] = useState(false);
   const [refreshTableToggle, setRefreshTableToggle] = useState(false);
-  const [personInfo, setPersonInfo] = useState<User>();
   const [pagination, setPagination] = useState<Pagination>({
     pageIndex: 0, //initial page index
     pageSize: 10, //default page size
@@ -115,27 +91,6 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
     }
   };
 
-  const handleFind = async (id: string) => {
-    try {
-      const userData = await userProfile();
-      const token = await userToken();
-      if (userData && token) {
-        const data = await FindPerson(userData.id, id);
-        if (data) {
-          setPersonInfo(data);
-          setShowPerson(true);
-        } else {
-          toast.error(data);
-        }
-        console.log({ data })
-      } else {
-        throw new Error("userData or token not found")
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const checkEmpty = async (name: string) => {
     console.log("...........................", { name })
     if (!name) {
@@ -178,7 +133,6 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           setShowNewEmployeeModal={setShowNewEmployeeModal}
           showConfirmationModal={showConfirmationModal}
           setShowConfirmationModal={setShowConfirmationModal}
-          cities={cities}
           setShowFilteredData={setShowFilteredData}
         />
         <PeopleDataTable
@@ -191,9 +145,6 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           data={employees}
           totalEntries={employees.length}
           handleDelete={handleDelete}
-          handleFind={handleFind}
-          setShowPerson={setShowPerson}
-          setShowPassword={setShowPassword}
           type="employee"
           showChangeRoleModal={showChangeRoleModal}
           setShowChangeRoleModal={setShowChangeRoleModal}

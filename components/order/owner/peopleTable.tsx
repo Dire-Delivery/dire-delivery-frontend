@@ -1,39 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import {
-    type ColumnDef,
-    type ColumnFiltersState,
-    flexRender,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    useReactTable,
-} from '@tanstack/react-table';
-import { useMediaQuery } from 'usehooks-ts';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from '@/components/ui/select';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import {
     AlertDialog,
     AlertDialogAction,
@@ -44,29 +10,52 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { Button } from '@/components/ui/button';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Input } from '@/components/ui/input';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/components/ui/table';
+import {
+    type ColumnDef,
+    type ColumnFiltersState,
+    flexRender,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    useReactTable,
+} from '@tanstack/react-table';
+import { useEffect, useState } from 'react';
+import { useMediaQuery } from 'usehooks-ts';
 
-import Link from 'next/link';
-import { LuEye, LuX } from 'react-icons/lu';
-import { RiDeleteBin5Line } from 'react-icons/ri';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { cn } from '@/lib/utils';
-import { FaUserLarge } from "react-icons/fa6";
-import { usePathname, useRouter } from 'next/navigation';
-import { Pagination, Person } from '@/types/employeeType';
 import { userProfile, userToken } from '@/actions/auth';
 import { PromoteEmployee } from '@/actions/employee';
-import { toast } from 'sonner';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
+import { Pagination, Person } from '@/types/employeeType';
+import { usePathname, useRouter } from 'next/navigation';
+import { FaUserLarge } from "react-icons/fa6";
+import { LuEye, LuX } from 'react-icons/lu';
+import { RiDeleteBin5Line } from 'react-icons/ri';
+import { toast } from 'sonner';
 
 interface EmployeeDataTableProps<TData extends Person, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     totalEntries: number;
     handleDelete: (id: string) => void;
-    handleFind: (id: string) => void;
     type: "admin" | "employee";
-    setShowPerson: React.Dispatch<React.SetStateAction<boolean>>;
-    setShowPassword: React.Dispatch<React.SetStateAction<boolean>>;
     showChangeRoleModal: boolean;
     setShowChangeRoleModal: React.Dispatch<React.SetStateAction<boolean>>;
     pagination: Pagination;
@@ -88,12 +77,8 @@ export function PeopleDataTable<
 >({
     columns,
     data,
-    totalEntries,
     type,
     handleDelete,
-    handleFind,
-    setShowPerson,
-    setShowPassword,
     showChangeRoleModal,
     setShowChangeRoleModal,
     pagination,

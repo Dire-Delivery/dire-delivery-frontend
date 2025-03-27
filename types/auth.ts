@@ -21,9 +21,9 @@ type loginDetails = {
 };
 
 type ForgotPasswordData = {
-  email: string
-}
+  email: string;
+};
 
 type ResetPasswordData = {
-  password: string
-}
+  password: string;
+};

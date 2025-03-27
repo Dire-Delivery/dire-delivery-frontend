@@ -3,22 +3,19 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { AddDetailsFetch, ResetPassword, setCookies, userProfile, userToken } from "@/actions/auth";
+import { ResetPassword } from "@/actions/auth";
 import { PasswordInput } from "@/components/log-in/password-input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { addDetailsSchema, resetPasswordSchema } from "@/lib/auth-schema";
-import addDetails from "@/public/images/add-details.png";
-import AddDetailsMobile from "@/public/images/details-mobile-version.svg";
-import Image from "next/image";
-import { redirect, useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { use } from 'react';
-import backgroundImage from "@/public/images/resetBackground.png";
+import { resetPasswordSchema } from "@/lib/auth-schema";
 import plane from '@/public/Icons/black Plane.svg';
+import backgroundImage from "@/public/images/resetBackground.png";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { use } from 'react';
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { z } from "zod";
 
 export default function Page({
     params,
@@ -26,7 +23,6 @@ export default function Page({
     params: Promise<{ forgotPwdToken: string }>;
 }) {
     const { forgotPwdToken } = use(params);
-    const redirectLink = '/owner/orders';
     const router = useRouter()
 
     const form = useForm<z.infer<typeof resetPasswordSchema>>({

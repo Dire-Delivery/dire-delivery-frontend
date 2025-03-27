@@ -1,9 +1,7 @@
 'use client';
 
-import { ColumnDef } from '@tanstack/react-table';
 import { Order } from '@/types/orderType';
-import { formatDate } from '@/lib/utils';
-import { getStatusColor } from '@/components/trackorder/factories';
+import { ColumnDef } from '@tanstack/react-table';
 
 export const employeeColumns: ColumnDef<Order>[] = [
   {

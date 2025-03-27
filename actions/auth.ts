@@ -98,7 +98,10 @@ export const ForgotPassword = async (data: ForgotPasswordData) => {
   return response;
 };
 
-export const ResetPassword = async (data: ResetPasswordData, forgotPwdToken: string) => {
+export const ResetPassword = async (
+  data: ResetPasswordData,
+  forgotPwdToken: string
+) => {
   const fetchURl = `${BaseUrl}/auth/reset-password/${forgotPwdToken}`;
   const response = await apiCall({ url: fetchURl, method: 'POST', data: data });
   return response;
@@ -117,4 +120,3 @@ export const RememberMe = async (userId: string) => {
   });
   return response;
 };
-
