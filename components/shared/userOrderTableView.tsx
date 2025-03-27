@@ -31,10 +31,10 @@ interface TransformedOrder extends OriginalTransformedOrder {
 
 type props = {
     redirectLink: string;
-    employeeId: string;
+    userId: string;
 };
 
-export default function PersonOrderTabelView({ redirectLink, employeeId }: props) {
+export default function UserOrderTabelView({ redirectLink, userId }: props) {
     const { toast } = useToast();
     const [transformedOrder, setTransformedOrder] = useState<
         TransformedOrder[] | null
@@ -50,7 +50,7 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
 
     const role = user?.role;
     const name = user?.name;
-    const userId = user?.id;
+    const myUserId = user?.id;
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -64,7 +64,7 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
             try {
                 const response = await FindOrdersByPerson(
                     decoded.id,
-                    employeeId,
+                    userId,
                     pagenumber
                 );
                 console.log("#############", response)
@@ -157,7 +157,7 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
                 const userData = await userProfile();
                 const token = await userToken();
                 if (userData && token) {
-                    const data = await FindPerson(userData.id, employeeId);
+                    const data = await FindPerson(userData.id, userId);
                     if (data) {
                         setPersonInfo(data);
 
@@ -341,7 +341,7 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
     const handleDelete = async (id: string) => {
         console.log('about to delete:', id);
         console.log('trxcode:', id);
-        const response = await DeleteOrder({ userid: userId!, trxCode: id });
+        const response = await DeleteOrder({ userid: myUserId!, trxCode: id });
         if (response.message === 'Order deleted successfully') {
             toast({
                 title: 'Deleted Successfully',
@@ -367,9 +367,9 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
             const token = await userToken();
             if (userData && token && personInfo) {
                 if (personInfo.role == "ADMIN") {
-                    await DemoteEmployee(userData.id, employeeId);
+                    await DemoteEmployee(userData.id, userId);
                 } else {
-                    await PromoteEmployee(userData.id, employeeId);
+                    await PromoteEmployee(userData.id, userId);
                 }
 
                 setShowChangeRoleModal(false);
@@ -448,11 +448,11 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
                     <CardHeader className='relative px-0 py-0'>
                         <CardTitle className='w-full flex justify-between items-center '>
                             <div className='font-bold text-2xl'>{personInfo?.name}</div>
-                            <Button className={cn('bg-[#060A87] rounded-[10px] w-40 h-10 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5 ')} onClick={() => setShowChangeRoleModal(true)}>
+                            {role == "OWNER" && <Button className={cn('bg-[#060A87] rounded-[10px] w-40 h-10 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5 ')} onClick={() => setShowChangeRoleModal(true)}>
                                 <FaUserLarge size={20} />
                                 <div className='text-base font-bold mb-[-3px]'>{personInfo?.role == "EMPLOYEE" ? "PROMOTE": "DEMOTE"}</div>
                                 <div className='text-2xl font-normal text-center mt-[-3px] ml-2'>+</div>
-                            </Button>
+                            </Button>}
                         </CardTitle>
 
                     </CardHeader>

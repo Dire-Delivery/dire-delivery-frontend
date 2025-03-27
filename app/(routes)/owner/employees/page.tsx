@@ -1,9 +1,9 @@
-import EmployeesView from "@/components/views/UserView";
+import UsersView from "@/components/views/usersView";
 
 function EmployeesPageOwner() {
   return (
     <>
-      <EmployeesView type="owner" view="employee"/>
+      <UsersView type="owner" view="employee"/>
     </>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 import { userProfile, userToken } from '@/actions/auth';
-import { DeletePerson, FetchEmployees, SearchByName } from '@/actions/employee';
+import { DeletePerson, FetchUsers, SearchByName } from '@/actions/employee';
 import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
 import { employeeColumns } from '@/components/order/owner/peopleColumn';
 import { UserDataTable } from '@/components/order/owner/peopleTable';
@@ -11,7 +11,7 @@ import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-export default function UserView({ type }: { type: "owner" | "admin" , view: "employee" | "admin"}) {
+export default function UserView({ type, view }: { type: "owner" | "admin" , view: "employee" | "admin"}) {
   const [employees, setEmployees] = useState<Person[]>([]);
   const [showNewEmployeeModal, setShowNewEmployeeModal] = useState<boolean>(false);
   const [showConfirmationModal, setShowConfirmationModal] =
@@ -33,9 +33,9 @@ export default function UserView({ type }: { type: "owner" | "admin" , view: "em
         const userData = await userProfile();
         const token = await userToken();
         if (userData && token) {
-          const response = await FetchEmployees(userData.id, pagination.pageIndex + 1);
+          const response = await FetchUsers(userData.id, pagination.pageIndex + 1, view.toUpperCase());
           console.log({ response });
-          const convertedEmployeeFormat = convertToUsersFormat(response.users, "EMPLOYEE");
+          const convertedEmployeeFormat = convertToUsersFormat(response.users, view.toUpperCase());
           setPageCount(response.totalPage);
           setTotalPeople(response.totalUsers)
           setEmployees(convertedEmployeeFormat);
@@ -55,7 +55,7 @@ export default function UserView({ type }: { type: "owner" | "admin" , view: "em
         if (userData && token) {
           const response = await SearchByName(userData.id, searchInput, pagination.pageIndex + 1);
           console.log({response})
-          const convertedEmployeeFormat = convertToUsersFormat(response.users, "EMPLOYEE");
+          const convertedEmployeeFormat = convertToUsersFormat(response.users, view.toUpperCase());
           setPageCount(response.totalPage);
           setTotalPeople(response.totalUsers);
           setEmployees(convertedEmployeeFormat);
@@ -113,20 +113,20 @@ export default function UserView({ type }: { type: "owner" | "admin" , view: "em
             Welcome Back, {type == "owner" ? "Owner" : "Admin"}!
           </div>
           <div className="self-stretch text-[#495d85] text-sm md:text-base font-extrabold font-['Manrope'] leading-tight">
-            Here’s your Employees Report
+            Here’s your {view == "employee" ? "Employee" : "Admin"}s Report
           </div>
         </div>
       </div>
       <section className=" w-full border px-2 md:px-6 md:py-2 mt-8 bg-white rounded-2xl flex-col justify-between items-start inline-flex overflow-hidden">
         <div className="w-full flex justify-between items-center mt-2 md:mt-4 ">
-          <h1 className="text-2xl font-bold pl-2 md:pl-0 text-[#060A87]">Employees</h1>
-          <button
+          <h1 className="text-2xl font-bold pl-2 md:pl-0 text-[#060A87]">{view == "employee" ? "Employees" : "Admins"}</h1>
+          {view == "employee" && <button
             onClick={() => setShowNewEmployeeModal(true)}
             className="bg-[#060A87] text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-[#060a87d5] mr-2 mt-2 md:mr-0 md:mt-0"
           >
             <Plus className="h-5 w-5" />
             Add New
-          </button>
+          </button>}
         </div>
         <AddEmployeeDialogue
           showNewEmployeeModal={showNewEmployeeModal}
@@ -145,7 +145,7 @@ export default function UserView({ type }: { type: "owner" | "admin" , view: "em
           data={employees}
           totalEntries={employees.length}
           handleDelete={handleDelete}
-          type="employee"
+          view={view}
           showChangeRoleModal={showChangeRoleModal}
           setShowChangeRoleModal={setShowChangeRoleModal}
           pagination={pagination}

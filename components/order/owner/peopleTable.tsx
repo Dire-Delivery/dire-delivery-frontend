@@ -39,7 +39,7 @@ import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
 
 import { userProfile, userToken } from '@/actions/auth';
-import { PromoteEmployee } from '@/actions/employee';
+import { ChangeRole } from '@/actions/employee';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
@@ -55,7 +55,7 @@ interface EmployeeDataTableProps<TData extends Person, TValue> {
     data: TData[];
     totalEntries: number;
     handleDelete: (id: string) => void;
-    type: "admin" | "employee";
+    view: "admin" | "employee";
     showChangeRoleModal: boolean;
     setShowChangeRoleModal: React.Dispatch<React.SetStateAction<boolean>>;
     pagination: Pagination;
@@ -77,7 +77,7 @@ export function UserDataTable<
 >({
     columns,
     data,
-    type,
+    view,
     handleDelete,
     showChangeRoleModal,
     setShowChangeRoleModal,
@@ -148,7 +148,7 @@ export function UserDataTable<
             const userData = await userProfile();
             const token = await userToken();
             if (userData && token && selectedPerson) {
-                const response = await PromoteEmployee(userData.id, selectedPerson.id);
+                const response = await ChangeRole(userData.id, selectedPerson.id, view);
                 toast.success(response.message)
                 setShowChangeRoleModal(false);
                 setRefreshTableToggle(!refreshTableToggle);
@@ -171,7 +171,7 @@ export function UserDataTable<
                                 setShowChangeRoleModal(false)
                                 setSelectedPerson(null)
                             }} />
-                            <CardTitle className='text-[#060A87] font-bold text-2xl mx-auto'>Are your sure you want to {type == "employee" ? "Promote" : "Demote"} them?</CardTitle>
+                            <CardTitle className='text-[#060A87] font-bold text-2xl mx-auto'>Are your sure you want to {view == "employee" ? "Promote" : "Demote"} them?</CardTitle>
                         </CardHeader>
                         <CardContent className=' '>
                             <div>
@@ -286,8 +286,8 @@ export function UserDataTable<
                                             </TableHead>
                                         );
                                     })}
-                                    {role == "owner" && <TableHead className='text-center hidden xl:flex xl:items-center xl:justify-center'>{type == "employee" ? 'Promote to Admin' : 'Demote to Employee'}</TableHead>}
-                                    {role == "owner" && <TableHead className='text-center xl:hidden'>{type == "employee" ? 'Promote' : 'Demote'}</TableHead>}
+                                    {role == "owner" && <TableHead className='text-center hidden xl:flex xl:items-center xl:justify-center'>{view == "employee" ? 'Promote to Admin' : 'Demote to Employee'}</TableHead>}
+                                    {role == "owner" && <TableHead className='text-center xl:hidden'>{view == "employee" ? 'Promote' : 'Demote'}</TableHead>}
                                     <TableHead className='text-center'>Actions</TableHead>
                                 </TableRow>
                             ))}
@@ -318,10 +318,10 @@ export function UserDataTable<
                                             <Button onClick={() => {
                                                 setSelectedPerson(row.original)
                                                 setShowChangeRoleModal(true);
-                                            }} className={cn('mx-auto bg-[#060A87] rounded-[10px] py-2 px-3 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5', type == 'admin' && 'bg-[#2F78EE] hover:bg-[#2F78EE]')}>
+                                            }} className={cn('mx-auto bg-[#060A87] rounded-[10px] py-2 px-3 hover:bg-[#060a87d5] hover:opacity-90 flex items-center gap-2.5', view == 'admin' && 'bg-[#060A87] hover:bg-[#060a87d8]')}>
                                                 <FaUserLarge />
-                                                <div className='text-sm font-bold mb-[-3px] hidden xl:block'>{type == "employee" ? 'Promote' : 'Demote'}</div>
-                                                {type == 'employee' && <div className='text-3xl font-normal text-center mt-[-3px]'>+</div>}
+                                                <div className='text-sm font-bold mb-[-3px] hidden xl:block'>{view == "employee" ? 'Promote' : 'Demote'}</div>
+                                                {view == 'employee' && <div className='text-3xl font-normal text-center mt-[-3px]'>+</div>}
                                             </Button>
                                         </TableCell>}
                                         <TableCell className='relative mx-auto text-center'>
@@ -337,7 +337,7 @@ export function UserDataTable<
                                                     <DropdownMenuItem className="cursor-pointer" onClick={() => {
 
                                                         // handleFind(row.original.id);
-                                                        router.push(`/${role}/${type}s/${row.original.id}`)
+                                                        router.push(`/${role}/${view}s/${row.original.id}`)
                                                     }}>
                                                         <LuEye className="mr-2 h-4 w-4" />
                                                         View

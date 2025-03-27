@@ -6,8 +6,12 @@ import { Order } from '@/types/orderType';
 // const BaseURL = 'http://localhost:3002';
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL;
 
-export const FetchEmployees = async (ownerId: string, pageNumber: number) => {
-  const fetchURl = `${BaseUrl}/users/${ownerId}/EMPLOYEE/${pageNumber}`;
+export const FetchUsers = async (
+  ownerId: string,
+  pageNumber: number,
+  view: string
+) => {
+  const fetchURl = `${BaseUrl}/users/${ownerId}/${view}/${pageNumber}`;
   //   console.log(`fetchUrl`, fetchURl);
   const response = await apiCall({ url: fetchURl });
   console.log('the employees', response);
@@ -20,6 +24,23 @@ export const PromoteEmployee = async (ownerId: string, employeeId: string) => {
     url: fetchURl,
     method: 'POST',
     data: { userId: employeeId, role: 'ADMIN' },
+  });
+  return response;
+};
+
+export const ChangeRole = async (
+  ownerId: string,
+  employeeId: string,
+  view: 'employee' | 'admin'
+) => {
+  const fetchURl = `${BaseUrl}/users/${ownerId}/change-role`;
+  const response = await apiCall({
+    url: fetchURl,
+    method: 'POST',
+    data: {
+      userId: employeeId,
+      role: view == 'employee' ? 'ADMIN' : 'EMPLOYEE',
+    },
   });
   return response;
 };
