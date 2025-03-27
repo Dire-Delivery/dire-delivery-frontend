@@ -78,6 +78,7 @@ interface EmployeeDataTableProps<TData extends Person, TValue> {
     setShowFilteredData: React.Dispatch<React.SetStateAction<boolean>>;
     searchInput: string;
     setSearchInput: React.Dispatch<React.SetStateAction<string>>;
+    totalPeople: number;
 
 }
 
@@ -103,7 +104,8 @@ export function PeopleDataTable<
     checkEmpty,
     setShowFilteredData,
     searchInput,
-    setSearchInput
+    setSearchInput,
+    totalPeople
 }: EmployeeDataTableProps<TData, TValue>) {
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
     const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
@@ -117,6 +119,9 @@ export function PeopleDataTable<
     // Detect screen size
     const isTablet = useMediaQuery('(max-width: 1024px)'); // Tablet screens
     const router = useRouter()
+
+    const startIndex = (pagination.pageIndex) * pagination.pageSize + 1;
+    const endIndex = Math.min((pagination.pageIndex + 1) * pagination.pageSize, totalPeople);
 
     // Update column visibility based on screen size
     useEffect(() => {
@@ -417,7 +422,7 @@ export function PeopleDataTable<
                 </div>
                 <div className="flex items-center justify-between space-x-2 py-4">
                     <div className=" hidden md:block text-sm text-muted-foreground">
-                        Showing {table.getRowModel().rows.length} of {totalEntries} entries
+                        Showing {startIndex}–{endIndex} of {totalPeople} users
                     </div>
                     <div className="flex items-center space-x-2">
                         <Button

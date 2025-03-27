@@ -47,6 +47,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
     pageSize: 10, //default page size
   });
   const [pageCount, setPageCount] = useState(1);
+  const [totalPeople, setTotalPeople] = useState(0);
   const [showFilteredData, setShowFilteredData] = useState(false);
   const [searchInput, setSearchInput] = useState("");
 
@@ -60,6 +61,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           console.log({ response });
           const convertedEmployeeFormat = convertToEmployeesFormat(response.users);
           setPageCount(response.totalPage);
+          setTotalPeople(response.totalUsers)
           setEmployees(convertedEmployeeFormat);
 
         } else {
@@ -78,7 +80,8 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           const response = await SearchByName(userData.id, searchInput, pagination.pageIndex + 1);
           console.log({response})
           const convertedEmployeeFormat = convertToEmployeesFormat(response.users);
-          setPageCount(response.totalPage)
+          setPageCount(response.totalPage);
+          setTotalPeople(response.totalUsers);
           setEmployees(convertedEmployeeFormat);
 
         } else {
@@ -203,6 +206,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           setShowFilteredData={setShowFilteredData}
           searchInput={searchInput}
           setSearchInput={setSearchInput}
+          totalPeople={totalPeople}
         />
       </section>
     </section>
