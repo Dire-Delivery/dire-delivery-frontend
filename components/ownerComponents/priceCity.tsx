@@ -340,7 +340,7 @@ export default function PriceCitySettings({
                     type="text"
                     className="input-field border rounded-md w-full p-2"
                     {...register('code')}
-                    placeholder="(ex. DD)"
+                    placeholder="(ex. ETDD)"
                   />
                   {errors.code && (
                     <p className="text-red-500 text-sm">

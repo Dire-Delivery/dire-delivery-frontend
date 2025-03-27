@@ -7,7 +7,7 @@ import { z } from 'zod';
 
 export const cityaddFormSchema = z.object({
   name: z.string().min(1, 'City Name is required'),
-  code: z.string().min(2, 'City Code is requried'),
+  code: z.string().min(4, 'City Code is requried and Must Be 4 Characters'),
 });
 // export type addFormSchema = z.infer<typeof formSchema>;
 
