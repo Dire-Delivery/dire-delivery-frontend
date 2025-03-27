@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { loginFetch, setCookies } from "@/actions/auth";
+import { ForgotPassword, loginFetch, setCookies, userProfile } from "@/actions/auth";
 import { PasswordInput } from "@/components/log-in/password-input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -17,9 +17,20 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 
 export default function SignIn() {
   const [rememberMe, setRememberMe] = useState(false); // ✅ Add state for Remember Me
+  const [showAlertDialog, setShowAlertDialog] = useState(false);
 
   const form = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
@@ -29,6 +40,13 @@ export default function SignIn() {
     },
   })
 
+  const forgotPasswordForm = useForm<{ email: string }>({ // ✅ Explicit type
+    resolver: zodResolver(z.object({ email: z.string().email() })), // ✅ Validation
+    defaultValues: {
+      email: "",
+    },
+  });
+
   async function onSubmit(values: z.infer<typeof signInFormSchema>) {
     const { email, password } = values;
     const loginDetails = {
@@ -36,7 +54,7 @@ export default function SignIn() {
       password: password
     }
     const data = await loginFetch(loginDetails);
-    console.log({data}, typeof data.payload)
+    console.log({ data }, typeof data.payload)
 
     if (data && !data.error) {
       toast.error(data.message)
@@ -61,8 +79,61 @@ export default function SignIn() {
     }
   }
 
+  const handleForgotPassword = async (email: string) => {
+    try {
+        const data = {email}
+        const response = await ForgotPassword(data);
+        console.log({response})
+        toast.success(response.message)
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="flex flex-col justify-between h-screen w-screen md:flex-row">
+      <AlertDialog
+        open={showAlertDialog}
+        onOpenChange={(open) => setShowAlertDialog(open)} // ✅ Simplified
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-[#060A87] text-xl">
+              Confirm Password Reset
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              If you proceed, please provide your registered email address below. An email with a password reset link will be sent to your inbox.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+
+          <Form {...forgotPasswordForm}>
+            <form onSubmit={forgotPasswordForm.handleSubmit((data) => handleForgotPassword(data.email))} className="space-y-4 md:space-y-7">
+              <FormField
+                control={forgotPasswordForm.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-s font-medium text-[#060A87] md:text-lg">Email <span className="text-[#E03137]">*</span></FormLabel>
+                    <FormControl>
+                      <Input placeholder="john@mail.com" className="h-10 md:h-12 md:text-base focus:outline-none focus:border-none focus-visible:ring-[#060A87]" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction
+                  type="submit" // ✅ Submit the form
+                  className="bg-[#060A87] hover:bg-[#060a87dc]"
+                >
+                  Confirm
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </form>
+          </Form>
+        </AlertDialogContent>
+      </AlertDialog>
       <div className="h-[calc(100vh/2.5)] w-full md:h-screen md:w-[calc(100vw/2)]">
         <Image src={Login} alt="login image" className=" w-full h-full object-cover" />
       </div>
@@ -102,10 +173,10 @@ export default function SignIn() {
               />
               <div className="flex justify-between ml-[-5px] mr-[-5px] items-center">
                 <label className="flex gap-1.5 items-center cursor-pointer">
-                  <Checkbox checked={rememberMe} className="data-[state=checked]:bg-[#27A376]" onClick={() => setRememberMe(!rememberMe)}/>
+                  <Checkbox checked={rememberMe} className="data-[state=checked]:bg-[#27A376]" onClick={() => setRememberMe(!rememberMe)} />
                   <span className="text-[#687588] font-medium">Remember Me</span>
                 </label>
-                <div className="text-[#687588] font-medium text-s items-center cursor-pointer">Forgot Password</div>
+                <div className="text-[#687588] font-medium text-s items-center cursor-pointer" onClick={() => setShowAlertDialog(true)}>Forgot Password</div>
               </div>
               <Button className="w-full h-12" type="submit" variant="login">Login</Button>
             </form>

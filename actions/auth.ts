@@ -94,3 +94,9 @@ export const LogOutFetch = async (id: string) => {
   const response = await apiCall({ url: fetchURl, method: 'GET' });
   return response;
 };
+
+export const ForgotPassword = async (data: ForgotPasswordData) => {
+  const fetchURl = `${BaseUrl}/auth/forgot-password`;
+  const response = await apiCall({ url: fetchURl, method: 'POST', data: data });
+  return response;
+};

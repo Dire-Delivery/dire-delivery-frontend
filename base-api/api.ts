@@ -43,6 +43,7 @@ export default async function apiCall({
       return responseData;
     } else {
       // Handle non-JSON responses (e.g., plain text)
+      console.log("..........", "none json")
       const text = await response.text();
       if (!response.ok) {
         throw new Error(text || 'Something went wrong');
