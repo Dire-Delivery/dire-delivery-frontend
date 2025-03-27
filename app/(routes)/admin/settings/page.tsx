@@ -16,8 +16,8 @@ export default function Home() {
         </h1>
         <p className="text-[#666] mb-6">
           {activeTab === 'profile'
-            ? 'Here are your settings'
-            : "Here's your Pricing Report"}
+            ? 'Here are your Profile Reports'
+            : "Here's your Price and City Settings"}
         </p>
 
         <div className="flex flex-col lg:flex-row gap-6 bg-[#F1F2F8]">
