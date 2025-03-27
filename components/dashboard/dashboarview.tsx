@@ -358,6 +358,8 @@ export default function Dashboardview() {
 
   console.log('fetchorders:', orders);
   console.log('fetchPending:', pending);
+  console.log('currentpage:', currentPage);
+  console.log('totalPages:', totalPages);
 
   return (
     <main className="min-h-screen bg-slate-50 p-4 md:p-8">
