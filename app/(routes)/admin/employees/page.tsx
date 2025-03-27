@@ -1,10 +1,10 @@
 import UsersView from "@/components/views/usersView";
 
-function EmployeesPageOwner() {
+function EmployeesPageAdmin() {
   return (
     <>
-      <UsersView type="owner" view="employee"/>
+      <UsersView type="admin" view="employee"/>
     </>
   );
 }
-export default EmployeesPageOwner;
+export default EmployeesPageAdmin;

@@ -447,11 +447,11 @@ export default function UserOrderTabelView({ redirectLink, userId }: props) {
                     <CardHeader className='relative px-0 py-0'>
                         <CardTitle className='w-full flex justify-between items-center '>
                             <div className='font-bold text-2xl'>{personInfo?.name}</div>
-                            <Button className={cn('bg-[#060A87] rounded-[10px] w-40 h-10 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5 ')} onClick={() => setShowChangeRoleModal(true)}>
+                            {role == "OWNER" && <Button className={cn('bg-[#060A87] rounded-[10px] w-40 h-10 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5 ')} onClick={() => setShowChangeRoleModal(true)}>
                                 <FaUserLarge size={20} />
                                 <div className='text-base font-bold mb-[-3px]'>{personInfo?.role == "EMPLOYEE" ? "PROMOTE": "DEMOTE"}</div>
                                 <div className='text-2xl font-normal text-center mt-[-3px] ml-2'>+</div>
-                            </Button>
+                            </Button>}
                         </CardTitle>
 
                     </CardHeader>

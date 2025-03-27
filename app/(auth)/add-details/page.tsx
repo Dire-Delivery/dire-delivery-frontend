@@ -41,8 +41,6 @@ export default function AddDetails() {
     const userData = await userProfile();
     const token = await userToken();
 
-    console.log("trying to sub", {userData, token})
-
     if (userData && token) {
       const data = await AddDetailsFetch(userData.id, addDetails);
       console.log("the data", data)
