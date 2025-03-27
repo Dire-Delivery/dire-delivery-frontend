@@ -86,10 +86,10 @@ export default function Page({
                                 Dire <span className="text-red-600 ml-[-4px]">Express</span>
                             </div>
                         </div>
-                        <div>
-                            <CardTitle className="font-bold text-2xl text-[#060A87] text-center md:text-4xl">Welcome To Dire Family</CardTitle>
-                            <CardDescription className="font-normal text-sm text-[#060A87] text-center md:text-lg">
-                                Please Fill the Form Below
+                        <div className="flex flex-col gap-4">
+                            <CardTitle className="font-bold text-2xl text-[#060A87] text-center md:text-4xl">Update your password</CardTitle>
+                            <CardDescription className="font-normal text-sm text-[#1A1C1E] text-center md:text-lg">
+                                Set your new password with minimum 8 characters with a combination of letters and numbers
                             </CardDescription>
                         </div>
 
