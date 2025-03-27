@@ -1,11 +1,14 @@
 'use client'; // Mark this component as a client component
 
-import { useEffect, useState } from 'react';
-import { use } from 'react'; // Import the `use` function
+import { userProfile } from '@/actions/auth';
 import { FetchOrder, updateOrderStatus } from '@/actions/order';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
+import { toast } from '@/hooks/use-toast';
+import { formatDate } from '@/lib/utils';
+import { orderDetail } from '@/types/orderType';
+import { userType } from '@/types/user';
 import {
   ArrowLeft,
   FileText,
@@ -15,13 +18,8 @@ import {
   User,
   UserPlus,
 } from 'lucide-react';
-import { notFound } from 'next/navigation';
-import { formatDate } from '@/lib/utils';
-import Link from 'next/link';
-import { userProfile } from '@/actions/auth';
-import { orderDetail } from '@/types/orderType';
-import { userType } from '@/types/user';
-import { toast } from '@/hooks/use-toast';
+import { notFound, useRouter } from 'next/navigation';
+import { use, useEffect, useState } from 'react';
 
 export default function OrderPage({
   params,
@@ -32,7 +30,7 @@ export default function OrderPage({
   const { orderid } = use(params);
   const [order, setOrder] = useState<orderDetail | null>(null);
   const [user, setUser] = useState<userType | null>(null);
-  // const router = useRouter();
+  const router = useRouter();
   const [triggerState, setTriggerState] = useState<boolean>(false);
 
   useEffect(() => {
@@ -95,14 +93,14 @@ export default function OrderPage({
         <div className="bg-white rounded-lg p-6 shadow-sm">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center justify-center">
-              <Link href={`/owner/orders`}>
+              <div onClick={() => {router.back()}}>
                 <Button
                   variant="ghost"
                   className="flex items-center gap-2 w-fit h-fit"
                 >
                   <ArrowLeft className="w-12 h-12" />
                 </Button>
-              </Link>
+              </div>
 
               <span className="text-xl font-bold">
                 {order.order.transactionCode}

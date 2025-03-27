@@ -19,3 +19,11 @@ type loginDetails = {
   email: string;
   password: string;
 };
+
+type ForgotPasswordData = {
+  email: string;
+};
+
+type ResetPasswordData = {
+  password: string;
+};

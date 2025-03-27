@@ -70,7 +70,7 @@ interface DataTableProps<
   redirectLink: string;
   loading: boolean;
   handlefilter: (status: string) => void;
-  filterValue: string;
+  filterValue?: string;
 }
 
 export function DataTable<

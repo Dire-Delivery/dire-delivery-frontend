@@ -1,12 +1,10 @@
-import React from 'react';
+import UsersView from "@/components/views/UserView";
 
-const EmployeesPage = () => {
-    return (
-        <div>
-            <h1>Employees Page</h1>
-            <p>This is a placeholder for the Employees page content.</p>
-        </div>
-    );
-};
-
-export default EmployeesPage;
+function EmployeesPageAdmin() {
+  return (
+    <>
+      <UsersView type="admin" view="employee"/>
+    </>
+  );
+}
+export default EmployeesPageAdmin;

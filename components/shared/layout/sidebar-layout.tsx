@@ -27,38 +27,77 @@ import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { LuChevronUp, LuLayoutGrid, LuLogOut } from 'react-icons/lu';
 import SidebarToggle from './sidebar-toggle';
+import { useMediaQuery } from 'usehooks-ts';
+
+const ownerItems = [
+  {
+    title: 'Employees',
+    url: '/owner/employees',
+    icon: Users,
+  },
+  {
+    title: 'Admins',
+    url: '/owner/admins',
+    icon: UserCog,
+  },
+  {
+    title: 'Orders',
+    url: '/owner/orders',
+    icon: ClipboardList,
+  },
+  {
+    title: 'Settings',
+    url: '/owner/settings',
+    icon: Settings,
+  },
+];
+
+const adminItems = [
+  {
+    title: 'Employees',
+    url: '/admin/employees',
+    icon: Users,
+  },
+  {
+    title: 'Orders',
+    url: '/admin/orders',
+    icon: ClipboardList,
+  },
+  {
+    title: 'Settings',
+    url: '/admin/settings',
+    icon: Settings,
+  },
+];
+
+const employeeItems = [
+  {
+    title: 'Orders',
+    url: '/employee/orders',
+    icon: ClipboardList,
+  },
+  {
+    title: 'Settings',
+    url: '/employee/settings',
+    icon: Settings,
+  },
+];
 
 export default function SidebarLayout() {
-  const { state } = useSidebar();
-  const router = useRouter()
-  const menuItems = [
-    {
-      title: 'Employees',
-      url: '/owner/employees',
-      icon: Users,
-    },
-    {
-      title: 'admins',
-      url: '/owner/admins',
-      icon: UserCog,
-    },
-    {
-      title: 'Orders',
-      url: '/owner/orders',
-      icon: ClipboardList,
-    },
-    {
-      title: 'Settings',
-      url: '/owner/settings',
-      icon: Settings,
-    },
-  ];
 
+  const { state, toggleSidebar } = useSidebar();
+  const router = useRouter();
   const pathname = usePathname();
+  const role = pathname.split('/')[1]; // Gets "owner", "admin", or "employee"
   const [selectedItem, setSelectedItem] = useState('');
 
+  const refinedMenuItems = role == "owner" ? ownerItems : role == "admin" ? adminItems : role == "employee" ? employeeItems : []
+
+  const isMobile = useMediaQuery('(max-width: 768px)'); // Tablet screens
+
+
   useEffect(() => {
-    const matchedItem = menuItems.find((item) => pathname == item.url);
+    const matchedItem = refinedMenuItems.find((item) => pathname == item.url);
     setSelectedItem(matchedItem ? matchedItem.title : '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]); // Re-run when pathname changes
@@ -115,6 +154,11 @@ export default function SidebarLayout() {
         </div>
         <Link
           href="/owner"
+          onClick={() => {
+            if (isMobile) {
+              toggleSidebar()
+            }
+            }}
           className={cn(
             ' ml-5 mr-5 py-4 px-5 flex justify-between items-center rounded-[10px] font-bold bg-[#C7E7F6F5]',
             state == 'collapsed' && 'hidden'
@@ -135,10 +179,15 @@ export default function SidebarLayout() {
           <LuLayoutGrid stroke="#060A87" size={24} />
         </Link>
         <SidebarMenu className="gap-2 p-0 m-0">
-          {menuItems.map((item, index) => (
-            <SidebarMenuItem key={index}>
+          {refinedMenuItems.map((item, index) => (
+            <SidebarMenuItem key={index} >
               <Link
                 href={item.url}
+                onClick={() => {
+                  if (isMobile) {
+                    toggleSidebar()
+                  }
+                  }}
                 className={cn(
                   `flex items-center justify-start gap-3 py-3 transition-all duration-300 ease-in-out`,
                   selectedItem == item.title
@@ -217,13 +266,14 @@ export default function SidebarLayout() {
                   />
                 </DialogTrigger>
                 <DialogContent
+                 onClick={logout}
                   className={cn(
-                    'bottom-16 left-40  bg-white py-3 px-3 rounded-md transition-all hover:bg-gray-200',
+                    'bottom-16 left-40  bg-white py-3 px-3 rounded-md transition-all hover:bg-gray-200 cursor-pointer',
                     state == 'collapsed' && 'left-14'
                   )}
                 >
                   <DialogHeader className="p-0">
-                    <DialogTitle className="flex gap-2 text-sm font-normal cursor-pointer" onClick={logout}>
+                    <DialogTitle className="flex gap-2 text-sm font-normal ">
                       <LuLogOut /> Logout
                     </DialogTitle>
                   </DialogHeader>
