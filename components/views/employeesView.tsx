@@ -3,7 +3,7 @@ import { userProfile, userToken } from '@/actions/auth';
 import { DeletePerson, FetchEmployees, SearchByName } from '@/actions/employee';
 import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
 import { employeeColumns } from '@/components/order/owner/peopleColumn';
-import { PeopleDataTable } from '@/components/order/owner/peopleTable';
+import { UserDataTable } from '@/components/order/owner/peopleTable';
 import { convertToEmployeesFormat } from '@/lib/utils';
 import { Pagination, Person } from '@/types/employeeType';
 import { ColumnDef } from '@tanstack/react-table';
@@ -11,7 +11,7 @@ import { Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
-export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
+export default function UserView({ type }: { type: "owner" | "admin" , view: "employee" | "admin"}) {
   const [employees, setEmployees] = useState<Person[]>([]);
   const [showNewEmployeeModal, setShowNewEmployeeModal] = useState<boolean>(false);
   const [showConfirmationModal, setShowConfirmationModal] =
@@ -135,7 +135,7 @@ export default function EmployeesView({ type }: { type: "owner" | "admin" }) {
           setShowConfirmationModal={setShowConfirmationModal}
           setShowFilteredData={setShowFilteredData}
         />
-        <PeopleDataTable
+        <UserDataTable
           columns={
             employeeColumns as ColumnDef<
               Person,

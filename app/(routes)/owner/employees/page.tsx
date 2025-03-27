@@ -3,7 +3,7 @@ import EmployeesView from "@/components/views/employeesView";
 function EmployeesPageOwner() {
   return (
     <>
-      <EmployeesView type="owner" />
+      <EmployeesView type="owner" view="employee"/>
     </>
   );
 }

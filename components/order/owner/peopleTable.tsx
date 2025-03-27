@@ -71,7 +71,7 @@ interface EmployeeDataTableProps<TData extends Person, TValue> {
 
 }
 
-export function PeopleDataTable<
+export function UserDataTable<
     TData extends Person,
     TValue,
 >({
