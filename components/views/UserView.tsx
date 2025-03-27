@@ -4,7 +4,7 @@ import { DeletePerson, FetchEmployees, SearchByName } from '@/actions/employee';
 import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
 import { employeeColumns } from '@/components/order/owner/peopleColumn';
 import { UserDataTable } from '@/components/order/owner/peopleTable';
-import { convertToEmployeesFormat } from '@/lib/utils';
+import { convertToUsersFormat } from '@/lib/utils';
 import { Pagination, Person } from '@/types/employeeType';
 import { ColumnDef } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
@@ -35,7 +35,7 @@ export default function UserView({ type }: { type: "owner" | "admin" , view: "em
         if (userData && token) {
           const response = await FetchEmployees(userData.id, pagination.pageIndex + 1);
           console.log({ response });
-          const convertedEmployeeFormat = convertToEmployeesFormat(response.users);
+          const convertedEmployeeFormat = convertToUsersFormat(response.users, "EMPLOYEE");
           setPageCount(response.totalPage);
           setTotalPeople(response.totalUsers)
           setEmployees(convertedEmployeeFormat);
@@ -55,7 +55,7 @@ export default function UserView({ type }: { type: "owner" | "admin" , view: "em
         if (userData && token) {
           const response = await SearchByName(userData.id, searchInput, pagination.pageIndex + 1);
           console.log({response})
-          const convertedEmployeeFormat = convertToEmployeesFormat(response.users);
+          const convertedEmployeeFormat = convertToUsersFormat(response.users, "EMPLOYEE");
           setPageCount(response.totalPage);
           setTotalPeople(response.totalUsers);
           setEmployees(convertedEmployeeFormat);

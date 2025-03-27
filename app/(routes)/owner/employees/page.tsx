@@ -1,4 +1,4 @@
-import EmployeesView from "@/components/views/employeesView";
+import EmployeesView from "@/components/views/UserView";
 
 function EmployeesPageOwner() {
   return (

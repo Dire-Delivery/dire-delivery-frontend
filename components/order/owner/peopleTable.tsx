@@ -151,6 +151,7 @@ export function UserDataTable<
                 const response = await PromoteEmployee(userData.id, selectedPerson.id);
                 toast.success(response.message)
                 setShowChangeRoleModal(false);
+                setRefreshTableToggle(!refreshTableToggle);
                 
             } else {
                 throw new Error("userData or token not found")

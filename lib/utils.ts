@@ -19,18 +19,20 @@ export function generateTransactionId() {
   return `DTE${randomNumbers}`;
 }
 
-export function convertToEmployeesFormat(users: User[]) {
-  return users.map((user: User) => {
-    const EmployeeFormat: Person = {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      phoneNumber: user.phone ? user.phone : '-',
-      location: user.location ? user.location : '-',
-      imgUrl: user.image,
-    };
-    return EmployeeFormat;
-  });
+export function convertToUsersFormat(users: User[], role: string) {
+  return users
+    .filter((user) => user.role === role)
+    .map((user: User) => {
+      const EmployeeFormat: Person = {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        phoneNumber: user.phone ? user.phone : '-',
+        location: user.location ? user.location : '-',
+        imgUrl: user.image,
+      };
+      return EmployeeFormat;
+    });
 }
 export function formatNewDate(date: Date): string {
   const year = date.getFullYear();

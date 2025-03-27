@@ -1,9 +1,9 @@
-import EmployeesView from "@/components/views/employeesView";
+import UsersView from "@/components/views/UserView";
 
 function EmployeesPageAdmin() {
   return (
     <>
-      <EmployeesView type="admin" />
+      <UsersView type="admin" view="employee"/>
     </>
   );
 }
