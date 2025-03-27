@@ -47,6 +47,7 @@ export default function OrderTabelView({ redirectLink }: props) {
   const [triggerstate, SetTriggerState] = useState<boolean>(false);
   const [user, setUser] = useState<userType | null>(null);
   const [filterValue, setFilterValue] = useState<string>('All Status');
+  const [orderAmount, setOrderAmount] = useState<number>(0);
 
   const role = user?.role;
   const name = user?.name;
@@ -142,6 +143,7 @@ export default function OrderTabelView({ redirectLink }: props) {
               addedBy: result.orderDetails.employeeInfo?.name || '',
             }))
           );
+          setOrderAmount(response.totalOrders);
         }
       } catch (error) {
         setTimeout(() => {
@@ -385,6 +387,7 @@ export default function OrderTabelView({ redirectLink }: props) {
         />
         {transformedOrder ? (
           <DataTable
+            orderAmount={orderAmount}
             filterValue={filterValue}
             handlefilter={handleFilter}
             loading={loading}
@@ -410,6 +413,7 @@ export default function OrderTabelView({ redirectLink }: props) {
           />
         ) : (
           <DataTable
+            orderAmount={orderAmount}
             filterValue={filterValue}
             handlefilter={handleFilter}
             loading={loading}

@@ -71,6 +71,7 @@ interface DataTableProps<
   loading: boolean;
   handlefilter: (status: string) => void;
   filterValue: string;
+  orderAmount: number;
 }
 
 export function DataTable<
@@ -84,7 +85,6 @@ export function DataTable<
   loading,
   columns,
   data,
-  totalEntries,
   handleDelete,
   role,
   totalPages,
@@ -95,6 +95,7 @@ export function DataTable<
   redirectLink,
   handlefilter,
   filterValue,
+  orderAmount,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [openAlertDialogId, setOpenAlertDialogId] = useState<string | null>(
@@ -336,7 +337,7 @@ export function DataTable<
       <div className="flex items-center justify-between space-x-2 py-4">
         {/* Showing Entries */}
         <div className="hidden md:block text-sm text-muted-foreground">
-          Showing {table.getRowModel().rows.length} of {totalEntries} entries
+          Showing {table.getRowModel().rows.length} of {orderAmount} entries
         </div>
 
         {/* Pagination Controls */}

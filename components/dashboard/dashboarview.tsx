@@ -56,6 +56,7 @@ export default function Dashboardview() {
     totalDelivered: 0,
     totalPickedup: 0,
   });
+  const [orderAmount, setOrderAmount] = useState<number>(0);
 
   const redirectLink = '/owner/orders';
 
@@ -150,6 +151,7 @@ export default function Dashboardview() {
             addedBy: result.orderDetails.employeeInfo?.name || '',
           }))
         );
+        setOrderAmount(orderRespose.totalOrders);
         setdashboardTotals(totalsResponse);
       } catch (error) {
         console.log(error);
@@ -424,6 +426,7 @@ export default function Dashboardview() {
         </div>
         {orders ? (
           <DataTable
+            orderAmount={orderAmount}
             loading={loading}
             redirectLink={redirectLink}
             totalPages={totalPages}
@@ -449,6 +452,7 @@ export default function Dashboardview() {
           />
         ) : (
           <DataTable
+            orderAmount={orderAmount}
             filterValue={filterValue}
             handlefilter={handleFilter}
             loading={loading}
