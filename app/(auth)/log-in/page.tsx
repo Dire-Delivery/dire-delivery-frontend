@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { ForgotPassword, loginFetch, setCookies, userProfile } from "@/actions/auth";
+import { ForgotPassword, loginFetch, RememberMe, setCookies, userProfile } from "@/actions/auth";
 import { PasswordInput } from "@/components/log-in/password-input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -58,8 +58,15 @@ export default function SignIn() {
 
     if (data && !data.error) {
       toast.error(data.message)
-      const maxAge = rememberMe ? 24 * 60 * 60 * 1000 * 7 : 24 * 60 * 60 * 1000; // 1 week vs 1 day
-      setCookies(data, maxAge);
+      setCookies(data);
+      if (rememberMe) {
+        try {
+          await RememberMe(data.payload.id); 
+
+        } catch (error) {
+          console.log(error);
+        }
+      }
       if (typeof data.payload == 'string') {
         redirect("/add-details")
       } else {
@@ -81,10 +88,10 @@ export default function SignIn() {
 
   const handleForgotPassword = async (email: string) => {
     try {
-        const data = {email}
-        const response = await ForgotPassword(data);
-        console.log({response})
-        toast.success(response.message)
+      const data = { email }
+      const response = await ForgotPassword(data);
+      console.log({ response })
+      toast.success(response.message)
     } catch (error) {
       console.log(error);
     }
@@ -173,7 +180,7 @@ export default function SignIn() {
               />
               <div className="flex justify-between ml-[-5px] mr-[-5px] items-center">
                 <label className="flex gap-1.5 items-center cursor-pointer">
-                  <Checkbox checked={rememberMe} className="data-[state=checked]:bg-[#27A376]" onClick={() => setRememberMe(!rememberMe)} />
+                  <Checkbox checked={rememberMe} className="data-[state=checked]:bg-[#060A87]" onClick={() => setRememberMe(!rememberMe)} />
                   <span className="text-[#687588] font-medium">Remember Me</span>
                 </label>
                 <div className="text-[#687588] font-medium text-s items-center cursor-pointer" onClick={() => setShowAlertDialog(true)}>Forgot Password</div>

@@ -7,14 +7,13 @@ import { cookies } from 'next/headers';
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function setCookies(data: any, expiration = 60 * 60 * 24 * 1000) {
+export async function setCookies(data: any) {
   const cookieStore = await cookies();
 
   cookieStore.set({
     name: 'token',
     value: data.token,
     httpOnly: true,
-    expires: new Date(Date.now() + expiration), // ✅ Use the passed expiration time
     path: '/',
     sameSite: 'lax',
   });
@@ -28,7 +27,6 @@ export async function setCookies(data: any, expiration = 60 * 60 * 24 * 1000) {
       name: 'user',
       value: JSON.stringify(user),
       httpOnly: true,
-      expires: new Date(Date.now() + expiration), // ✅ Use the passed expiration time
       path: '/',
       sameSite: 'lax',
     });
@@ -37,7 +35,6 @@ export async function setCookies(data: any, expiration = 60 * 60 * 24 * 1000) {
       name: 'user',
       value: JSON.stringify(data.payload),
       httpOnly: true,
-      expires: new Date(Date.now() + expiration), // ✅ Use the passed expiration time
       path: '/',
       sameSite: 'lax',
     });
@@ -104,6 +101,20 @@ export const ForgotPassword = async (data: ForgotPasswordData) => {
 export const ResetPassword = async (data: ResetPasswordData, forgotPwdToken: string) => {
   const fetchURl = `${BaseUrl}/auth/reset-password/${forgotPwdToken}`;
   const response = await apiCall({ url: fetchURl, method: 'POST', data: data });
+  return response;
+};
+
+export const RememberMe = async (userId: string) => {
+  const cookieStore = await cookies();
+  const fetchURl = `${BaseUrl}/auth/${userId}/remember-me`;
+  const response = await apiCall({ url: fetchURl });
+  cookieStore.set({
+    name: 'token',
+    value: response.token,
+    httpOnly: true,
+    path: '/',
+    sameSite: 'lax',
+  });
   return response;
 };
 
