@@ -11,9 +11,7 @@ import { z } from 'zod';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const helpFormSchema = z.object({
-  email: z.string().email(),
-  phone: z.string().min(10),
-  location: z.string(),
+  supportTel: z.string().min(1, 'Sender phone number is required'),
 });
 
 type HelpFormSchema = z.infer<typeof helpFormSchema>;
@@ -51,49 +49,17 @@ export default function HelpForm({
               <div className="flex flex-col gap-4 mt-2 px-2">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Email
-                  </label>
-                  <input
-                    type="text"
-                    placeholder={help?.item.email}
-                    className="w-full px-3 py-2 border rounded-lg"
-                    {...register('email')}
-                  />
-                  {errors.email && (
-                    <p className="text-red-500 text-sm">
-                      {errors.email.message}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
                     Phone Number
                   </label>
                   <input
                     type="text"
-                    placeholder={help?.item.phone}
+                    placeholder={help?.supportTel}
                     className="w-full px-3 py-2 border rounded-lg"
-                    {...register('phone')}
+                    {...register('supportTel')}
                   />
-                  {errors.phone && (
+                  {errors.supportTel && (
                     <p className="text-red-500 text-sm">
-                      {errors.phone.message}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Location
-                  </label>
-                  <input
-                    type="text"
-                    placeholder={help?.item.location}
-                    className="w-full px-3 py-2 border rounded-lg"
-                    {...register('location')}
-                  />
-                  {errors.location && (
-                    <p className="text-red-500 text-sm">
-                      {errors.location.message}
+                      {errors.supportTel.message}
                     </p>
                   )}
                 </div>

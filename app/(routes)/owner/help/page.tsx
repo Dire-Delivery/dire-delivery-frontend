@@ -8,19 +8,23 @@ import { Button } from '@/components/ui/button';
 import { z } from 'zod';
 
 const helpForm = z.object({
-  email: z.string().email(),
-  phone: z.string().min(10),
-  location: z.string(),
+  supportTel: z.string().min(10, 'Sender phone number is required'),
 });
+
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import HelpForm from '@/components/order/owner/help/helpEdit';
 import HelpConfirm from '@/components/order/owner/help/helpConfirm';
+import { userProfile } from '@/actions/auth';
+import { userType } from '@/types/user';
+import { PriceInfoType } from '@/types/cities';
 
 export default function Page() {
   const [help, setHelp] = useState<help>();
   const [showEditInfoModal, setShowEditInfoModal] = useState<boolean>(false);
   const [triggerState, setStateTrigger] = useState<boolean>(false);
+  const [user, setUser] = useState<userType | null>(null);
+  const [constatns, setconstants] = useState<PriceInfoType>();
 
   const [showConfirmInfo, setShowConfirmInfo] = useState<boolean>(false);
 
@@ -35,25 +39,28 @@ export default function Page() {
 
   useEffect(() => {
     const fetchHelp = async () => {
+      const decoded = await userProfile();
+      const user = decoded as userType;
+      setUser(user);
       try {
         const response = await HelpFetch();
-        setHelp(response);
+        setconstants(response);
+        const result = {
+          supportTel: response.supportTel,
+        };
+        setHelp(result);
         console.log(response);
       } catch (error) {
         console.log(error);
       }
     };
     fetchHelp();
-  }, [triggerState]);
+  }, [triggerState, showEditInfoModal]);
 
   const onSubmit: SubmitHandler<z.infer<typeof helpForm>> = async (data) => {
     console.log('Form data submitted:', data); // Log form data
-    const updatedHelp = {
-      item: {
-        email: data.email,
-        phone: data.phone,
-        location: data.location,
-      },
+    const updatedHelp: help = {
+      supportTel: data.supportTel,
     };
     setHelp(updatedHelp);
     setShowEditInfoModal(false);
@@ -68,8 +75,13 @@ export default function Page() {
 
   const submitting = async () => {
     try {
-      const response = await patchHelp(help!);
+      const response = await patchHelp({
+        data: help!,
+        userid: user!.id,
+        constants: constatns!.id,
+      });
       console.log('response:', response);
+
       setShowEditInfoModal(false);
       setShowConfirmInfo(false);
       reset();
@@ -78,6 +90,8 @@ export default function Page() {
       console.log(error);
     }
   };
+
+  console.log('help:', help);
 
   return (
     <>
@@ -106,7 +120,7 @@ export default function Page() {
                   </div>
                   <div>
                     <h3 className="font-medium text-gray-900">Email Support</h3>
-                    <p className="text-gray-500">{help?.item.email}</p>
+                    <p className="text-gray-500">[Dire Delivery Email]</p>
                   </div>
                 </div>
 
@@ -116,7 +130,7 @@ export default function Page() {
                   </div>
                   <div>
                     <h3 className="font-medium text-gray-900">Phone Support</h3>
-                    <p className="text-gray-500">{help?.item.phone}</p>
+                    <p className="text-gray-500">{help?.supportTel}</p>
                   </div>
                 </div>
 
@@ -126,7 +140,7 @@ export default function Page() {
                   </div>
                   <div>
                     <h3 className="font-medium text-gray-900">Location</h3>
-                    <p className="text-gray-500">{help?.item.location}</p>
+                    <p className="text-gray-500">[Dire Delivery Location]</p>
                   </div>
                 </div>
               </div>
