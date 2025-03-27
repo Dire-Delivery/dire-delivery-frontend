@@ -15,11 +15,22 @@ export async function middleware(request: NextRequest) {
       const decoded: { exp?: number } = jwtDecode(token);
       if (decoded.exp && decoded.exp < now) {
         console.log('Token expired');
-        removeUserProfile();
+        await removeUserProfile();
         return NextResponse.redirect(new URL('/log-in', request.url));
       }
     } catch (error) {
       console.error('Invalid token:', error);
+      return NextResponse.redirect(new URL('/log-in', request.url)); 
+    }
+  }
+
+  let userData = null;
+  if (user) {
+    try {
+      userData = JSON.parse(user);
+    } catch (error) {
+      console.error('Error parsing user cookie:', error);
+      return NextResponse.redirect(new URL('/log-in', request.url)); // Prevent bad JSON from crashing
     }
   }
 
