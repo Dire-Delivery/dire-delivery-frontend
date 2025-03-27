@@ -55,7 +55,7 @@ export default function HelpView() {
       }
     };
     fetchHelp();
-  }, [triggerState, showEditInfoModal]);
+  }, [triggerState]);
 
   const onSubmit: SubmitHandler<z.infer<typeof helpForm>> = async (data) => {
     console.log('Form data submitted:', data); // Log form data
