@@ -31,10 +31,10 @@ interface TransformedOrder extends OriginalTransformedOrder {
 
 type props = {
     redirectLink: string;
-    employeeId: string;
+    userId: string;
 };
 
-export default function PersonOrderTabelView({ redirectLink, employeeId }: props) {
+export default function UserOrderTabelView({ redirectLink, userId }: props) {
     const { toast } = useToast();
     const [transformedOrder, setTransformedOrder] = useState<
         TransformedOrder[] | null
@@ -50,7 +50,6 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
 
     const role = user?.role;
     const name = user?.name;
-    const userId = user?.id;
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -64,7 +63,7 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
             try {
                 const response = await FindOrdersByPerson(
                     decoded.id,
-                    employeeId,
+                    userId,
                     pagenumber
                 );
                 console.log("#############", response)
@@ -157,7 +156,7 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
                 const userData = await userProfile();
                 const token = await userToken();
                 if (userData && token) {
-                    const data = await FindPerson(userData.id, employeeId);
+                    const data = await FindPerson(userData.id, userId);
                     if (data) {
                         setPersonInfo(data);
 
@@ -341,7 +340,7 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
     const handleDelete = async (id: string) => {
         console.log('about to delete:', id);
         console.log('trxcode:', id);
-        const response = await DeleteOrder({ userid: userId!, trxCode: id });
+        const response = await DeleteOrder({ userid: user?.id!, trxCode: id });
         if (response.message === 'Order deleted successfully') {
             toast({
                 title: 'Deleted Successfully',
@@ -367,9 +366,9 @@ export default function PersonOrderTabelView({ redirectLink, employeeId }: props
             const token = await userToken();
             if (userData && token && personInfo) {
                 if (personInfo.role == "ADMIN") {
-                    await DemoteEmployee(userData.id, employeeId);
+                    await DemoteEmployee(userData.id, userId);
                 } else {
-                    await PromoteEmployee(userData.id, employeeId);
+                    await PromoteEmployee(userData.id, userId);
                 }
 
                 setShowChangeRoleModal(false);
