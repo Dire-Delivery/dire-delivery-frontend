@@ -67,6 +67,20 @@ export const addDetailsSchema = z
     path: ['confirmPassword'], // Attach error to confirmPassword field
   });
 
+  export const resetPasswordSchema = z
+  .object({
+    newPassword: z
+      .string()
+      .min(8, { message: 'Password must be at least 8 characters long' })
+      .max(15, { message: 'Password cannot exceed 15 characters' }),
+
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: 'Passwords must match',
+    path: ['confirmPassword'], // Attach error to confirmPassword field
+  });
+
 export const signInFormSchema = formSchema.pick({
   email: true,
   password: true,
