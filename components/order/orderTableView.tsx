@@ -301,12 +301,12 @@ export default function OrderTabelView({ redirectLink }: props) {
               (s: { status: string }) => s.status === 'Picked up'
             )
               ? {
-                  type: 'Picked up',
+                  type: 'Picked-up',
                   date: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'Picked up'
+                    (s: { status: string }) => s.status === 'Picked-up'
                   )!.date,
                   location: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'Picked up'
+                    (s: { status: string }) => s.status === 'Picked-up'
                   )!.location,
                 }
               : undefined,
