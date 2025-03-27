@@ -1,4 +1,7 @@
 'use client';
+
+import UsersView from "@/components/views/usersView";
+
 // import { FetchEmployees, } from '@/actions/employee';
 // import { adminsColumns } from '@/components/order/owner/peopleColumn';
 // import { PeopleDataTable } from '@/components/order/owner/peopleTable';
@@ -8,7 +11,11 @@
 // import { useEffect, useState } from 'react';
 
 export default function Page() {
-  
+    return (
+      <>
+        <UsersView type="owner" view="admin"/>
+      </>
+    );
 
 
 

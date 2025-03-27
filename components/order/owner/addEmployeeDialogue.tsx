@@ -32,7 +32,7 @@ type props = {
   setShowNewEmployeeModal: React.Dispatch<React.SetStateAction<boolean>>;
   showConfirmationModal: boolean;
   setShowConfirmationModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setShowFilteredData: React.Dispatch<React.SetStateAction<boolean>>;
+  setShowFilteredData: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 export default function AddEmployeeDialogue({
