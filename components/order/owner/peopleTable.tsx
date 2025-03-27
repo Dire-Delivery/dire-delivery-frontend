@@ -39,7 +39,7 @@ import { useEffect, useState } from 'react';
 import { useMediaQuery } from 'usehooks-ts';
 
 import { userProfile, userToken } from '@/actions/auth';
-import { ChangeRole, PromoteEmployee } from '@/actions/employee';
+import { ChangeRole } from '@/actions/employee';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';

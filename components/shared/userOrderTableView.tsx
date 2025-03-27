@@ -50,6 +50,7 @@ export default function UserOrderTabelView({ redirectLink, userId }: props) {
 
     const role = user?.role;
     const name = user?.name;
+    const myUserId = user?.id;
 
     useEffect(() => {
         const fetchOrders = async () => {
@@ -340,7 +341,7 @@ export default function UserOrderTabelView({ redirectLink, userId }: props) {
     const handleDelete = async (id: string) => {
         console.log('about to delete:', id);
         console.log('trxcode:', id);
-        const response = await DeleteOrder({ userid: user?.id!, trxCode: id });
+        const response = await DeleteOrder({ userid: myUserId!, trxCode: id });
         if (response.message === 'Order deleted successfully') {
             toast({
                 title: 'Deleted Successfully',
