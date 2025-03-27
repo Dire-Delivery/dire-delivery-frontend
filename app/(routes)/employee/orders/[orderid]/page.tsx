@@ -88,7 +88,7 @@ export default function OrderPage({
   }
 
   return (
-    <section className="w-full h-dvh px-8 py-4 bg-[#F1F2F8]">
+    <section className="w-full h-dvh md:px-8 py-4 bg-[#F1F2F8]">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-indigo-900">
