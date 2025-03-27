@@ -58,7 +58,7 @@ export const addDetailsSchema = z
     newPassword: z
       .string()
       .min(8, { message: 'Password must be at least 8 characters long' })
-      .max(15, { message: 'Password cannot exceed 15 characters' }),
+      .max(50, { message: 'Password cannot exceed 50 characters' }),
 
     confirmPassword: z.string(),
   })
@@ -72,7 +72,7 @@ export const addDetailsSchema = z
     newPassword: z
       .string()
       .min(8, { message: 'Password must be at least 8 characters long' })
-      .max(15, { message: 'Password cannot exceed 15 characters' }),
+      .max(50, { message: 'Password cannot exceed 50 characters' }),
 
     confirmPassword: z.string(),
   })
