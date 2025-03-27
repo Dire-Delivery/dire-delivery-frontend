@@ -9,7 +9,7 @@ export const cityaddFormSchema = z.object({
   name: z.string().min(1, 'City Name is required'),
   code: z
     .string()
-    .min(4, 'City Code is requried and Must Be 4 Characters Ex: ETXX'),
+    .min(4, 'City Code is required  and Must Be 4 Characters Ex: ETXX'),
 });
 // export type addFormSchema = z.infer<typeof formSchema>;
 
