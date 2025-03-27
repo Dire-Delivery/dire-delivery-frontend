@@ -324,8 +324,8 @@ export default function AddOrderDialogue({
                           <SelectValue placeholder="Select a city" />
                         </SelectTrigger>
                         <SelectContent>
-                          {cities.map((city) => (
-                            <SelectItem key={city.id} value={city.name}>
+                          {cities.map((city, index) => (
+                            <SelectItem key={index} value={city.name}>
                               {city.name}
                             </SelectItem>
                           ))}
@@ -409,8 +409,8 @@ export default function AddOrderDialogue({
                           <SelectValue placeholder="Select a city" />
                         </SelectTrigger>
                         <SelectContent>
-                          {cities.map((city) => (
-                            <SelectItem key={city.id} value={city.name}>
+                          {cities.map((city, index) => (
+                            <SelectItem key={index} value={city.name}>
                               {city.name}
                             </SelectItem>
                           ))}

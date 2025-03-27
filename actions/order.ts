@@ -98,3 +98,39 @@ export const updateOrderStatus = async ({
   console.log('serverResponse:', response);
   return response;
 };
+
+export const orderByDate = async ({
+  userid,
+  date,
+  pagenumber,
+}: {
+  userid: string;
+  date: string;
+  pagenumber: number;
+}) => {
+  const endpoint = `${BaseURL}/orders/${userid}/filter-order-date/${date}/${pagenumber}`;
+  console.log('endpoint', endpoint);
+
+  const response = await apiCall({ url: endpoint });
+
+  return response;
+};
+
+export const statusFilterDate = async ({
+  userid,
+  date,
+  pagenumber,
+  status,
+}: {
+  userid: string;
+  date: string;
+  pagenumber: number;
+  status: string;
+}) => {
+  const endpoint = `${BaseURL}/orders/${userid}/filter-recent-status-date/${status}/${date}/${pagenumber}`;
+  console.log('statusfilterep:', endpoint);
+
+  const response = await apiCall({ url: endpoint });
+
+  return response;
+};
