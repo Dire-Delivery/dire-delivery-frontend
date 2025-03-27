@@ -45,6 +45,7 @@ export const FetchStatusOrder = async ({
 }) => {
   console.log('status:', status);
   const fetchUrl = `${BaseURL}/orders/${userid}/filter-order-status/${status}/${pagenumber}`;
+  console.log('filterurl:', fetchUrl);
   const response = await apiCall({ url: fetchUrl });
   return response;
 };
