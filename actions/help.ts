@@ -1,16 +1,30 @@
 import apiCall from '@/base-api/api';
-import { endPoints } from '@/data/endPoints';
 import { help } from '@/types/help';
 
-const BaseURL = 'http://localhost:3001';
-const url = `${BaseURL}/${endPoints.help}`;
+const BaseURL = process.env.NEXT_PUBLIC_API_URL;
 
 export const HelpFetch = async () => {
-  const response = await apiCall({ url: url });
+  const fetchURl = `${BaseURL}/constants`;
+  const response = await apiCall({ url: fetchURl });
   return response;
 };
 
-export const patchHelp = async (data: help) => {
-  const response = await apiCall({ url: url, method: 'PATCH', data: data });
+export const patchHelp = async ({
+  data,
+  userid,
+  constants,
+}: {
+  data: help;
+  userid: string;
+  constants: number;
+}) => {
+  const fetchURl = `${BaseURL}/constants/${userid}/update-constants/${constants}`;
+  console.log('patchURL:', fetchURl);
+
+  const response = await apiCall({
+    url: fetchURl,
+    method: 'POST',
+    data: data,
+  });
   return response;
 };

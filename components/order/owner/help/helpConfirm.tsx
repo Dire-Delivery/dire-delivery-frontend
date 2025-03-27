@@ -29,23 +29,9 @@ export default function HelpConfirm({
 
         <div className="border px-5 py-5 flex flex-col gap-6">
           <div className="h-full">
-            <h3 className="font-bold text-lg mb-2 pb-2 border-b-2">Email</h3>
-            <div className="px-3 flex flex-col gap-1">
-              <p>{help?.item.email}</p>
-            </div>
-          </div>
-
-          <div className="h-full">
             <h3 className="font-bold text-lg mb-2 pb-2 border-b-2">Phone</h3>
             <div className="px-3 flex flex-col gap-1">
-              <p>{help?.item.phone}</p>
-            </div>
-          </div>
-
-          <div className="h-full">
-            <h3 className="font-bold text-lg mb-2 pb-2 border-b-2">Location</h3>
-            <div className="px-3 flex flex-col gap-1">
-              <p>{help?.item.location}</p>
+              <p>{help?.supportTel}</p>
             </div>
           </div>
         </div>
