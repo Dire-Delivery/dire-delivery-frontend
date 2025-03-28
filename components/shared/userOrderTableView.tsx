@@ -157,7 +157,7 @@ export default function UserOrderTabelView({ redirectLink, userId }: props) {
       }
     };
     fetchOrders();
-  }, [pagenumber, triggerstate]);
+  }, [pagenumber, triggerstate, userId]);
 
   useEffect(() => {
     const fetchPerson = async () => {
@@ -177,7 +177,7 @@ export default function UserOrderTabelView({ redirectLink, userId }: props) {
       }
     };
     fetchPerson();
-  }, [showChangeRoleModal]);
+  }, [showChangeRoleModal, userId]);
 
   const handleSearch = async (id: string) => {
     setloading(true);
