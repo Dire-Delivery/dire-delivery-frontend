@@ -14,6 +14,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import PasswordChange from './passwordChange';
 import { updateProfile } from '@/actions/usert';
 import { z } from 'zod';
+import { UpdateUser } from '@/actions/auth';
 
 // Create a simplified schema without password for profile updates
 const profileUpdateSchema = updateProfileSchema.omit({ password: true });
@@ -48,17 +49,22 @@ export default function UpdateProfile({ user }: ProfileSettingsProps) {
     setError(null);
 
     try {
+      const newData = {
+        name: `${data.firstName} ${data.lastName}`,
+        location: data.location,
+        phone: data.phone,
+        password: user.password, // Use existing password (unchanged)
+      }
       const response = await updateProfile({
         userid: user.id,
-        data: {
-          name: `${data.firstName} ${data.lastName}`,
-          location: data.location,
-          phone: data.phone,
-          password: user.password, // Use existing password (unchanged)
-        },
+        data: newData,
       });
 
       console.log('Profile update response:', response);
+
+      if (response.message == "User updated successfully") {
+        UpdateUser(newData)
+      }
       // Handle success (e.g., show toast notification)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to update profile');
@@ -68,17 +74,22 @@ export default function UpdateProfile({ user }: ProfileSettingsProps) {
   };
 
   const handlePasswordChange = async (data: ChangePasswordType) => {
+    const newData = {
+      name: user.name,
+      location: user.location,
+      phone: user.phone || '',
+      password: data.newPassword,
+    }
     const response = await updateProfile({
       userid: user.id,
-      data: {
-        name: user.name,
-        location: user.location,
-        phone: user.phone || '',
-        password: data.newPassword,
-      },
+      data: newData,
     });
     console.log('Password change response:', response);
     // Handle success (e.g., show toast notification)
+
+    if (response.message == "User updated successfully") {
+      UpdateUser(newData)
+    }
   };
 
   return (

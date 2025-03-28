@@ -8,6 +8,7 @@ interface ProfileSettingsProps {
 }
 
 export default function ProfileSettings({ user }: ProfileSettingsProps) {
+  console.log("...........",user)
   return (
     <div className="flex-1 bg-white rounded-lg  py-6 px-2 md:p-6">
       <h2 className="text-xl font-semibold mb-6">Profile Setting</h2>
@@ -22,17 +23,17 @@ export default function ProfileSettings({ user }: ProfileSettingsProps) {
             </h3>
             <div className="grid grid-cols-2 gap-y-2 border">
               <div className="font-medium">First Name:</div>
-              <div>{splitName(user.name).firstName}</div>
+              <div>{user.role == "OWNER" ? "Owner" : splitName(user.name).firstName}</div>
               <div className="font-medium">Last Name:</div>
-              <div>{splitName(user.name).lastName}</div>
+              <div>{user.role == "OWNER" ? "" : splitName(user.name).lastName}</div>
               <div className="font-medium">Phone Number</div>
-              <div>{user.phone}</div>
+              <div>{user.role == "OWNER" ? "" :user.phone}</div>
               <div className="font-medium ">Email</div>
               <div className="w-full  break-words">
                 <p className="break-words w-full">{user.email}</p>
               </div>
               <div className="font-medium">Location:</div>
-              <div>{user.location}</div>
+              <div>{user.role == "OWNER" ? "" : user.location}</div>
             </div>
           </div>
         </div>

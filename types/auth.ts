@@ -27,3 +27,10 @@ type ForgotPasswordData = {
 type ResetPasswordData = {
   password: string;
 };
+
+type UpdateUserData = {
+  location: string;
+  name: string;
+  password: string;
+  phone: string;
+}
