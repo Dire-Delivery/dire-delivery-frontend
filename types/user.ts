@@ -2,7 +2,7 @@ export type userType = {
   id: string;
   email: string;
   createdAt: string;
-  image: null;
+  image: string | null;
   isActive: number;
   isDeleted: number;
   location: string;
@@ -11,4 +11,5 @@ export type userType = {
   role: string;
   updatedAt: string;
   phone?: string;
+  joinedAt?: string;
 };

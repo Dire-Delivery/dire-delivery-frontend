@@ -1,12 +1,22 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
-import { Eye, EyeOff, Camera } from 'lucide-react';
+import { Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import image from '@/public/images/confused.jpg';
-export default function ProfileSettings() {
+import { userType } from '@/types/user';
+interface ProfileSettingsProps {
+  user: userType;
+}
+
+export default function ProfileSettings({ user }: ProfileSettingsProps) {
   const [showPassword, setShowPassword] = useState(false);
+
+  function splitName(name: string): { firstName: string; lastName: string } {
+    const nameParts = name.trim().split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.slice(1).join(' ') || '';
+    return { firstName, lastName };
+  }
 
   return (
     <div className="flex-1 bg-white rounded-lg  py-6 px-2 md:p-6">
@@ -15,33 +25,24 @@ export default function ProfileSettings() {
       <div className="flex flex-col">
         <div className="flex flex-col lg:flex-row gap-12 px-2">
           {/* Basic Information Card */}
-          <div className="flex flex-col h-fit items-center justify-center pt-2">
-            <div className="relative  items-center justify-center">
-              <div className="w-56 h-56 rounded-full overflow-hidden border-4 border-gray-200">
-                <Image src={image} alt="Profile" className="object-cover" />
-              </div>
-              <Button className="absolute bottom-6 right-2 bg-[#0a1172] text-white p-2.5 rounded-full">
-                <Camera size={20} />
-              </Button>
-            </div>
-          </div>
+          <div className="flex flex-col h-fit items-center justify-center pt-2"></div>
           <div className="mb-8 w-full border rounded-lg p-4">
             <h3 className="text-lg font-semibold mb-4 border-b pb-2">
               Basic Information
             </h3>
             <div className="grid grid-cols-2 gap-y-2 border">
               <div className="font-medium">First Name:</div>
-              <div>Jhon</div>
+              <div>{splitName(user.name).firstName}</div>
               <div className="font-medium">Last Name:</div>
-              <div>Doe</div>
+              <div>{splitName(user.name).lastName}</div>
               <div className="font-medium">Phone Number</div>
-              <div>+251973246477</div>
+              <div>{user.phone}</div>
               <div className="font-medium ">Email</div>
               <div className="w-full  break-words">
-                <p className="break-words w-full">JhonDoe22@gmail.com</p>
+                <p className="break-words w-full">{user.email}</p>
               </div>
               <div className="font-medium">Location:</div>
-              <div>AddisAbaba</div>
+              <div>{user.location}</div>
             </div>
           </div>
 
@@ -53,7 +54,7 @@ export default function ProfileSettings() {
             <input
               type="text"
               className="input-field border rounded-md py-2 px-3 w-full"
-              defaultValue="Jhon"
+              defaultValue={splitName(user.name).firstName}
               title="First Name"
               placeholder="First Name"
             />
@@ -64,7 +65,7 @@ export default function ProfileSettings() {
               title="email"
               type="email"
               className="input-field border rounded-md py-2 px-3 w-full"
-              defaultValue="abcd123@gmail.com"
+              defaultValue={user.email}
             />
           </div>
           <div>
@@ -73,7 +74,7 @@ export default function ProfileSettings() {
               title="last name"
               type="text"
               className="input-field border rounded-md py-2 px-3 w-full"
-              defaultValue="Jhon"
+              defaultValue={splitName(user.name).lastName}
             />
           </div>
           <div>
@@ -82,7 +83,7 @@ export default function ProfileSettings() {
               title="phone"
               type="text"
               className="input-field border rounded-md py-2 px-3 w-full"
-              defaultValue="JhonDoe26"
+              defaultValue={user.phone}
             />
           </div>
           <div>
@@ -91,7 +92,7 @@ export default function ProfileSettings() {
               title="location"
               type="text"
               className="input-field border rounded-md py-2 px-3 w-full"
-              defaultValue="abcd123@gmail.com"
+              defaultValue={user.location}
             />
           </div>
           <div className="grid  items-end md:grid-cols-5 gap-5 w-full ">
@@ -102,7 +103,7 @@ export default function ProfileSettings() {
                   title="password"
                   type={showPassword ? 'text' : 'password'}
                   className="input-field pr-10 border rounded-md py-2 px-3 w-full"
-                  defaultValue="password"
+                  defaultValue={user.password}
                 />
                 <button
                   className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"

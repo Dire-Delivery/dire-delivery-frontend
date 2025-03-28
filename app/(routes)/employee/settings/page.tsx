@@ -1,14 +1,47 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Sidebar from '@/components/ownerComponents/sidebar';
 import ProfileSettings from '@/components/ownerComponents/profile';
 import PriceCitySettings from '@/components/ownerComponents/priceCity';
+import { userType } from '@/types/user';
+import { userProfile } from '@/actions/auth';
 export default function Home() {
   const [activeTab, setActiveTab] = useState('profile');
   const [triggerState, setTriggerState] = useState<boolean>(false);
+  const [user, setUser] = useState<userType>({
+    id: '',
+    name: '',
+    email: '',
+    createdAt: '',
+    updatedAt: '',
+    role: '',
+    image: '',
+    phone: '',
+    location: '',
+    isActive: 1,
+    isDeleted: 0,
+    password: '',
+    joinedAt: '',
+    
+  });
 
-  const role = 'EMPLOYEE';
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await userProfile();
+        console.log('response:', response);
+        setUser(response as userType);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUser();
+  }, [activeTab]);
+  const role = user?.role || 'EMPLOYEE';
+
+  console.log('myUser:', user);
+
   return (
     <main className="min-h-screen p-6 px-4 lg:px-8 bg-[#F1F2F8]">
       <div className="max-w-fill mx-auto ">
@@ -27,7 +60,7 @@ export default function Home() {
 
           {/* Main Content */}
           {activeTab === 'profile' ? (
-            <ProfileSettings />
+            <ProfileSettings user={user} />
           ) : (
             <PriceCitySettings
               role={role}
