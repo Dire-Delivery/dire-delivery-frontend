@@ -1,36 +1,36 @@
-type AddDetailsProps = {
+export type AddDetailsProps = {
   id: string;
   data: Details;
 };
 
-type Details = {
+export type Details = {
   name: string;
   location: string;
   password: string;
 };
 
-type AddUserDetails = {
+export type AddUserDetails = {
   name: string;
   email: string;
   phoneNumber: string;
 };
 
-type loginDetails = {
+export type loginDetails = {
   email: string;
   password: string;
 };
 
-type ForgotPasswordData = {
+export type ForgotPasswordData = {
   email: string;
 };
 
-type ResetPasswordData = {
+export type ResetPasswordData = {
   password: string;
 };
 
-type UpdateUserData = {
+export type UpdateUserData = {
   location: string;
   name: string;
   password: string;
   phone: string;
-}
+};

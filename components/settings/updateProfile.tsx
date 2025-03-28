@@ -54,16 +54,14 @@ export default function UpdateProfile({ user }: ProfileSettingsProps) {
         location: data.location,
         phone: data.phone,
         password: user.password, // Use existing password (unchanged)
-      }
+      };
       const response = await updateProfile({
         userid: user.id,
         data: newData,
       });
 
-      console.log('Profile update response:', response);
-
-      if (response.message == "User updated successfully") {
-        UpdateUser(newData)
+      if (response.message == 'User updated successfully') {
+        UpdateUser(newData);
       }
       // Handle success (e.g., show toast notification)
     } catch (err) {
@@ -79,16 +77,15 @@ export default function UpdateProfile({ user }: ProfileSettingsProps) {
       location: user.location,
       phone: user.phone || '',
       password: data.newPassword,
-    }
+    };
     const response = await updateProfile({
       userid: user.id,
       data: newData,
     });
-    console.log('Password change response:', response);
     // Handle success (e.g., show toast notification)
 
-    if (response.message == "User updated successfully") {
-      UpdateUser(newData)
+    if (response.message == 'User updated successfully') {
+      UpdateUser(newData);
     }
   };
 

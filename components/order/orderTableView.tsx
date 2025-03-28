@@ -58,11 +58,8 @@ export default function OrderTabelView({ redirectLink }: props) {
       const decoded = await userProfile();
       const user = decoded as userType;
       setUser(user);
-
       const response = await fetchCity();
-      console.log('cities:', response.locations);
       setCities(response.locations);
-
       if (!user) {
         return;
       }
@@ -77,7 +74,6 @@ export default function OrderTabelView({ redirectLink }: props) {
           setTotalPages(response.totalPage);
           setCurrentPage(response.currentPage);
           const result = response.orders;
-          console.log('fetched order:', result);
           setTransformedOrder(
             result.map((result: Order) => ({
               id: uuidv4(),
@@ -163,7 +159,6 @@ export default function OrderTabelView({ redirectLink }: props) {
       }
       const response = await FetchOrder(id);
       const result = response;
-      console.log(result);
       setTransformedOrder([
         {
           id: uuidv4(),
@@ -248,7 +243,6 @@ export default function OrderTabelView({ redirectLink }: props) {
         status: status,
       });
       const result = response;
-      console.log(result);
       if (result.error === 'No Order could be found!') {
         setFilterValue(status);
         setTransformedOrder([]);
@@ -326,8 +320,6 @@ export default function OrderTabelView({ redirectLink }: props) {
     }
   };
   const handleDelete = async (id: string) => {
-    console.log('about to delete:', id);
-    console.log('trxcode:', id);
     const response = await DeleteOrder({ userid: userId!, trxCode: id });
     if (response.message === 'Order deleted successfully') {
       toast({
@@ -343,10 +335,6 @@ export default function OrderTabelView({ redirectLink }: props) {
     }
     SetTriggerState(!triggerstate);
   };
-
-  console.log('transformedOrder:', transformedOrder);
-  console.log('totalPages:', totalPages);
-  console.log('currenPage:', currentPage);
 
   return (
     <section className="w-full px-2 md:px-8 py-4 bg-[#F1F2F8] h-full">

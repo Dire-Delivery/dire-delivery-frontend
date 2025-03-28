@@ -34,7 +34,6 @@ export default function UserView({ type, view }: { type: "owner" | "admin" , vie
         const token = await userToken();
         if (userData && token) {
           const response = await FetchUsers(userData.id, pagination.pageIndex + 1, view.toUpperCase());
-          console.log({ response });
           const convertedEmployeeFormat = convertToUsersFormat(response.users, view.toUpperCase());
           setPageCount(response.totalPage);
           setTotalPeople(response.totalUsers)
@@ -54,7 +53,6 @@ export default function UserView({ type, view }: { type: "owner" | "admin" , vie
         const token = await userToken();
         if (userData && token) {
           const response = await SearchByName(userData.id, searchInput, pagination.pageIndex + 1);
-          console.log({response})
           const convertedEmployeeFormat = convertToUsersFormat(response.users, view.toUpperCase());
           setPageCount(response.totalPage);
           setTotalPeople(response.totalUsers);
@@ -92,7 +90,6 @@ export default function UserView({ type, view }: { type: "owner" | "admin" , vie
   };
 
   const checkEmpty = async (name: string) => {
-    console.log("...........................", { name })
     if (!name) {
       setShowFilteredData(false);
       setPagination({

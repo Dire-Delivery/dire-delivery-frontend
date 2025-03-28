@@ -29,7 +29,6 @@ export default function Home() {
     const fetchUser = async () => {
       try {
         const response = await userProfile();
-        console.log('response:', response);
         setUser(response as userType);
       } catch (error) {
         console.log(error);

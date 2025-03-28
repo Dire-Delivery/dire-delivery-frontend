@@ -118,11 +118,9 @@ export default function AddOrderDialogue({
   const onSubmit: SubmitHandler<z.infer<typeof addFormSchema>> = async (
     data
   ) => {
-    console.log('Form data submitted:', data); // Log form data
     const orderData = {
       ...data,
     };
-    console.log('Order data:', orderData); // Log order data
     setCurrentOrder(orderData);
     setShowNewOrderModal(false);
     setShowConfirmationModal(true);
@@ -130,7 +128,6 @@ export default function AddOrderDialogue({
   const submitting = async () => {
     try {
       const response = await AddOrder({ userid: userId, data: currentOrder });
-      console.log('responseFromadd', response);
       setReipetOrder(response);
       setShowConfirmationModal(false);
       setShowRecipt(true);
@@ -181,8 +178,6 @@ export default function AddOrderDialogue({
     setShowNewOrderModal(false);
     reset();
   };
-  console.log('Form errors:', errors);
-  console.log('currentOrder:', currentOrder);
 
   return (
     <>

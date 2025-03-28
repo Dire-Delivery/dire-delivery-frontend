@@ -50,19 +50,16 @@ export default function OrderPage({
     fetchData();
   }, [orderid, triggerState]);
 
-  console.log('order:', order);
-
   const handlestatus = async (id: string, status: string) => {
     const data = {
       trxCode: id,
       status: status,
     };
     try {
-      const response = await updateOrderStatus({
+      await updateOrderStatus({
         userid: user!.id,
         data: data,
       });
-      console.log('response of change:', response);
       toast({
         title: 'Status Changed Successfully',
         description: `Transaction ${id} changed to ${status} succesfully `,
@@ -73,8 +70,6 @@ export default function OrderPage({
     } catch (error) {
       console.error('Error updating order status:', error);
     }
-
-    console.log('status data', data);
   };
 
   if (!order) {

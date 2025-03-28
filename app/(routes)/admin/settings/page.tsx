@@ -29,7 +29,6 @@ export default function Home() {
     const fetchUser = async () => {
       try {
         const response = await userProfile();
-        console.log('response:', response);
         setUser(response as userType);
       } catch (error) {
         console.log(error);
@@ -38,8 +37,6 @@ export default function Home() {
     fetchUser();
   }, [activeTab]);
   const role = user?.role || 'ADMIN';
-
-  console.log('myUser:', user);
 
   return (
     <main className="min-h-screen p-6 px-4 lg:px-8 bg-[#F1F2F8]">
