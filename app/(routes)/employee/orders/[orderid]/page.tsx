@@ -15,13 +15,13 @@ import {
   User,
   UserPlus,
 } from 'lucide-react';
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
-import Link from 'next/link';
 import { userProfile } from '@/actions/auth';
 import { orderDetail } from '@/types/orderType';
 import { userType } from '@/types/user';
 import { toast } from '@/hooks/use-toast';
+import handlePrintDetail from '@/components/order/orderPrintdetail';
 
 export default function OrderPage({
   params,
@@ -32,7 +32,7 @@ export default function OrderPage({
   const { orderid } = use(params);
   const [order, setOrder] = useState<orderDetail | null>(null);
   const [user, setUser] = useState<userType | null>(null);
-  // const router = useRouter();
+  const router = useRouter();
   const [triggerState, setTriggerState] = useState<boolean>(false);
 
   useEffect(() => {
@@ -100,21 +100,28 @@ export default function OrderPage({
         <div className="bg-white rounded-lg p-6 shadow-sm">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center justify-center">
-              <Link href={`/employee/orders`}>
+              <div
+                onClick={() => {
+                  router.back();
+                }}
+              >
                 <Button
                   variant="ghost"
                   className="flex items-center gap-2 w-fit h-fit"
                 >
                   <ArrowLeft className="w-12 h-12" />
                 </Button>
-              </Link>
+              </div>
 
               <span className="text-xl font-bold">
                 {order.order.transactionCode}
               </span>
             </div>
 
-            <Button className="bg-indigo-900 hover:bg-indigo-800">
+            <Button
+              className="bg-indigo-900 hover:bg-indigo-800"
+              onClick={() => handlePrintDetail(order)}
+            >
               <Printer className="mr-2 h-4 w-4" /> Print
             </Button>
           </div>

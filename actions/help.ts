@@ -19,7 +19,6 @@ export const patchHelp = async ({
   constants: number;
 }) => {
   const fetchURl = `${BaseURL}/constants/${userid}/update-constants/${constants}`;
-  console.log('patchURL:', fetchURl);
 
   const response = await apiCall({
     url: fetchURl,

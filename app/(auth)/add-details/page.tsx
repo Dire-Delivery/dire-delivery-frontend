@@ -1,71 +1,87 @@
-'use client'
+'use client';
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { zodResolver } from '@hookform/resolvers/zod';
 
-import { AddDetailsFetch, setCookies, userProfile, userToken } from "@/actions/auth";
-import { PasswordInput } from "@/components/log-in/password-input";
-import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { addDetailsSchema } from "@/lib/auth-schema";
-import addDetails from "@/public/images/add-details.png";
-import AddDetailsMobile from "@/public/images/details-mobile-version.svg";
-import Image from "next/image";
-import { redirect } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { useToast } from "@/hooks/use-toast";
-
+import {
+  AddDetailsFetch,
+  setCookies,
+  userProfile,
+  userToken,
+} from '@/actions/auth';
+import { PasswordInput } from '@/components/log-in/password-input';
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { addDetailsSchema } from '@/lib/auth-schema';
+import addDetails from '@/public/images/add-details.png';
+import AddDetailsMobile from '@/public/images/details-mobile-version.svg';
+import Image from 'next/image';
+import { redirect } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { useToast } from '@/hooks/use-toast';
 
 export default function AddDetails() {
   const { toast } = useToast();
   const form = useForm<z.infer<typeof addDetailsSchema>>({
     resolver: zodResolver(addDetailsSchema),
     defaultValues: {
-      fName: "",
-      lName: "",
-      location: "",
-      newPassword: "",
-      confirmPassword: ""
+      fName: '',
+      lName: '',
+      location: '',
+      newPassword: '',
+      confirmPassword: '',
     },
-  })
+  });
 
   async function onSubmit(values: z.infer<typeof addDetailsSchema>) {
     const { fName, lName, location, newPassword } = values;
     const addDetails = {
       name: `${fName} ${lName}`,
       location,
-      password: newPassword
-    }
+      password: newPassword,
+    };
 
     const userData = await userProfile();
     const token = await userToken();
 
     if (userData && token) {
       const data = await AddDetailsFetch(userData.id, addDetails);
-      console.log("the data", data)
 
       if (data && !data.error) {
         // toast.success(data.message)
         toast({
-          title: "Successfully added basic information",
+          title: 'Successfully added basic information',
           variant: `success`,
         });
         setCookies(data);
-        if (data.payload.role == "OWNER") {
-          redirect("/owner")
-        } else if (data.payload.role == "ADMIN") {
-          redirect("/admin")
-        } else if (data.payload.role == "EMPLOYEE") {
-          redirect("/employee")
+        if (data.payload.role == 'OWNER') {
+          redirect('/owner');
+        } else if (data.payload.role == 'ADMIN') {
+          redirect('/admin');
+        } else if (data.payload.role == 'EMPLOYEE') {
+          redirect('/employee');
         } else {
-          console.error("unknown role error")
+          console.error('unknown role error');
           // add toast for unknown role error
         }
       } else {
         toast({
-          title: "Could not add information",
+          title: 'Could not add information',
           variant: 'destructive',
         });
       }
@@ -75,12 +91,22 @@ export default function AddDetails() {
   return (
     <div className="flex flex-col h-screen w-screen md:flex-row-reverse">
       <div className="h-[calc(100vh/2.5)] w-full md:w-[calc(100vw/2)] md:h-auto lg:h-screen lg:w-auto">
-        <Image src={addDetails} alt="login image" className=" w-full h-full object-cover hidden md:block" />
-        <Image src={AddDetailsMobile} alt="login image" className=" w-full h-full object-cover md:hidden" />
+        <Image
+          src={addDetails}
+          alt="login image"
+          className=" w-full h-full object-cover hidden md:block"
+        />
+        <Image
+          src={AddDetailsMobile}
+          alt="login image"
+          className=" w-full h-full object-cover md:hidden"
+        />
       </div>
       <Card className="w-full my-auto border-none shadow-none py-0 md:flex-none md:w-[370px] md:p-0 md:mx-auto md:border-none md:shadow-none lg:w-[450px] xl:w-[550px] 2xl:w-[650px]">
         <CardHeader className="pt-3 md:flex md:gap-1">
-          <CardTitle className="font-bold text-2xl text-[#060A87] text-center md:text-4xl">Welcome To Dire Family</CardTitle>
+          <CardTitle className="font-bold text-2xl text-[#060A87] text-center md:text-4xl">
+            Welcome To Dire Family
+          </CardTitle>
           <CardDescription className="font-normal text-sm text-[#060A87] text-center md:text-lg">
             Please Fill the Form Below
           </CardDescription>
@@ -96,9 +122,15 @@ export default function AddDetails() {
                     name="fName"
                     render={({ field }) => (
                       <FormItem className="space-y-0 flex-1 md:space-y-2">
-                        <FormLabel className="font-medium text-base text-[#111827] md:text-lg">First Name <span className="text-[#E03137]">*</span></FormLabel>
+                        <FormLabel className="font-medium text-base text-[#111827] md:text-lg">
+                          First Name <span className="text-[#E03137]">*</span>
+                        </FormLabel>
                         <FormControl>
-                          <Input placeholder="Input your First Name" className="border-[#27A376] text-sm md:h-12 md:text-base placeholder-[#A0AEC0]" {...field} />
+                          <Input
+                            placeholder="Input your First Name"
+                            className="border-[#27A376] text-sm md:h-12 md:text-base placeholder-[#A0AEC0]"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -109,9 +141,15 @@ export default function AddDetails() {
                     name="lName"
                     render={({ field }) => (
                       <FormItem className="space-y-0 flex-1 md:space-y-2">
-                        <FormLabel className="font-medium text-base text-[#111827] md:text-lg" >Last Name <span className="text-[#E03137]">*</span></FormLabel>
+                        <FormLabel className="font-medium text-base text-[#111827] md:text-lg">
+                          Last Name <span className="text-[#E03137]">*</span>
+                        </FormLabel>
                         <FormControl>
-                          <Input placeholder="Input your Last Name" className="border-[#27A376] text-sm md:h-12 md:text-base placeholder-[#A0AEC0]"  {...field} />
+                          <Input
+                            placeholder="Input your Last Name"
+                            className="border-[#27A376] text-sm md:h-12 md:text-base placeholder-[#A0AEC0]"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -123,9 +161,15 @@ export default function AddDetails() {
                   name="location"
                   render={({ field }) => (
                     <FormItem className="space-y-0 md:space-y-2">
-                      <FormLabel className="font-medium text-base text-[#111827] md:text-lg">Location <span className="text-[#E03137]">*</span></FormLabel>
+                      <FormLabel className="font-medium text-base text-[#111827] md:text-lg">
+                        Location <span className="text-[#E03137]">*</span>
+                      </FormLabel>
                       <FormControl>
-                        <Input placeholder="Addis Ababa" className="border-[#27A376] text-sm md:h-12 md:text-base placeholder-[#A0AEC0]" {...field} />
+                        <Input
+                          placeholder="Addis Ababa"
+                          className="border-[#27A376] text-sm md:h-12 md:text-base placeholder-[#A0AEC0]"
+                          {...field}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -137,9 +181,15 @@ export default function AddDetails() {
                     name="newPassword"
                     render={({ field }) => (
                       <FormItem className="space-y-0 flex-1 md:space-y-2">
-                        <FormLabel className="font-medium text-base text-[#111827] md:text-lg">New Password <span className="text-[#E03137]">*</span></FormLabel>
+                        <FormLabel className="font-medium text-base text-[#111827] md:text-lg">
+                          New Password <span className="text-[#E03137]">*</span>
+                        </FormLabel>
                         <FormControl>
-                          <PasswordInput placeholder="new password" className="h-10 border-[#27A376] text-sm md:h-12 md:text-base placeholder-[#A0AEC0]" {...field} />
+                          <PasswordInput
+                            placeholder="new password"
+                            className="h-10 border-[#27A376] text-sm md:h-12 md:text-base placeholder-[#A0AEC0]"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -150,9 +200,16 @@ export default function AddDetails() {
                     name="confirmPassword"
                     render={({ field }) => (
                       <FormItem className="space-y-0 flex-1 md:text-lg md:space-y-2">
-                        <FormLabel className="font-medium text-base text-[#111827]">Confirm Password <span className="text-[#E03137]">*</span></FormLabel>
+                        <FormLabel className="font-medium text-base text-[#111827]">
+                          Confirm Password{' '}
+                          <span className="text-[#E03137]">*</span>
+                        </FormLabel>
                         <FormControl>
-                          <PasswordInput placeholder="confirm password" className="h-10 border-[#27A376] text-sm placeholder-[#A0AEC0] md:h-12 md:text-base" {...field} />
+                          <PasswordInput
+                            placeholder="confirm password"
+                            className="h-10 border-[#27A376] text-sm placeholder-[#A0AEC0] md:h-12 md:text-base"
+                            {...field}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -161,14 +218,17 @@ export default function AddDetails() {
                 </div>
               </div>
 
-
-              <Button className="w-full h-12 mt-6 md:mt-9 md:h-14" type="submit" variant="login">Submit</Button>
+              <Button
+                className="w-full h-12 mt-6 md:mt-9 md:h-14"
+                type="submit"
+                variant="login"
+              >
+                Submit
+              </Button>
             </form>
           </Form>
         </CardContent>
       </Card>
-
     </div>
-
-  )
+  );
 }

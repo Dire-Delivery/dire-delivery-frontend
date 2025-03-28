@@ -6,3 +6,8 @@ export type dashboardTotals = {
   totalDelivered: number;
   totalPickedup: number;
 };
+
+export type locations = {
+  name: string;
+  code: string;
+};

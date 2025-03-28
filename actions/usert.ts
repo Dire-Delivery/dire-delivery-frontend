@@ -10,7 +10,6 @@ export const updateProfile = async ({
   userid: string;
   data: updateProfileType;
 }) => {
-  console.log('data:', data);
   const fetchUrl = `${BaseUrl}/users/${userid}/update-user`;
 
   const response = await apiCall({ url: fetchUrl, method: 'POST', data: data });
