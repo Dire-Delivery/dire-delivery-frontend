@@ -24,8 +24,9 @@ import { EmployeeLoginDetails } from '@/types/employeeType';
 import Image from 'next/image';
 import { useState } from 'react';
 import { AiOutlineCopy } from "react-icons/ai";
-import { toast } from 'sonner';
+
 import { useMediaQuery } from 'usehooks-ts';
+import { useToast } from "@/hooks/use-toast";
 
 type props = {
   showNewEmployeeModal: boolean;
@@ -51,6 +52,7 @@ export default function AddEmployeeDialogue({
       phoneNumber: "",
     },
   })
+  const { toast } = useToast();
 
   const { reset } = form;
 
@@ -72,7 +74,10 @@ export default function AddEmployeeDialogue({
     if (userData && token) {
       const response = await AddUserFetch(userData.id, addDetails)
       if (response.message) {
-        toast.error(response.message)
+        toast({
+          title: "Successfully added employee",
+          variant: 'success',
+        });
       }
 
       console.log("the message", response.message)
@@ -102,7 +107,10 @@ export default function AddEmployeeDialogue({
   
     try {
       await navigator.clipboard.writeText(copyText);
-      toast.success("Successfully copied to clipboard");
+      toast({
+        title: "Successfully copied to clipboard",
+        variant: `success`,
+      });
     } catch {
   
       // Fallback method for older mobile browsers
@@ -113,7 +121,10 @@ export default function AddEmployeeDialogue({
       document.execCommand("copy"); // Deprecated but still works as a fallback
       document.body.removeChild(textArea);
   
-      toast.success("Copied to clipboard");
+      toast({
+        title: "Successfully copied to clipboard",
+        variant: `success`,
+      });
     }
   };
 

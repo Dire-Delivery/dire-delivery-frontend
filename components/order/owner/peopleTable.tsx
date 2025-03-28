@@ -48,7 +48,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { FaUserLarge } from "react-icons/fa6";
 import { LuEye, LuX } from 'react-icons/lu';
 import { RiDeleteBin5Line } from 'react-icons/ri';
-import { toast } from 'sonner';
+import { useToast } from '@/hooks/use-toast';
 
 interface EmployeeDataTableProps<TData extends Person, TValue> {
     columns: ColumnDef<TData, TValue>[];
@@ -100,6 +100,7 @@ export function UserDataTable<
     const pathname = usePathname();
     const role = pathname.split('/')[1]; // Gets "owner", "admin", or "employee"
     const [columnVisibility, setColumnVisibility] = useState({}); // State for column visibility
+    const { toast } = useToast();
 
     // Detect screen size
     const isTablet = useMediaQuery('(max-width: 1024px)'); // Tablet screens
@@ -149,12 +150,20 @@ export function UserDataTable<
             const token = await userToken();
             if (userData && token && selectedPerson) {
                 const response = await ChangeRole(userData.id, selectedPerson.id, view);
-                toast.success(response.message)
+                toast({
+                    title: "Successfully changed roles",
+                    variant: `success`,
+                  });
                 setShowChangeRoleModal(false);
                 setRefreshTableToggle(!refreshTableToggle);
                 
             } else {
+                toast({
+                    title: "Could not change role",
+                    variant: 'destructive',
+                  });
                 throw new Error("userData or token not found")
+
             }
         } catch (error) {
             console.log(error);
