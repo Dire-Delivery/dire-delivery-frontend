@@ -47,6 +47,8 @@ export default function UserOrderTabelView({ redirectLink, userId }: props) {
     const [user, setUser] = useState<userType | null>(null);
     const [personInfo, setPersonInfo] = useState<User>();
     const [showChangeRoleModal, setShowChangeRoleModal] = useState(false);
+    const [filterValue, setFilterValue] = useState<string>('All Status');
+    const [orderAmount, setOrderAmount] = useState<number>(0);
 
     const role = user?.role;
     const name = user?.name;
@@ -140,6 +142,7 @@ export default function UserOrderTabelView({ redirectLink, userId }: props) {
                             addedBy: result.orderDetails.employeeInfo?.name || '',
                         }))
                     );
+                    setOrderAmount(response.totalOrders);
                 }
             } catch (error) {
                 setTimeout(() => {
@@ -256,6 +259,7 @@ export default function UserOrderTabelView({ redirectLink, userId }: props) {
     const handleFilter = async (status: string) => {
         try {
             if (status === 'All Status') {
+                setFilterValue(status);
                 SetTriggerState(!triggerstate);
                 return;
             }
@@ -265,9 +269,13 @@ export default function UserOrderTabelView({ redirectLink, userId }: props) {
                 status: status,
             });
             const result = response;
-            console.log("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^",result);
+            if (result.error === 'No Order could be found!') {
+                setFilterValue(status);
+                setTransformedOrder([]);
+            }
             setTotalPages(response.totalPage);
             setCurrentPage(response.currentPage);
+            setFilterValue(status);
             const filteredData = result.orders?.filter((order: OrderType) => order.orderDetails.employeeInfo.email == personInfo?.email).map((result: Order) => ({
                 transactionCode: result.orderDetails.order.transactionCode, // Use transactionCode instead of orderId
                 senderName: result.orderDetails.sender?.name || '',
@@ -331,7 +339,6 @@ export default function UserOrderTabelView({ redirectLink, userId }: props) {
                 addedBy: result.orderDetails.employeeInfo?.name || '',
             })
             );
-            console.log(">..................", filteredData)
             setTransformedOrder(filteredData);
             setloading(false);
         } catch (error) {
@@ -450,7 +457,7 @@ export default function UserOrderTabelView({ redirectLink, userId }: props) {
                             <div className='font-bold text-2xl'>{personInfo?.name}</div>
                             {role == "OWNER" && <Button className={cn('bg-[#060A87] rounded-[10px] w-40 h-10 hover:bg-[#060A87] hover:opacity-90 flex items-center gap-2.5 ')} onClick={() => setShowChangeRoleModal(true)}>
                                 <FaUserLarge size={20} />
-                                <div className='text-base font-bold mb-[-3px]'>{personInfo?.role == "EMPLOYEE" ? "PROMOTE": "DEMOTE"}</div>
+                                <div className='text-base font-bold mb-[-3px]'>{personInfo?.role == "EMPLOYEE" ? "PROMOTE" : "DEMOTE"}</div>
                                 <div className='text-2xl font-normal text-center mt-[-3px] ml-2'>+</div>
                             </Button>}
                         </CardTitle>
@@ -489,6 +496,8 @@ export default function UserOrderTabelView({ redirectLink, userId }: props) {
                 <div className='font-bold text-2xl pt-4'>Orders Made</div>
                 {transformedOrder ? (
                     <DataTable
+                        orderAmount={orderAmount}
+                        filterValue={filterValue}
                         handlefilter={handleFilter}
                         loading={loading}
                         redirectLink={redirectLink}
@@ -513,6 +522,8 @@ export default function UserOrderTabelView({ redirectLink, userId }: props) {
                     />
                 ) : (
                     <DataTable
+                        orderAmount={orderAmount}
+                        filterValue={filterValue}
                         handlefilter={handleFilter}
                         loading={loading}
                         redirectLink={redirectLink}
