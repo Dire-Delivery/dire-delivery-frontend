@@ -144,7 +144,7 @@ export default function handlePrintDetail(order: orderDetail): void {
             <tr>
                 <td> ${order.order.createdAT}</td>
                 <td>${order.order.transactionCode}</td>
-                <td> ${order.order.payment}</td>
+                <td> ${order.order.payment === 0 ? 'On Delivery' : 'Now'}</td>
                 <td>${order.item.totalPrice}</td>
             </tr>
         </table>

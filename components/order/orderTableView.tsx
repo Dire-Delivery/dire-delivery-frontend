@@ -90,7 +90,9 @@ export default function OrderTabelView({ redirectLink }: props) {
               createdAt: result.orderDetails.order.createdAT || '',
               updatedAt: result.updatedAt || '',
               paymentMethod:
-                result.orderDetails.order?.payment === 0 ? 'Unpaid' : 'Paid', // Adjust payment method logic
+                result.orderDetails.order?.payment === 0
+                  ? 'On Delivery'
+                  : 'Now', // Adjust payment method logic
               statuses: {
                 pending: result.orderDetails.status?.find(
                   (s: { status: string }) => s.status === 'Pending'
