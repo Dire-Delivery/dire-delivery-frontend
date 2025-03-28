@@ -149,7 +149,7 @@ export function UserDataTable<
             const userData = await userProfile();
             const token = await userToken();
             if (userData && token && selectedPerson) {
-                const response = await ChangeRole(userData.id, selectedPerson.id, view);
+                await ChangeRole(userData.id, selectedPerson.id, view);
                 toast({
                     title: "Successfully changed roles",
                     variant: `success`,

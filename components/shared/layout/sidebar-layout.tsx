@@ -8,7 +8,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/shared/custom-shadcn/custom-dialog-logout';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
   Sidebar,
   SidebarContent,
@@ -26,8 +25,8 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { LuChevronUp, LuLayoutGrid, LuLogOut } from 'react-icons/lu';
-import SidebarToggle from './sidebar-toggle';
 import { useMediaQuery } from 'usehooks-ts';
+import SidebarToggle from './sidebar-toggle';
 
 const ownerItems = [
   {
@@ -95,9 +94,6 @@ export default function SidebarLayout() {
   const refinedMenuItems = role == "owner" ? ownerItems : role == "admin" ? adminItems : role == "employee" ? employeeItems : []
 
   const isMobile = useMediaQuery('(max-width: 768px)'); // Tablet screens
-
-  let userName = "";
-  let userEmail = "";
 
 
   useEffect(() => {

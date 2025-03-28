@@ -8,7 +8,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/shared/custom-shadcn/custom-dialog-logout';
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from '@/lib/utils';
 import { useRouter } from 'next/navigation';
 import { LuChevronUp, LuLogOut } from 'react-icons/lu';
