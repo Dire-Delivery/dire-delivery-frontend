@@ -279,12 +279,18 @@ export default function SidebarLayout() {
                   }
                 }}
                 className={cn(
-                  `flex justify-start gap-3 py-3 transition-all duration-300 ease-in-out`
+                  `flex items-center justify-start gap-3 py-3 transition-all duration-300 ease-in-out`,
+                  state === 'expanded'
+                    ? ' rounded-[12px]'
+                    : 'justify-center rounded-[10px]'
                 )}
               >
-                {item.icon && item.icon()}
-
-                <div className="font-semibold text-white">{item.title}</div>
+                {React.createElement(item.icon, {
+                  className: cn('h-6 w-6', state == 'collapsed' && 'mx-auto'),
+                })}
+                {state === 'expanded' && (
+                  <div className="font-semibold text-white">{item.title}</div>
+                )}
               </Link>
             </SidebarMenuItem>
           ))}
