@@ -36,10 +36,6 @@ function Header() {
       {/* <SidebarTrigger /> */}
       <SidebarToggleHeader />
       <div className="flex gap-1 items-center justify-center ml-auto">
-        <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
         <Dialog>
           <DialogTrigger>
             <LuChevronUp

@@ -90,10 +90,14 @@ export default function SidebarLayout() {
   const pathname = usePathname();
   const role = pathname.split('/')[1]; // Gets "owner", "admin", or "employee"
   const [selectedItem, setSelectedItem] = useState('');
+  const [userData, setUserData] = useState<Full_Info>()
 
   const refinedMenuItems = role == "owner" ? ownerItems : role == "admin" ? adminItems : role == "employee" ? employeeItems : []
 
   const isMobile = useMediaQuery('(max-width: 768px)'); // Tablet screens
+
+  let userName = "";
+  let userEmail = "";
 
 
   useEffect(() => {
@@ -101,6 +105,23 @@ export default function SidebarLayout() {
     setSelectedItem(matchedItem ? matchedItem.title : '');
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]); // Re-run when pathname changes
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const user = await userProfile();
+        if ("email" in user) {
+          setUserData(user);
+        }
+        
+      } catch {
+        console.error("failed to fetch user data")
+      }
+          
+    }
+    fetchUserData();
+
+  }, [])
 
   const logout = async () => {
     const userData = await userProfile();
@@ -240,10 +261,6 @@ export default function SidebarLayout() {
             )}
           >
             <div className={cn('flex gap-1.5')}>
-              <Avatar className="cursor-pointer">
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
-              </Avatar>
               <div
                 className={cn(
                   'flex flex-col items-start',
@@ -251,9 +268,9 @@ export default function SidebarLayout() {
                 )}
               >
                 <div className="font-semibold text-sm text-white">
-                  Hanna Baptista
+                  {userData?.role == "OWNER" ? "Owner" : userData?.name}
                 </div>
-                <div className="text-[#D6D1D1] text-xs">hanna@unpixel.com</div>
+                <div className="text-[#D6D1D1] text-xs">{userData?.email}</div>
               </div>
             </div>
             <div>
