@@ -26,6 +26,7 @@ export async function middleware(request: NextRequest) {
   let userData = null;
   if (user) {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       userData = JSON.parse(user);
     } catch (error) {
       console.error('Error parsing user cookie:', error);
