@@ -124,8 +124,14 @@ export const RememberMe = async (userId: string) => {
 export const UpdateUser = async (data: UpdateUserData) => {
   const cookieStore = await cookies();
   const userData = await userProfile();
-  if (userData && "email" in userData) {
-    const newData = {...userData, name: data.name, password: data.password, location: data.location, phone: data.phone};
+  if (userData && 'email' in userData) {
+    const newData = {
+      ...userData,
+      name: data.name,
+      password: data.password,
+      location: data.location,
+      phone: data.phone,
+    };
     cookieStore.set({
       name: 'user',
       value: JSON.stringify(newData),
@@ -133,6 +139,5 @@ export const UpdateUser = async (data: UpdateUserData) => {
       path: '/',
       sameSite: 'lax',
     });
-    
   }
 };
