@@ -1,23 +1,13 @@
 'use client';
 
-import { useState } from 'react';
-import { Eye, EyeOff } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { userType } from '@/types/user';
+import UpdateProfile from '../settings/updateProfile';
+import { splitName } from '@/lib/utils';
 interface ProfileSettingsProps {
   user: userType;
 }
 
 export default function ProfileSettings({ user }: ProfileSettingsProps) {
-  const [showPassword, setShowPassword] = useState(false);
-
-  function splitName(name: string): { firstName: string; lastName: string } {
-    const nameParts = name.trim().split(' ');
-    const firstName = nameParts[0] || '';
-    const lastName = nameParts.slice(1).join(' ') || '';
-    return { firstName, lastName };
-  }
-
   return (
     <div className="flex-1 bg-white rounded-lg  py-6 px-2 md:p-6">
       <h2 className="text-xl font-semibold mb-6">Profile Setting</h2>
@@ -45,10 +35,11 @@ export default function ProfileSettings({ user }: ProfileSettingsProps) {
               <div>{user.location}</div>
             </div>
           </div>
-
-          {/* Form Fields */}
         </div>
-        <div className="grid lg:grid-cols-2 gap-4 px-2 ">
+        {/* Form Fields */}
+
+        <UpdateProfile user={user} />
+        {/* <div className="grid lg:grid-cols-2 gap-4 px-2 ">
           <div className="w-full ">
             <label className="block mb-2 font-medium">First Name</label>
             <input
@@ -125,7 +116,7 @@ export default function ProfileSettings({ user }: ProfileSettingsProps) {
           <Button className="primary-button bg-[#0a1172] text-white w-fit px-4 h-full rounded-md">
             Update Profile
           </Button>
-        </div>
+        </div> */}
       </div>
     </div>
   );
