@@ -34,12 +34,13 @@ import { DataTable } from '@/components/order/owner/orderTable';
 import { userProfile } from '@/actions/auth';
 import { userType } from '@/types/user';
 import { toast } from '@/hooks/use-toast';
+import { dashboardTotals } from '@/types/dashboard';
+import { dashboardTotalsAPI } from '@/actions/dashboard';
 
 export default function Dashboardview() {
   const [orders, setOrders] = useState<TransformedOrder[] | null>(null);
   const [pending, setPending] = useState<Order[]>([]);
-  const [delivered, setDelivered] = useState<Order[]>([]);
-  const [pickedUp, setpickedUp] = useState<Order[]>([]);
+
   const [user, setUser] = useState<userType | null>(null);
   const [pagenumber, setPagenumber] = useState<number>(1);
   const [loading, setloading] = useState<boolean>(true);
@@ -47,6 +48,15 @@ export default function Dashboardview() {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [triggerstate, SetTriggerState] = useState<boolean>(false);
   const [filterValue, setFilterValue] = useState<string>('All Status');
+  const [dashboarTotals, setdashboardTotals] = useState<dashboardTotals>({
+    totalAdmins: 0,
+    totalEmployees: 0,
+    totalOrders: 0,
+    totalPending: 0,
+    totalDelivered: 0,
+    totalPickedup: 0,
+  });
+  const [orderAmount, setOrderAmount] = useState<number>(0);
 
   const redirectLink = '/owner/orders';
 
@@ -68,11 +78,11 @@ export default function Dashboardview() {
           date: today,
           pagenumber: pagenumber,
         });
+        const totalsResponse = await dashboardTotalsAPI(user.id);
+
         console.log('orderRespose:', orderRespose);
         setOrders([]);
         setPending([]);
-        setDelivered([]);
-        setpickedUp([]);
         const result = orderRespose;
         setTotalPages(result.totalPage);
         setCurrentPage(result.currentPage);
@@ -141,6 +151,8 @@ export default function Dashboardview() {
             addedBy: result.orderDetails.employeeInfo?.name || '',
           }))
         );
+        setOrderAmount(orderRespose.totalOrders);
+        setdashboardTotals(totalsResponse);
       } catch (error) {
         console.log(error);
       }
@@ -346,6 +358,8 @@ export default function Dashboardview() {
 
   console.log('fetchorders:', orders);
   console.log('fetchPending:', pending);
+  console.log('currentpage:', currentPage);
+  console.log('totalPages:', totalPages);
 
   return (
     <main className="min-h-screen bg-slate-50 p-4 md:p-8">
@@ -361,25 +375,25 @@ export default function Dashboardview() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             title="Total Employees"
-            value={0}
+            value={dashboarTotals.totalEmployees ?? 0}
             icon={<Users className="h-6 w-6 text-white" />}
             color="bg-blue-400"
           />
           <StatCard
             title="Total Admins"
-            value={0}
+            value={dashboarTotals.totalAdmins ?? 0}
             icon={<Shield className="h-6 w-6 text-white" />}
             color="bg-purple-400"
           />
           <StatCard
             title="Delivered Items"
-            value={delivered.length}
+            value={dashboarTotals.totalDelivered ?? 0}
             icon={<Truck className="h-6 w-6 text-white" />}
             color="bg-red-400"
           />
           <StatCard
             title="Pending Items"
-            value={pending.length}
+            value={dashboarTotals.totalPending ?? 0}
             icon={<Clock className="h-6 w-6 text-white" />}
             color="bg-yellow-400"
           />
@@ -389,7 +403,7 @@ export default function Dashboardview() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             title="Total Orders"
-            value={orders?.length || 0}
+            value={dashboarTotals.totalOrders ?? 0}
             icon={<Package className="h-6 w-6 text-white" />}
             color="bg-emerald-400"
           />
@@ -407,13 +421,14 @@ export default function Dashboardview() {
           />
           <StatCard
             title="Picked Up Items"
-            value={pickedUp.length}
+            value={dashboarTotals.totalPickedup ?? 0}
             icon={<Users className="h-6 w-6 text-white" />}
             color="bg-purple-400"
           />
         </div>
         {orders ? (
           <DataTable
+            orderAmount={orderAmount}
             loading={loading}
             redirectLink={redirectLink}
             totalPages={totalPages}
@@ -439,6 +454,7 @@ export default function Dashboardview() {
           />
         ) : (
           <DataTable
+            orderAmount={orderAmount}
             filterValue={filterValue}
             handlefilter={handleFilter}
             loading={loading}
