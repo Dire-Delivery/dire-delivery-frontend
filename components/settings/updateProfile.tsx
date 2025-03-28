@@ -36,7 +36,6 @@ export default function UpdateProfile({ user }: ProfileSettingsProps) {
     defaultValues: {
       firstName: splitName(user.name).firstName,
       lastName: splitName(user.name).lastName,
-      email: user.email,
       location: user.location,
       phone: user.phone || '',
     },
@@ -97,7 +96,8 @@ export default function UpdateProfile({ user }: ProfileSettingsProps) {
               type="text"
               className="input-field border rounded-md py-2 px-3 w-full"
               {...register('firstName')}
-              defaultValue={splitName(user.name).firstName}
+              placeholder={splitName(user.name).firstName}
+              // placeholder={}
             />
             {errors.firstName && (
               <p className="text-red-500 text-sm">{errors.firstName.message}</p>
@@ -108,15 +108,12 @@ export default function UpdateProfile({ user }: ProfileSettingsProps) {
           <div>
             <label className="block mb-2 font-medium">Email</label>
             <input
+              title="email"
               type="email"
               className="input-field border rounded-md py-2 px-3 w-full"
-              {...register('email')}
               value={user.email}
               readOnly
             />
-            {errors.email && (
-              <p className="text-red-500 text-sm">{errors.email.message}</p>
-            )}
           </div>
 
           {/* Last Name */}
@@ -126,7 +123,7 @@ export default function UpdateProfile({ user }: ProfileSettingsProps) {
               type="text"
               className="input-field border rounded-md py-2 px-3 w-full"
               {...register('lastName')}
-              defaultValue={splitName(user.name).lastName}
+              placeholder={splitName(user.name).lastName}
             />
             {errors.lastName && (
               <p className="text-red-500 text-sm">{errors.lastName.message}</p>
@@ -140,7 +137,7 @@ export default function UpdateProfile({ user }: ProfileSettingsProps) {
               type="text"
               className="input-field border rounded-md py-2 px-3 w-full"
               {...register('phone')}
-              defaultValue={user.phone || ''}
+              placeholder={user.phone || 'not assigned'}
             />
             {errors.phone && (
               <p className="text-red-500 text-sm">{errors.phone.message}</p>
@@ -154,7 +151,7 @@ export default function UpdateProfile({ user }: ProfileSettingsProps) {
               type="text"
               className="input-field border rounded-md py-2 px-3 w-full"
               {...register('location')}
-              defaultValue={user.location}
+              placeholder={user.location}
             />
             {errors.location && (
               <p className="text-red-500 text-sm">{errors.location.message}</p>
