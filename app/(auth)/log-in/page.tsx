@@ -25,12 +25,13 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
+import { useToast } from "@/hooks/use-toast";
 
 export default function SignIn() {
   const [rememberMe, setRememberMe] = useState(false); // ✅ Add state for Remember Me
   const [showAlertDialog, setShowAlertDialog] = useState(false);
+  const { toast } = useToast();
 
   const form = useForm<z.infer<typeof signInFormSchema>>({
     resolver: zodResolver(signInFormSchema),
@@ -57,7 +58,10 @@ export default function SignIn() {
     console.log({ data }, typeof data.payload)
 
     if (data && !data.error) {
-      toast.success(data.message)
+      toast({
+        title: "Successfully logged in",
+        variant: `success`,
+      });
       setCookies(data);
       if (typeof data.payload == 'string') {
         redirect("/add-details")
@@ -82,7 +86,10 @@ export default function SignIn() {
         }
       }
     } else {
-      toast.error(data.message)
+      toast({
+        title: "Could not log in",
+        variant: 'destructive',
+      });
     }
   }
 
@@ -91,9 +98,16 @@ export default function SignIn() {
       const data = { email }
       const response = await ForgotPassword(data);
       console.log({ response })
-      toast.success(response.message)
+      toast({
+        title: "Successfully sent rest password email",
+        variant: `success`,
+      });
     } catch (error) {
       console.log(error);
+      toast({
+        title: "Could not send rest password email",
+        variant: 'destructive',
+      });
     }
   };
 

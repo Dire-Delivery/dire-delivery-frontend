@@ -14,8 +14,8 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { use } from 'react';
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Page({
     params,
@@ -24,6 +24,7 @@ export default function Page({
 }) {
     const { forgotPwdToken } = use(params);
     const router = useRouter()
+    const { toast } = useToast();
 
     const form = useForm<z.infer<typeof resetPasswordSchema>>({
         resolver: zodResolver(resetPasswordSchema),
@@ -41,7 +42,10 @@ export default function Page({
 
     try {
         const response = await ResetPassword(passwordDetails, forgotPwdToken);
-        toast.success(response.message)
+        toast({
+            title: "Successfully reset password",
+            variant: `success`,
+          });
 
         if (response.message == "Password reset successfully!") {
             router.push('/log-in')
@@ -49,6 +53,10 @@ export default function Page({
 
     } catch (error) {
       console.log(error);
+      toast({
+        title: "Could not reset password",
+        variant: 'destructive',
+      });
     }
     }
 

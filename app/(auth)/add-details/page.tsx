@@ -15,10 +15,11 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 
 
 export default function AddDetails() {
+  const { toast } = useToast();
   const form = useForm<z.infer<typeof addDetailsSchema>>({
     resolver: zodResolver(addDetailsSchema),
     defaultValues: {
@@ -46,7 +47,11 @@ export default function AddDetails() {
       console.log("the data", data)
 
       if (data && !data.error) {
-        toast.success(data.message)
+        // toast.success(data.message)
+        toast({
+          title: "Successfully added basic information",
+          variant: `success`,
+        });
         setCookies(data);
         if (data.payload.role == "OWNER") {
           redirect("/owner")
@@ -59,7 +64,10 @@ export default function AddDetails() {
           // add toast for unknown role error
         }
       } else {
-        toast.error(data.message)
+        toast({
+          title: "Could not add information",
+          variant: 'destructive',
+        });
       }
     }
   }
