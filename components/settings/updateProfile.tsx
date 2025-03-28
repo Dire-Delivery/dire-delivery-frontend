@@ -15,6 +15,7 @@ import PasswordChange from './passwordChange';
 import { updateProfile } from '@/actions/usert';
 import { z } from 'zod';
 import { UpdateUser } from '@/actions/auth';
+import { toast } from '@/hooks/use-toast';
 
 // Create a simplified schema without password for profile updates
 const profileUpdateSchema = updateProfileSchema.omit({ password: true });
@@ -62,6 +63,11 @@ export default function UpdateProfile({ user }: ProfileSettingsProps) {
 
       if (response.message == 'User updated successfully') {
         UpdateUser(newData);
+        toast({
+          title: 'Success',
+          description: 'Profile updated successfully',
+          variant: 'success',
+        });
       }
       // Handle success (e.g., show toast notification)
     } catch (err) {
@@ -86,6 +92,11 @@ export default function UpdateProfile({ user }: ProfileSettingsProps) {
 
     if (response.message == 'User updated successfully') {
       UpdateUser(newData);
+      toast({
+        title: 'Success',
+        description: 'Password updated successfully',
+        variant: 'success',
+      });
     }
   };
 
