@@ -2,7 +2,14 @@
 'use server';
 
 import apiCall from '@/base-api/api';
-import { AddUserDetails, Details, ForgotPasswordData, loginDetails, ResetPasswordData, UpdateUserData } from '@/types/auth';
+import {
+  AddUserDetails,
+  Details,
+  ForgotPasswordData,
+  loginDetails,
+  ResetPasswordData,
+  UpdateUserData,
+} from '@/types/auth';
 import { cookies } from 'next/headers';
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL;
