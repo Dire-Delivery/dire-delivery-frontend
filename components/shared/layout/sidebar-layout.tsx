@@ -1,6 +1,11 @@
 'use client';
 
-import { LogOutFetch, removeUserProfile, userProfile, userToken } from '@/actions/auth';
+import {
+  LogOutFetch,
+  removeUserProfile,
+  userProfile,
+  userToken,
+} from '@/actions/auth';
 import {
   Dialog,
   DialogContent,
@@ -27,6 +32,7 @@ import { useEffect, useState } from 'react';
 import { LuChevronUp, LuLayoutGrid, LuLogOut } from 'react-icons/lu';
 import { useMediaQuery } from 'usehooks-ts';
 import SidebarToggle from './sidebar-toggle';
+import React from 'react';
 
 const ownerItems = [
   {
@@ -82,19 +88,55 @@ const employeeItems = [
   },
 ];
 
-export default function SidebarLayout() {
+const ownerHelp = [
+  {
+    title: 'Help',
+    url: '/owner/help',
+    icon: () => <Image src={question} alt="Help Icon" className="h-6 w-6" />,
+  },
+];
+const adminHelp = [
+  {
+    title: 'Help',
+    url: '/admin/help',
+    icon: () => <Image src={question} alt="Help Icon" className="h-6 w-6" />,
+  },
+];
+const employeeHelp = [
+  {
+    title: 'Help',
+    url: '/employee/help',
+    icon: () => <Image src={question} alt="Help Icon" className="h-6 w-6" />,
+  },
+];
 
+export default function SidebarLayout() {
   const { state, toggleSidebar } = useSidebar();
   const router = useRouter();
   const pathname = usePathname();
   const role = pathname.split('/')[1]; // Gets "owner", "admin", or "employee"
   const [selectedItem, setSelectedItem] = useState('');
-  const [userData, setUserData] = useState<Full_Info>()
+  const [userData, setUserData] = useState<Full_Info>();
 
-  const refinedMenuItems = role == "owner" ? ownerItems : role == "admin" ? adminItems : role == "employee" ? employeeItems : []
+  const refinedMenuItems =
+    role == 'owner'
+      ? ownerItems
+      : role == 'admin'
+        ? adminItems
+        : role == 'employee'
+          ? employeeItems
+          : [];
 
   const isMobile = useMediaQuery('(max-width: 768px)'); // Tablet screens
 
+  const refinedHelpItems =
+    role == 'owner'
+      ? ownerHelp
+      : role == 'admin'
+        ? adminHelp
+        : role == 'employee'
+          ? employeeHelp
+          : [];
 
   useEffect(() => {
     const matchedItem = refinedMenuItems.find((item) => pathname == item.url);
@@ -106,18 +148,15 @@ export default function SidebarLayout() {
     const fetchUserData = async () => {
       try {
         const user = await userProfile();
-        if ("email" in user) {
+        if ('email' in user) {
           setUserData(user);
         }
-        
       } catch {
-        console.error("failed to fetch user data")
+        console.error('failed to fetch user data');
       }
-          
-    }
+    };
     fetchUserData();
-
-  }, [])
+  }, []);
 
   const logout = async () => {
     const userData = await userProfile();
@@ -126,9 +165,9 @@ export default function SidebarLayout() {
     if (userData && token) {
       await removeUserProfile();
       router.push('/log-in');
-      await LogOutFetch(userData.id)
+      await LogOutFetch(userData.id);
     }
-  }
+  };
 
   return (
     <Sidebar
@@ -144,7 +183,7 @@ export default function SidebarLayout() {
           className={cn(
             'transition-all duration-300 ease-in-out hidden opacity-0 scale-90 px-4 md:px-0',
             state !== 'collapsed' &&
-            'scale-100 opacity-100 flex justify-between'
+              'scale-100 opacity-100 flex justify-between'
           )}
         >
           <div className="flex items-center gap-0">
@@ -173,9 +212,9 @@ export default function SidebarLayout() {
           href="/owner"
           onClick={() => {
             if (isMobile) {
-              toggleSidebar()
+              toggleSidebar();
             }
-            }}
+          }}
           className={cn(
             ' ml-5 mr-5 py-4 px-5 flex justify-between items-center rounded-[10px] font-bold bg-[#C7E7F6F5]',
             state == 'collapsed' && 'hidden'
@@ -197,14 +236,14 @@ export default function SidebarLayout() {
         </Link>
         <SidebarMenu className="gap-2 p-0 m-0">
           {refinedMenuItems.map((item, index) => (
-            <SidebarMenuItem key={index} >
+            <SidebarMenuItem key={index}>
               <Link
                 href={item.url}
                 onClick={() => {
                   if (isMobile) {
-                    toggleSidebar()
+                    toggleSidebar();
                   }
-                  }}
+                }}
                 className={cn(
                   `flex items-center justify-start gap-3 py-3 transition-all duration-300 ease-in-out`,
                   selectedItem == item.title
@@ -215,9 +254,9 @@ export default function SidebarLayout() {
                     : 'ml-2 mr-2 rounded-[10px]'
                 )}
               >
-                <item.icon
-                  className={cn('h-6 w-6', state == 'collapsed' && 'mx-auto')}
-                />
+                {React.createElement(item.icon, {
+                  className: cn('h-6 w-6', state == 'collapsed' && 'mx-auto'),
+                })}
                 {state === 'expanded' && (
                   <div className="font-semibold">{item.title}</div>
                 )}
@@ -230,7 +269,27 @@ export default function SidebarLayout() {
         className={cn('p-5 bg-[#060A87]', state == 'collapsed' && 'px-0')}
       >
         <div className="flex flex-col gap-4 ">
-          <Link href="/owner/help">
+          {refinedHelpItems.map((item, index) => (
+            <SidebarMenuItem key={index}>
+              <Link
+                href={item.url}
+                onClick={() => {
+                  if (isMobile) {
+                    toggleSidebar();
+                  }
+                }}
+                className={cn(
+                  `flex justify-start gap-3 py-3 transition-all duration-300 ease-in-out`
+                )}
+              >
+                {item.icon && item.icon()}
+
+                <div className="font-semibold text-white">{item.title}</div>
+              </Link>
+            </SidebarMenuItem>
+          ))}
+
+          {/* <Link href="/owner/help">
             <div className="flex gap-2.5 cursor-pointer">
               <Image
                 src={question}
@@ -249,7 +308,7 @@ export default function SidebarLayout() {
                 Help Center
               </div>
             </div>
-          </Link>
+          </Link> */}
           <div
             className={cn(
               'hidden w-full justify-between items-center relative md:flex',
@@ -264,7 +323,7 @@ export default function SidebarLayout() {
                 )}
               >
                 <div className="font-semibold text-sm text-white">
-                  {userData?.role == "OWNER" ? "Owner" : userData?.name}
+                  {userData?.role == 'OWNER' ? 'Owner' : userData?.name}
                 </div>
                 <div className="text-[#D6D1D1] text-xs">{userData?.email}</div>
               </div>
@@ -279,7 +338,7 @@ export default function SidebarLayout() {
                   />
                 </DialogTrigger>
                 <DialogContent
-                 onClick={logout}
+                  onClick={logout}
                   className={cn(
                     'bottom-16 left-40  bg-white py-3 px-3 rounded-md transition-all hover:bg-gray-200 cursor-pointer',
                     state == 'collapsed' && 'left-14'
