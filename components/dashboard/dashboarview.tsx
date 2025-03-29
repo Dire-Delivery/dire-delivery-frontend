@@ -1,14 +1,6 @@
 'use client';
 
-import {
-  Users,
-  Shield,
-  Truck,
-  Clock,
-  Package,
-  DollarSign,
-  Building,
-} from 'lucide-react';
+import { Users, Shield, Truck, Clock, Package, Building } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 
 import { JSX, useEffect, useState } from 'react';
@@ -395,12 +387,6 @@ export default function Dashboardview() {
             value={dashboarTotals.totalOrders ?? 0}
             icon={<Package className="h-6 w-6 text-white" />}
             color="bg-emerald-400"
-          />
-          <StatCard
-            title="Total Revenue"
-            value={0}
-            icon={<DollarSign className="h-6 w-6 text-white" />}
-            color="bg-indigo-400"
           />
           <StatCard
             title="Cities"
