@@ -7,8 +7,6 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value || null;
   const user = request.cookies.get('user')?.value || null;
 
-  console.log('......................', { token, user });
-
   const now = Math.floor(Date.now() / 1000);
 
   // Decode token and check expiration
@@ -16,7 +14,6 @@ export async function middleware(request: NextRequest) {
     try {
       const decoded: { exp?: number } = jwtDecode(token);
       if (decoded.exp && decoded.exp < now) {
-        console.log('Token expired');
         await removeUserProfile();
         return NextResponse.redirect(new URL('/log-in', request.url));
       }
@@ -29,6 +26,7 @@ export async function middleware(request: NextRequest) {
   let userData = null;
   if (user) {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       userData = JSON.parse(user);
     } catch (error) {
       console.error('Error parsing user cookie:', error);

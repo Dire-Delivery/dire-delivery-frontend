@@ -1,23 +1,53 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Sidebar from '@/components/ownerComponents/sidebar';
 import ProfileSettings from '@/components/ownerComponents/profile';
 import PriceCitySettings from '@/components/ownerComponents/priceCity';
+import { userType } from '@/types/user';
+import { userProfile } from '@/actions/auth';
 export default function Home() {
   const [activeTab, setActiveTab] = useState('profile');
   const [triggerState, setTriggerState] = useState<boolean>(false);
-  const role = 'ADMIN';
+  const [user, setUser] = useState<userType>({
+    id: '',
+    name: '',
+    email: '',
+    createdAt: '',
+    updatedAt: '',
+    role: '',
+    image: '',
+    phone: '',
+    location: '',
+    isActive: 1,
+    isDeleted: 0,
+    password: '',
+    joinedAt: '',
+  });
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await userProfile();
+        setUser(response as userType);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUser();
+  }, [activeTab]);
+  const role = user?.role || 'ADMIN';
+
   return (
     <main className="min-h-screen p-6 px-4 lg:px-8 bg-[#F1F2F8]">
       <div className="max-w-fill mx-auto ">
         <h1 className="text-3xl font-bold text-[#0a1172] mb-2">
-          Welcome Back, [admin Name]!
+          Welcome Back, [employee Name]!
         </h1>
         <p className="text-[#666] mb-6">
           {activeTab === 'profile'
-            ? 'Here are your Profile Reports'
-            : "Here's your Price and City Settings"}
+            ? 'Here are your settings'
+            : "Here's your Pricing Report"}
         </p>
 
         <div className="flex flex-col lg:flex-row gap-6 bg-[#F1F2F8]">
@@ -26,7 +56,7 @@ export default function Home() {
 
           {/* Main Content */}
           {activeTab === 'profile' ? (
-            <ProfileSettings />
+            <ProfileSettings user={user} />
           ) : (
             <PriceCitySettings
               role={role}

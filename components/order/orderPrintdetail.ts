@@ -1,13 +1,13 @@
-import { Order } from '@/types/orderType';
+import { orderDetail } from '@/types/orderType';
 
-export default function handlePrint(order: Order): void {
+export default function handlePrintDetail(order: orderDetail): void {
   if (!order) return;
 
   const printWindow = window.open('', '_blank');
   if (!printWindow) return;
 
   printWindow.document.write(`
-     <html lang="en">
+    <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -177,9 +177,9 @@ export default function handlePrint(order: Order): void {
                 <th>Quantity</th>
               </tr>
               <tr>
-                <td>${order.orderDetails.item.description}</td>
-                <td>${order.orderDetails.item.weight}</td>
-                <td>${order.orderDetails.item.quantity}</td>
+                <td>${order.item.description}</td>
+                <td>${order.item.weight}</td>
+                <td>${order.item.quantity}</td>
               </tr>
             </table>
           </div>
@@ -193,14 +193,10 @@ export default function handlePrint(order: Order): void {
               <th>TOTAL PRICE(birr)</th>
             </tr>
             <tr>
-              <td>${order.orderDetails.order.createdAT}</td>
-              <td>${order.orderDetails.order.transactionCode}</td>
-              <td>
-                ${
-                  order.orderDetails.order.payment === 0 ? 'On Delivery' : 'Now'
-                }
-              </td>
-              <td>${order.orderDetails.item.totalPrice}</td>
+              <td>${order.order.createdAT}</td>
+              <td>${order.order.transactionCode}</td>
+              <td>${order.order.payment === 0 ? 'On Delivery' : 'Now'}</td>
+              <td>${order.item.totalPrice}</td>
             </tr>
           </table>
 
@@ -215,10 +211,10 @@ export default function handlePrint(order: Order): void {
                 <th>Location</th>
               </tr>
               <tr>
-                <td>${order.orderDetails.sender.name}</td>
-                <td>${order.orderDetails.sender.email}</td>
-                <td>${order.orderDetails.sender.phone}</td>
-                <td>${order.orderDetails.sender.address}</td>
+                <td>${order.sender.name}</td>
+                <td>${order.sender.email}</td>
+                <td>${order.sender.phone}</td>
+                <td>${order.sender.address}</td>
               </tr>
             </table>
           </div>
@@ -234,10 +230,10 @@ export default function handlePrint(order: Order): void {
                 <th>Location</th>
               </tr>
               <tr>
-                <td>${order.orderDetails.receiver.name}</td>
-                <td>${order.orderDetails.receiver.email}</td>
-                <td>${order.orderDetails.receiver.phone}</td>
-                <td>${order.orderDetails.receiver.address}</td>
+                <td>${order.receiver.name}</td>
+                <td>${order.receiver.email}</td>
+                <td>${order.receiver.phone}</td>
+                <td>${order.receiver.address}</td>
               </tr>
             </table>
           </div>

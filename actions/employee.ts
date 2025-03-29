@@ -1,9 +1,5 @@
 import apiCall from '@/base-api/api';
-import { orderTrack } from '@/types/orderTrack';
-import { endPoints } from '@/data/endPoints';
-import { Order } from '@/types/orderType';
 
-// const BaseURL = 'http://localhost:3002';
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL;
 
 export const FetchUsers = async (
@@ -12,9 +8,7 @@ export const FetchUsers = async (
   view: string
 ) => {
   const fetchURl = `${BaseUrl}/users/${ownerId}/${view}/${pageNumber}`;
-  //   console.log(`fetchUrl`, fetchURl);
   const response = await apiCall({ url: fetchURl });
-  console.log('the employees', response);
   return response;
 };
 

@@ -34,12 +34,12 @@ import { DataTable } from '@/components/order/owner/orderTable';
 import { userProfile } from '@/actions/auth';
 import { userType } from '@/types/user';
 import { toast } from '@/hooks/use-toast';
-import { dashboardTotals } from '@/types/dashboard';
-import { dashboardTotalsAPI } from '@/actions/dashboard';
+import { dashboardTotals, locations } from '@/types/dashboard';
+import { dashboardTotalsAPI, fetchLocations } from '@/actions/dashboard';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function Dashboardview() {
   const [orders, setOrders] = useState<TransformedOrder[] | null>(null);
-  const [pending, setPending] = useState<Order[]>([]);
 
   const [user, setUser] = useState<userType | null>(null);
   const [pagenumber, setPagenumber] = useState<number>(1);
@@ -57,7 +57,7 @@ export default function Dashboardview() {
     totalPickedup: 0,
   });
   const [orderAmount, setOrderAmount] = useState<number>(0);
-
+  const [locations, setLocations] = useState<locations[]>([]);
   const redirectLink = '/owner/orders';
 
   const role = user?.role;
@@ -65,7 +65,6 @@ export default function Dashboardview() {
   const userId = user?.id;
 
   const today = formatNewDate(new Date());
-  console.log('Formatted Date:', today);
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -79,10 +78,10 @@ export default function Dashboardview() {
           pagenumber: pagenumber,
         });
         const totalsResponse = await dashboardTotalsAPI(user.id);
-
-        console.log('orderRespose:', orderRespose);
+        const locationRespose = await fetchLocations();
+        setLocations(locationRespose);
+        setdashboardTotals(totalsResponse);
         setOrders([]);
-        setPending([]);
         const result = orderRespose;
         setTotalPages(result.totalPage);
         setCurrentPage(result.currentPage);
@@ -152,7 +151,6 @@ export default function Dashboardview() {
           }))
         );
         setOrderAmount(orderRespose.totalOrders);
-        setdashboardTotals(totalsResponse);
       } catch (error) {
         console.log(error);
       }
@@ -172,7 +170,6 @@ export default function Dashboardview() {
         setOrders([]);
         setloading(false);
       }
-      console.log(result);
       setOrders([
         {
           id: uuidv4(),
@@ -246,8 +243,6 @@ export default function Dashboardview() {
   };
 
   const handleDelete = async (id: string) => {
-    console.log('about to delete:', id);
-    console.log('trxcode:', id);
     const response = await DeleteOrder({ userid: userId!, trxCode: id });
     if (response.message === 'Order deleted successfully') {
       toast({
@@ -278,7 +273,6 @@ export default function Dashboardview() {
         date: today,
       });
       const result = response;
-      console.log('filterResult:', result);
       if (result.error === 'No Order could be found!') {
         setFilterValue(status);
         setOrders([]);
@@ -356,11 +350,6 @@ export default function Dashboardview() {
     }
   };
 
-  console.log('fetchorders:', orders);
-  console.log('fetchPending:', pending);
-  console.log('currentpage:', currentPage);
-  console.log('totalPages:', totalPages);
-
   return (
     <main className="min-h-screen bg-slate-50 p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-8">
@@ -414,8 +403,8 @@ export default function Dashboardview() {
             color="bg-indigo-400"
           />
           <StatCard
-            title="Cities Delivered"
-            value={0}
+            title="Cities"
+            value={locations.length}
             icon={<Building className="h-6 w-6 text-white" />}
             color="bg-blue-400"
           />
@@ -479,17 +468,6 @@ export default function Dashboardview() {
             handleSearch={handleSearch}
           />
         )}
-        {/* <DataTable
-          columns={
-            columns as ColumnDef<
-              { transactionId: string; id: string },
-              unknown
-            >[]
-          }
-          data={orders}
-          totalEntries={orders.length}
-          handleDelete={handleDelete}
-        /> */}
       </div>
     </main>
   );
@@ -514,7 +492,4 @@ function StatCard({ title, value, icon, color }: StatCard) {
       </div>
     </Card>
   );
-}
-function uuidv4(): string {
-  throw new Error('Function not implemented.');
 }

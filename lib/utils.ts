@@ -40,3 +40,13 @@ export function formatNewDate(date: Date): string {
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
+
+export function splitName(name: string): {
+  firstName: string;
+  lastName: string;
+} {
+  const nameParts = name.trim().split(' ');
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || '';
+  return { firstName, lastName };
+}

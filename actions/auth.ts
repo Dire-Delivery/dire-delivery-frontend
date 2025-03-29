@@ -2,6 +2,14 @@
 'use server';
 
 import apiCall from '@/base-api/api';
+import {
+  AddUserDetails,
+  Details,
+  ForgotPasswordData,
+  loginDetails,
+  ResetPasswordData,
+  UpdateUserData,
+} from '@/types/auth';
 import { cookies } from 'next/headers';
 
 const BaseUrl = process.env.NEXT_PUBLIC_API_URL;
@@ -119,4 +127,25 @@ export const RememberMe = async (userId: string) => {
     sameSite: 'lax',
   });
   return response;
+};
+
+export const UpdateUser = async (data: UpdateUserData) => {
+  const cookieStore = await cookies();
+  const userData = await userProfile();
+  if (userData && 'email' in userData) {
+    const newData = {
+      ...userData,
+      name: data.name,
+      password: data.password,
+      location: data.location,
+      phone: data.phone,
+    };
+    cookieStore.set({
+      name: 'user',
+      value: JSON.stringify(newData),
+      httpOnly: true,
+      path: '/',
+      sameSite: 'lax',
+    });
+  }
 };

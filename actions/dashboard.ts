@@ -27,3 +27,10 @@ export const dashboardTotalsAPI = async (userid: string) => {
 
   return result;
 };
+
+export const fetchLocations = async () => {
+  const fetchUrl = `${BaseURL}/orders/pre-order`;
+  const response = await apiCall({ url: fetchUrl });
+
+  return response.locations;
+};

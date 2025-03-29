@@ -94,8 +94,7 @@ export default function PriceCitySettings({
       ...data,
     };
     try {
-      const response = await addCity({ data: cityData, userid: user!.id });
-      console.log(response);
+      await addCity({ data: cityData, userid: user!.id });
       setActiveTab('price');
       setTriggerState((prev) => !prev);
       toast({
@@ -132,10 +131,8 @@ export default function PriceCitySettings({
   };
 
   const handleDelete = async (code: string) => {
-    console.log('code:', code);
     try {
-      const response = await deleteCity({ userid: user!.id, code });
-      console.log(response);
+      await deleteCity({ userid: user!.id, code });
       toast({
         title: 'Deleted Successfully',
         description: `City ${code} Deleted succesfully `,
@@ -153,12 +150,11 @@ export default function PriceCitySettings({
     }
   };
   const handlePriceChange = async () => {
-    console.log('newPrice:', newPrice);
     const newPriceSet = {
       price: newPrice,
     };
     try {
-      const response = await changePrice({
+      await changePrice({
         data: newPriceSet,
         userid: user!.id,
         constants: constatns!.id,
@@ -168,7 +164,6 @@ export default function PriceCitySettings({
         description: `Price Set succesfull `,
         variant: `success`,
       });
-      console.log('response:', response);
       setConfirmModal(false);
       setEditPrice(false);
       setTriggerState((prev) => !prev);

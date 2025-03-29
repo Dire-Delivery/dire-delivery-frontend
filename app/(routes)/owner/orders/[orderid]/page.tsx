@@ -21,6 +21,7 @@ import {
 import { notFound, useRouter } from 'next/navigation';
 import { use, useEffect, useState } from 'react';
 
+import handlePrintDetail from '@/components/order/orderPrintdetail';
 export default function OrderPage({
   params,
 }: {
@@ -49,19 +50,16 @@ export default function OrderPage({
     fetchData();
   }, [orderid, triggerState]);
 
-  console.log('order:', order);
-
   const handlestatus = async (id: string, status: string) => {
     const data = {
       trxCode: id,
       status: status,
     };
     try {
-      const response = await updateOrderStatus({
+      await updateOrderStatus({
         userid: user!.id,
         data: data,
       });
-      console.log('response of change:', response);
       toast({
         title: 'Status Changed Successfully',
         description: `Transaction ${id} changed to ${status} succesfully `,
@@ -72,8 +70,6 @@ export default function OrderPage({
     } catch (error) {
       console.error('Error updating order status:', error);
     }
-
-    console.log('status data', data);
   };
 
   if (!order) {
@@ -93,7 +89,11 @@ export default function OrderPage({
         <div className="bg-white rounded-lg p-6 shadow-sm">
           <div className="flex justify-between items-center mb-6">
             <div className="flex items-center justify-center">
-              <div onClick={() => {router.back()}}>
+              <div
+                onClick={() => {
+                  router.back();
+                }}
+              >
                 <Button
                   variant="ghost"
                   className="flex items-center gap-2 w-fit h-fit"
@@ -107,7 +107,10 @@ export default function OrderPage({
               </span>
             </div>
 
-            <Button className="bg-indigo-900 hover:bg-indigo-800">
+            <Button
+              className="bg-indigo-900 hover:bg-indigo-800"
+              onClick={() => handlePrintDetail(order)}
+            >
               <Printer className="mr-2 h-4 w-4" /> Print
             </Button>
           </div>

@@ -49,7 +49,6 @@ export default function HelpView() {
           supportTel: response.supportTel,
         };
         setHelp(result);
-        console.log(response);
       } catch (error) {
         console.log(error);
       }
@@ -58,14 +57,12 @@ export default function HelpView() {
   }, [triggerState]);
 
   const onSubmit: SubmitHandler<z.infer<typeof helpForm>> = async (data) => {
-    console.log('Form data submitted:', data); // Log form data
     const updatedHelp: help = {
       supportTel: data.supportTel,
     };
     setHelp(updatedHelp);
     setShowEditInfoModal(false);
     setShowConfirmInfo(true);
-    console.log('Updated help data:', updatedHelp); // Log updated help data
   };
   const handleClose = () => {
     reset();
@@ -75,12 +72,11 @@ export default function HelpView() {
 
   const submitting = async () => {
     try {
-      const response = await patchHelp({
+      await patchHelp({
         data: help!,
         userid: user!.id,
         constants: constatns!.id,
       });
-      console.log('response:', response);
 
       setShowEditInfoModal(false);
       setShowConfirmInfo(false);
@@ -90,8 +86,6 @@ export default function HelpView() {
       console.log(error);
     }
   };
-
-  console.log('help:', help);
 
   return (
     <>
