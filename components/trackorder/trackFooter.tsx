@@ -1,6 +1,5 @@
 import Image from 'next/image';
 
-import { FaFacebookF, FaLinkedinIn, FaInstagram } from 'react-icons/fa';
 import plane from '@/public/Icons/plane.svg';
 
 export default function TrackFooter() {
@@ -18,16 +17,14 @@ export default function TrackFooter() {
             Your trusted partner for fast and reliable delivery services.
           </p>
         </div>
-        <div className="mt-6 md:mt-0">
-          <h3 className="text-xl font-bold">Contact Us</h3>
-          <p className="mt-2">Abdihadiiiman@gmail.com</p>
-          <p>Tel: +251916272791</p>
-          <p>Megenagna, Addis Ababa, Ethiopia</p>
-        </div>
-        <div className="mt-6 md:mt-0 flex gap-4">
-          <FaFacebookF className="w-8 h-8" />
-          <FaLinkedinIn className="w-8 h-8" />
-          <FaInstagram className="w-8 h-8" />
+
+        <div className="mt-6 md:mt-0  w-full flex justify-center">
+          <div>
+            <h3 className="text-xl font-bold">Contact Us</h3>
+            <p className="mt-2">Direexpress1@gmail.com</p>
+            <p>Tel: +251915797270</p>
+            <p>Bole Michael, Addis Ababa, Ethiopia</p>
+          </div>
         </div>
       </footer>
       <div className="w-full py-4 bg-[#060a87] text-center text-white text-sm">

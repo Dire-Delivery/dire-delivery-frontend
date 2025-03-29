@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import plane from '@/public/Icons/plane.svg';
-import { FaFacebookF, FaLinkedinIn, FaInstagram } from 'react-icons/fa';
 import { LuMapPin } from 'react-icons/lu';
 import Link from 'next/link';
 
@@ -17,13 +16,8 @@ export default function TrackNav() {
         <div className=" hidden md:hidden lg:flex items-center gap-2">
           <LuMapPin className="text-white w-6 h-6" />
           <span className="text-white text-lg">
-            Megenaga, Addis Ababa, Ethiopia
+            Bole Michael, Addis Ababa, Ethiopia
           </span>
-        </div>
-        <div className="hidden md:flex gap-4">
-          <FaFacebookF className="text-white w-6 h-6" />
-          <FaLinkedinIn className="text-white w-6 h-6" />
-          <FaInstagram className="text-white w-6 h-6" />
         </div>
         <Link href="#TrackPackage">
           <button className="px-4 py-2 bg-[#e30613] rounded-lg text-white font-bold">

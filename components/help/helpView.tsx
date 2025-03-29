@@ -114,7 +114,7 @@ export default function HelpView() {
                   </div>
                   <div>
                     <h3 className="font-medium text-gray-900">Email Support</h3>
-                    <p className="text-gray-500">[Dire Delivery Email]</p>
+                    <p className="text-gray-500">Direexpress1@gmail.com</p>
                   </div>
                 </div>
 
@@ -134,7 +134,9 @@ export default function HelpView() {
                   </div>
                   <div>
                     <h3 className="font-medium text-gray-900">Location</h3>
-                    <p className="text-gray-500">[Dire Delivery Location]</p>
+                    <p className="text-gray-500">
+                      Bole Michael, Addis Ababa, Ethiopia
+                    </p>
                   </div>
                 </div>
               </div>

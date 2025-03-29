@@ -463,15 +463,15 @@ export default function handlePrintDetail(order: orderDetail): void {
       <!-- Employee Signature Section -->
 
       <!-- Footer -->
-      <div class="footer">
+     <div class="footer">
         <div class="logo">
           <span class="dire">Dire</span><span class="express">Express</span>
         </div>
         <div>
           <div>Support:</div>
-          <div>Abdihadiiiman@gmail.com</div>
+          <div>Direexpress1@gmail.com</div>
           <div class="address">
-            Tel: +251-912-751-9727<br />Megenagna, Addis Ababa, Ethiopia
+            Tel: +251915797270<br />Bole Michael, Addis Ababa, Ethiopia
           </div>
         </div>
       </div>

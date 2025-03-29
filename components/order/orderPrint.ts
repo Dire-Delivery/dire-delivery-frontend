@@ -473,9 +473,9 @@ export default function handlePrint(order: Order): void {
         </div>
         <div>
           <div>Support:</div>
-          <div>Abdihadiiiman@gmail.com</div>
+          <div>Direexpress1@gmail.com</div>
           <div class="address">
-            Tel: +251-912-751-9727<br />Megenagna, Addis Ababa, Ethiopia
+            Tel: +251915797270<br />Bole Michael, Addis Ababa, Ethiopia
           </div>
         </div>
       </div>
