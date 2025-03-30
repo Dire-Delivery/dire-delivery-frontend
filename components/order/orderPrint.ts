@@ -372,7 +372,7 @@ export default function handlePrint(order: Order): void {
               <li>
                 <strong>Reporting Damaged or Missing Items</strong>Any damage or
                 missing contents must be reported within seven (7) days from the
-                delivery date. To file a claim, customers must call 0973983018
+                delivery date. To file a claim, customers must call 0915797270
                 or visit the nearest Dire Delivery office.
               </li>
               <li>
