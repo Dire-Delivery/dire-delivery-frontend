@@ -225,7 +225,6 @@ export default function tracking({
                 </div>
               </div>
             </div>
-            ;
           </section>
         ) : (
           <section className='className="flex flex-col justify-center items-center gap-2 md:gap-8 border-t-2 border-[#060a87] py-6 md:py-12 px-2 lg:px-3  w-full '>
