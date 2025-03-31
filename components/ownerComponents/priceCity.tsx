@@ -316,7 +316,7 @@ export default function PriceCitySettings({
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="mb-4">
                 <div>
-                  <label className="block mb-2 font-medium">City</label>
+                  <label className="block mb-2 font-medium">City Name</label>
                   <input
                     type="text"
                     className="input-field border rounded-md w-full p-2"
@@ -330,7 +330,7 @@ export default function PriceCitySettings({
                   )}
                 </div>
                 <div>
-                  <label className="block mb-2 font-medium">City</label>
+                  <label className="block mb-2 font-medium">City Code</label>
                   <input
                     type="text"
                     className="input-field border rounded-md w-full p-2"
