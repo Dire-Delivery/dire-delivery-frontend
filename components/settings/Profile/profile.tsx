@@ -25,9 +25,9 @@ export default function ProfileSettings({ user }: ProfileSettingsProps) {
               <div>{splitName(user.name).firstName}</div>
               <div className="font-medium">Last Name:</div>
               <div>{splitName(user.name).lastName}</div>
-              <div className="font-medium">Phone Number</div>
+              <div className="font-medium">Phone Number:</div>
               <div>{user.phone}</div>
-              <div className="font-medium ">Email</div>
+              <div className="font-medium ">Email:</div>
               <div className="w-full  break-words">
                 <p className="break-words w-full">{user.email}</p>
               </div>
