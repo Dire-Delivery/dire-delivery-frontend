@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import Sidebar from '@/components/ownerComponents/sidebar';
-import ProfileSettings from '@/components/ownerComponents/profile';
-import PriceCitySettings from '@/components/ownerComponents/priceCity';
+import ProfileSettings from '@/components/settings/Profile/profile';
+import PriceCitySettings from '@/components/settings/PriceCity/priceCity';
 import { userType } from '@/types/user';
 import { userProfile } from '@/actions/auth';
 export default function Settings() {
@@ -59,6 +59,7 @@ export default function Settings() {
             <ProfileSettings user={user} />
           ) : (
             <PriceCitySettings
+              user={user}
               role={role}
               setActiveTab={setActiveTab}
               setTriggerState={setTriggerState}
