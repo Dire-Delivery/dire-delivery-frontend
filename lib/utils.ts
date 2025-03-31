@@ -50,3 +50,12 @@ export function splitName(name: string): {
   const lastName = nameParts.slice(1).join(' ') || '';
   return { firstName, lastName };
 }
+
+
+export function priceCalculator(weight: number, basePrice: number): number {
+  if (weight <= 1 && weight > 0) {
+    return basePrice!;
+  } else {
+    return basePrice! * weight;
+  }
+}
