@@ -4,12 +4,6 @@ import {
   TransformedOrder as OriginalTransformedOrder,
 } from '@/types/orderType';
 
-/**
- * Transforms raw Order data into TransformedOrder format
- * @param result - The raw Order data from API
- * @returns Formatted TransformedOrder object
- */
-
 interface TransformedOrder extends OriginalTransformedOrder {
   id: string;
   addedBy: string;
@@ -17,7 +11,6 @@ interface TransformedOrder extends OriginalTransformedOrder {
 export const transformOrder = (result: Order): TransformedOrder => {
   const statuses = result.orderDetails.status || [];
 
-  // Helper function to transform individual status
   const transformStatus = (statusType: string) => {
     const foundStatus = statuses.find(
       (s: { status: string }) => s.status === statusType
