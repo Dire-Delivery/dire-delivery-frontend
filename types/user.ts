@@ -5,8 +5,8 @@ export type userType = {
   email: string;
   createdAt: string;
   image: string | null;
-  isActive: number;
-  isDeleted: number;
+  isActive?: number;
+  isDeleted?: number;
   location: string;
   name: string;
   password: string;

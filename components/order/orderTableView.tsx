@@ -45,7 +45,17 @@ export default function OrderTabelView({ redirectLink }: props) {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [triggerstate, SetTriggerState] = useState<boolean>(false);
-  const [user, setUser] = useState<userType | null>(null);
+  const [user, setUser] = useState<userType>({
+    id: '',
+    email: '',
+    createdAt: '',
+    image: '',
+    location: '',
+    name: '',
+    password: '',
+    role: '',
+    updatedAt: '',
+  });
   const [filterValue, setFilterValue] = useState<string>('All Status');
   const [orderAmount, setOrderAmount] = useState<number>(0);
 
