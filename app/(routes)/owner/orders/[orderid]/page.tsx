@@ -30,7 +30,17 @@ export default function OrderPage({
   // Unwrap the `params` Promise using `React.use()`
   const { orderid } = use(params);
   const [order, setOrder] = useState<orderDetail | null>(null);
-  const [user, setUser] = useState<userType | null>(null);
+  const [user, setUser] = useState<userType>({
+    id: '',
+    email: '',
+    createdAt: '',
+    image: '',
+    location: '',
+    name: '',
+    password: '',
+    role: '',
+    updatedAt: '',
+  });
   const router = useRouter();
   const [triggerState, setTriggerState] = useState<boolean>(false);
 

@@ -33,7 +33,17 @@ export default function UserView({
   const [totalPeople, setTotalPeople] = useState(0);
   const [showFilteredData, setShowFilteredData] = useState(false);
   const [searchInput, setSearchInput] = useState('');
-  const [user, setUser] = useState<userType | null>(null);
+  const [user, setUser] = useState<userType>({
+    id: '',
+    email: '',
+    createdAt: '',
+    image: '',
+    location: '',
+    name: '',
+    password: '',
+    role: '',
+    updatedAt: '',
+  });
 
   useEffect(() => {
     const fetchOrders = async () => {

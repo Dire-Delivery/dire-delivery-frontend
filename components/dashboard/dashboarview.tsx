@@ -33,7 +33,17 @@ import { v4 as uuidv4 } from 'uuid';
 export default function Dashboardview() {
   const [orders, setOrders] = useState<TransformedOrder[] | null>(null);
 
-  const [user, setUser] = useState<userType | null>(null);
+  const [user, setUser] = useState<userType>({
+    id: '',
+    email: '',
+    createdAt: '',
+    image: '',
+    location: '',
+    name: '',
+    password: '',
+    role: '',
+    updatedAt: '',
+  });
   const [pagenumber, setPagenumber] = useState<number>(1);
   const [loading, setloading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState<number>(1);

@@ -17,7 +17,17 @@ export default function HelpView() {
   const [help, setHelp] = useState<help>();
   const [showEditInfoModal, setShowEditInfoModal] = useState(false);
   const [triggerState, setStateTrigger] = useState(false);
-  const [user, setUser] = useState<userType | null>(null);
+  const [user, setUser] = useState<userType>({
+    id: '',
+    email: '',
+    createdAt: '',
+    image: '',
+    location: '',
+    name: '',
+    password: '',
+    role: '',
+    updatedAt: '',
+  });
   const [constatns, setconstants] = useState<PriceInfoType>();
 
   useEffect(() => {
