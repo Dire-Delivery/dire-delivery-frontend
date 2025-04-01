@@ -105,16 +105,13 @@ export default function Dashboardview() {
           fetchLocations(),
         ]);
 
-      // Set user and locations first as they're straightforward
       setUser(decoded as userType);
       setLocations(locationResponse);
 
-      // Handle dashboard totals
       if (totalsResponse) {
         setDashboardTotals(totalsResponse);
       }
 
-      // Handle order response with proper type checking
       const result = orderResponse as OrderApiResponse;
 
       if (result?.error) {
@@ -147,21 +144,17 @@ export default function Dashboardview() {
   // Search handler
   const handleSearch = useCallback(async (id: string) => {
     setLoading(true);
-
     try {
       if (!id) {
         setTriggerstate((prev) => !prev);
         return;
       }
-
       const response = await FetchOrder(id);
-
       if (response.error === 'Transaction not found!') {
         setOrders([]);
         setLoading(false);
         return;
       }
-
       setOrders([transformOrder(response)]);
     } catch (error) {
       console.error('Search failed:', error);
