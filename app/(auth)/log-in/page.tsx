@@ -98,7 +98,8 @@ export default function SignIn() {
       }
     } else {
       toast({
-        title: 'Could not log in',
+        title: data.error.title ? data.error.title : 'Could not log in',
+        description: data.error.description ? data.error.description : '',
         variant: 'destructive',
       });
     }
