@@ -5,7 +5,7 @@ import {
   getStatusColor,
 } from '@/components/trackorder/factories';
 import Image from 'next/image';
-import Confused from '@/public/images/confused.jpg';
+import Confused from '@/public/images/confused.webp';
 import Loading from '@/components/loading';
 import { FiPackage } from 'react-icons/fi';
 import { formatDate } from '@/lib/utils';
