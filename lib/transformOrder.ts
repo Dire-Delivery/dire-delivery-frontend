@@ -35,7 +35,7 @@ export const transformOrder = (result: Order): TransformedOrder => {
     Price: result.orderDetails.item?.totalPrice || 0,
     senderAddress: result.orderDetails.sender?.address || '',
     reciverAddress: result.orderDetails.receiver?.address || '',
-    status: statuses[0]?.status || 'unknown',
+    status: result.orderDetails.order.status,
     createdAt: result.orderDetails.order.createdAT || '',
     updatedAt: result.updatedAt || '',
     paymentMethod: result.orderDetails.order?.payment === 0 ? 'Unpaid' : 'Paid',

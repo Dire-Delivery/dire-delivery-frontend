@@ -85,6 +85,8 @@ export default function OrderTableView({ redirectLink }: Props) {
               })
             : await FetchOrders({ userid: user.id, pagenumber: page });
 
+        console.log('response:', response);
+
         if (response.message !== 'Route not found') {
           setLoading(false);
           setTotalPages(response.totalPage);
@@ -203,6 +205,7 @@ export default function OrderTableView({ redirectLink }: Props) {
       </div>
     );
   }
+  console.log('trasformed:', transformedOrder);
 
   return (
     <section className="w-full px-2 md:px-8 py-4 bg-[#F1F2F8] h-full">

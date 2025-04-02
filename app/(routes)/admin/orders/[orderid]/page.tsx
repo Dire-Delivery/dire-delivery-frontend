@@ -12,9 +12,9 @@ import { toast } from '@/hooks/use-toast';
 import { orderDetail } from '@/types/orderType';
 import { userType } from '@/types/user';
 import handlePrintDetail from '@/components/order/orderPrintdetail';
-import { PackageCard } from '@/data/Packagecard';
-import { OrderDetailCard } from '@/data/orderDetailCard';
-import PersonaCard from '@/data/PersonaCard';
+import { PackageCard } from '@/components/order/orderDetail/Packagecard';
+import { OrderDetailCard } from '@/components/order/orderDetail/orderDetailCard';
+import PersonaCard from '@/components/order/orderDetail/PersonaCard';
 
 type OrderPageProps = {
   params: Promise<{ orderid: string }>;
