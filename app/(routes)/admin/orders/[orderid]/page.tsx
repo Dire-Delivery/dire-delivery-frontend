@@ -47,7 +47,6 @@ export default function OrderPage({ params }: OrderPageProps) {
         FetchOrder(orderid),
         userProfile(),
       ]);
-      console.log('order:', orderResponse);
 
       setUser(userData as userType);
       setOrder(orderResponse.orderDetails);

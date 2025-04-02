@@ -48,8 +48,6 @@ export default function HelpForm({
   });
 
   const onSubmit: SubmitHandler<z.infer<typeof helpForm>> = (data) => {
-    console.log('submitting');
-
     setHelp({ supportTel: data.supportTel });
     setShowConfirmInfo(!showConfirmInfo);
   };

@@ -82,7 +82,6 @@ export const updateOrderStatus = async ({
   const endPoint = `${BaseURL}/orders/${userid}/update-status`;
 
   const response = await apiCall({ url: endPoint, method: 'POST', data: data });
-  console.log('serverResponse:', response);
   return response;
 };
 
