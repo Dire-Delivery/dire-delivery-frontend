@@ -1,13 +1,11 @@
 'use client';
 
-import { useCallback, useEffect, useState, useMemo, use } from 'react';
+import { useCallback, useEffect, useState, use } from 'react';
 import { notFound, useRouter } from 'next/navigation';
-import { ArrowLeft, Printer, Truck, User, UserPlus } from 'lucide-react';
+import { ArrowLeft, Printer, User, UserPlus } from 'lucide-react';
 import { userProfile } from '@/actions/auth';
 import { FetchOrder, updateOrderStatus } from '@/actions/order';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import { toast } from '@/hooks/use-toast';
 import { orderDetail } from '@/types/orderType';
 import { userType } from '@/types/user';
@@ -15,6 +13,7 @@ import handlePrintDetail from '@/components/order/orderPrintdetail';
 import { PackageCard } from '@/components/order/orderDetail/Packagecard';
 import { OrderDetailCard } from '@/components/order/orderDetail/orderDetailCard';
 import PersonaCard from '@/components/order/orderDetail/PersonaCard';
+import DeliveryStatusCard from '@/components/order/orderDetail/deliveryStatusCard';
 
 type OrderPageProps = {
   params: Promise<{ orderid: string }>;
@@ -103,65 +102,6 @@ export default function OrderPage({ params }: OrderPageProps) {
     }
   }, [order]);
 
-  // Memoized card components to prevent unnecessary re-renders
-  const packageCard = useMemo(
-    () => (
-      <PackageCard
-        description={order?.item.description || ''}
-        weight={order?.item.weight || 0}
-        quantity={order?.item.quantity || 0}
-      />
-    ),
-    [order]
-  );
-
-  const orderDetailsCard = useMemo(
-    () => (
-      <OrderDetailCard
-        transactionCode={order?.order.transactionCode || ''}
-        createdAT={order?.order.createdAT || ''}
-        totalPrice={order?.item.totalPrice || 0}
-        payment={order?.order.payment || 0}
-      />
-    ),
-    [order]
-  );
-
-  const deliveryStatusCard = useMemo(
-    () => (
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-md flex items-center gap-2">
-            <Truck className="h-5 w-5" />
-            Delivery Status
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form className="space-y-3">
-            {['Pending', 'Delivered', 'Picked-up'].map((status) => (
-              <div key={status} className="flex items-center space-x-2">
-                <input
-                  title="radio"
-                  type="radio"
-                  id={status.toLowerCase()}
-                  name="status"
-                  value={status}
-                  checked={order?.order.status === status}
-                  onChange={() =>
-                    order &&
-                    handleStatusChange(order.order.transactionCode, status)
-                  }
-                />
-                <Label htmlFor={status.toLowerCase()}>{status}</Label>
-              </div>
-            ))}
-          </form>
-        </CardContent>
-      </Card>
-    ),
-    [order, handleStatusChange]
-  );
-
   if (loading) {
     return (
       <section className="w-full h-dvh md:px-8 py-4 bg-[#F1F2F8] flex items-center justify-center">
@@ -179,7 +119,7 @@ export default function OrderPage({ params }: OrderPageProps) {
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-indigo-900">
-            Welcome Back, {user.name || 'Employee'}!
+            Welcome Back, {user.name || 'Owner'}!
           </h1>
           <p className="text-gray-600">Here&apos;s Orders Report</p>
         </div>
@@ -208,9 +148,21 @@ export default function OrderPage({ params }: OrderPageProps) {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {packageCard}
-            {orderDetailsCard}
-            {deliveryStatusCard}
+            <PackageCard
+              description={order?.item.description || ''}
+              weight={order?.item.weight || 0}
+              quantity={order?.item.quantity || 0}
+            />
+            <OrderDetailCard
+              transactionCode={order?.order.transactionCode || ''}
+              createdAT={order?.order.createdAT || ''}
+              totalPrice={order?.item.totalPrice || 0}
+              payment={order?.order.payment || 0}
+            />
+            <DeliveryStatusCard
+              order={order}
+              handleStatusChange={handleStatusChange}
+            />
             <PersonaCard
               title="Sender Information"
               Icon={User}
