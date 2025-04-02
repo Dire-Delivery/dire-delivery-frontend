@@ -51,7 +51,6 @@ export function splitName(name: string): {
   return { firstName, lastName };
 }
 
-
 export function priceCalculator(weight: number, basePrice: number): number {
   if (weight <= 1 && weight > 0) {
     return basePrice!;
@@ -60,4 +59,15 @@ export function priceCalculator(weight: number, basePrice: number): number {
   }
 }
 
-
+export function formatTrackDate(date: string): string {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  };
+  const parsedDate = new Date(date);
+  return parsedDate.toLocaleDateString('en-US', options).replace(',', '');
+}

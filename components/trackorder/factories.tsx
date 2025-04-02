@@ -10,7 +10,7 @@ export function getStatusIcon(status: string) {
       return <FaPlaneDeparture className="h-10 w-10" />;
     case 'Delivered':
       return <PiBoxArrowDownBold className="h-10 w-10" />;
-    case 'Picked up':
+    case 'Picked-up':
       return <TbCircleCheckFilled className="h-16 w-16" />;
     default:
       return <Circle className="h-10 w-10" />;
