@@ -28,7 +28,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { addDetailsSchema } from '@/lib/auth-schema';
 import addDetails from '@/public/images/add-details.webp';
-import AddDetailsMobile from '@/public/images/details-mobile-version.svg';
+import AddDetailsMobile from '@/public/images/details-mobile-version.webp';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { useForm } from 'react-hook-form';
