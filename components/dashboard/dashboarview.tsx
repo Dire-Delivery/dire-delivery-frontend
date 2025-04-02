@@ -115,7 +115,6 @@ export default function Dashboardview() {
       const result = orderResponse as OrderApiResponse;
 
       if (result?.error) {
-        console.error('Order fetch error:', result.error);
         setOrders([]);
         return;
       }
