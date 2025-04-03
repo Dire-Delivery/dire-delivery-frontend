@@ -39,6 +39,14 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
+import LogInCard from '@/components/log-in/LogInCard';
+
+import dynamic from 'next/dynamic';
+
+// Dynamically import ForgotPasswordDialog
+const ForgotPasswordDialog = dynamic(() => import('@/components/log-in/ForgotPasswordDialog'), {
+  ssr: false,
+});
 
 export default function SignIn() {
   const [rememberMe, setRememberMe] = useState(false); // ✅ Add state for Remember Me
@@ -124,61 +132,7 @@ export default function SignIn() {
 
   return (
     <div className="flex flex-col justify-between h-screen w-screen md:flex-row">
-      <AlertDialog
-        open={showAlertDialog}
-        onOpenChange={(open) => setShowAlertDialog(open)} // ✅ Simplified
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle className="text-[#060A87] text-xl">
-              Confirm Password Reset
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              If you proceed, please provide your registered email address
-              below. An email with a password reset link will be sent to your
-              inbox.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-
-          <Form {...forgotPasswordForm}>
-            <form
-              onSubmit={forgotPasswordForm.handleSubmit((data) =>
-                handleForgotPassword(data.email)
-              )}
-              className="space-y-4 md:space-y-7"
-            >
-              <FormField
-                control={forgotPasswordForm.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-s font-medium text-[#060A87] md:text-lg">
-                      Email <span className="text-[#E03137]">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="john@mail.com"
-                        className="h-10 md:h-12 md:text-base focus:outline-none focus:border-none focus-visible:ring-[#060A87]"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  type="submit" // ✅ Submit the form
-                  className="bg-[#060A87] hover:bg-[#060a87dc]"
-                >
-                  Confirm
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </form>
-          </Form>
-        </AlertDialogContent>
-      </AlertDialog>
+      <ForgotPasswordDialog forgotPasswordForm={forgotPasswordForm} showAlertDialog={showAlertDialog} setShowAlertDialog={setShowAlertDialog} handleForgotPassword={handleForgotPassword}/>
       <div className="h-[calc(100vh/2.5)] w-full md:h-screen md:w-[calc(100vw/2)]">
         <Image
           src={Login}
@@ -186,82 +140,7 @@ export default function SignIn() {
           className=" w-full h-full object-cover"
         />
       </div>
-      <Card className="flex-1 w-full px-8 flex flex-col justify-center md:flex-none md:w-[350px] md:p-0 md:mx-auto md:border-none md:shadow-none lg:w-[450px] xl:w-[500px] 2xl:w-[550px]">
-        <CardHeader className="p-0">
-          <CardTitle className="font-bold text-2xl text-[#060A87] text-center p-0 px-0 pb-6 md:text-3xl">
-            Login to your account
-          </CardTitle>
-        </CardHeader>
-
-        <CardContent className="pb-0">
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 md:space-y-7"
-            >
-              <FormField
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-s font-medium text-[#111827] md:text-lg">
-                      Email <span className="text-[#E03137]">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="john@mail.com"
-                        className="h-10 md:h-12 md:text-base"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-s font-medium text-[#111827] md:text-lg">
-                      Password <span className="text-[#E03137]">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <PasswordInput
-                        placeholder="Enter your password"
-                        className="h-10 md:h-12 md:text-base"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <div className="flex justify-between ml-[-5px] mr-[-5px] items-center">
-                <label className="flex gap-1.5 items-center cursor-pointer">
-                  <Checkbox
-                    checked={rememberMe}
-                    className="data-[state=checked]:bg-[#060A87]"
-                    onClick={() => setRememberMe(!rememberMe)}
-                  />
-                  <span className="text-[#687588] font-medium">
-                    Remember Me
-                  </span>
-                </label>
-                <div
-                  className="text-[#687588] font-medium text-s items-center cursor-pointer"
-                  onClick={() => setShowAlertDialog(true)}
-                >
-                  Forgot Password
-                </div>
-              </div>
-              <Button className="w-full h-12" type="submit" variant="login">
-                Login
-              </Button>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
+      <LogInCard form={form} onSubmit={onSubmit} rememberMe={rememberMe} setRememberMe={setRememberMe} setShowAlertDialog={setShowAlertDialog}/>
     </div>
   );
 }
