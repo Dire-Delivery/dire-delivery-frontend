@@ -81,11 +81,7 @@ export default function AddEmployeeDialogue({
     if (userData && token) {
       const response = await AddUserFetch(userData.id, addDetails);
       if (response.message) {
-        toast({
-          title: 'Successfully added employee',
-          variant: 'success',
-        });
-      }
+      console.log("response", response)
 
       if (response.message == 'employee successfully created') {
         setShowFilteredData(false);
@@ -98,6 +94,16 @@ export default function AddEmployeeDialogue({
           password: response.password,
         };
         setNewEmployeeLoginDetails(employeeDetails);
+        toast({
+          title: 'Successfully added employee',
+          variant: 'success',
+        });
+      } else {
+        toast({
+          title: 'could not add employee',
+          variant: 'destructive',
+        });
+      }
       }
     }
   }
