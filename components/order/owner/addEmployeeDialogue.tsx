@@ -1,13 +1,6 @@
 'use client';
 
 import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
-import {
   Form,
   FormControl,
   FormField,
@@ -15,26 +8,20 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import done from '@/public/images/done.svg';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
 import { AddUserFetch, userProfile, userToken } from '@/actions/auth';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { addUserSchema } from '@/lib/auth-schema';
-import { cn } from '@/lib/utils';
 import { EmployeeLoginDetails } from '@/types/employeeType';
-import Image from 'next/image';
 import { useState } from 'react';
-import { AiOutlineCopy } from 'react-icons/ai';
 
-import { useMediaQuery } from 'usehooks-ts';
 import { useToast } from '@/hooks/use-toast';
-import ConfirmModal from '../confirmModal';
 import dynamic from 'next/dynamic';
+import { useMediaQuery } from 'usehooks-ts';
 const ConfirmationModal = dynamic(() => import('./ConfirmationModal'), {
   ssr: false,
 });

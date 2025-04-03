@@ -1,6 +1,5 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import {
@@ -9,28 +8,8 @@ import {
   RememberMe,
   setCookies,
 } from '@/actions/auth';
-import { PasswordInput } from '@/components/log-in/password-input';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import LogInCard from '@/components/log-in/LogInCard';
+import { useToast } from '@/hooks/use-toast';
 import { signInFormSchema } from '@/lib/auth-schema';
 import Login from '@/public/images/log-in.webp';
 import Image from 'next/image';
@@ -38,8 +17,6 @@ import { redirect } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useToast } from '@/hooks/use-toast';
-import LogInCard from '@/components/log-in/LogInCard';
 
 import dynamic from 'next/dynamic';
 

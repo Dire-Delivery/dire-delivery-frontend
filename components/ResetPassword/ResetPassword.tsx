@@ -1,21 +1,15 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { zodResolver } from "@hookform/resolvers/zod";
 
-import { ResetPassword } from "@/actions/auth";
 import { PasswordInput } from "@/components/log-in/password-input";
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { resetPasswordSchema } from "@/lib/auth-schema";
 import plane from '@/public/Icons/black Plane.svg';
-import backgroundImage from "@/public/images/resetBackground.png";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { use } from 'react';
-import { useForm, UseFormReturn } from "react-hook-form";
+import { UseFormReturn } from "react-hook-form";
 import { z } from "zod";
-import { useToast } from "@/hooks/use-toast";
 
 function ResetPasswordComponent({form, onSubmit}: {form: UseFormReturn<z.infer<typeof resetPasswordSchema>>, onSubmit: (values: z.infer<typeof resetPasswordSchema>) => Promise<void>}) {
   return (

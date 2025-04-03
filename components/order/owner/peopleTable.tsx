@@ -41,15 +41,14 @@ import { useMediaQuery } from 'usehooks-ts';
 import { userProfile, userToken } from '@/actions/auth';
 import { ChangeRole } from '@/actions/employee';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { Pagination, Person } from '@/types/employeeType';
+import dynamic from 'next/dynamic';
 import { usePathname, useRouter } from 'next/navigation';
 import { FaUserLarge } from "react-icons/fa6";
-import { LuEye, LuX } from 'react-icons/lu';
+import { LuEye } from 'react-icons/lu';
 import { RiDeleteBin5Line } from 'react-icons/ri';
-import { useToast } from '@/hooks/use-toast';
-import dynamic from 'next/dynamic';
 
 interface EmployeeDataTableProps<TData extends Person, TValue> {
     columns: ColumnDef<TData, TValue>[];

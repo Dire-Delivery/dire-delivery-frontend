@@ -1,54 +1,9 @@
 'use client';
 
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Input } from '@/components/ui/input';
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableHead,
-    TableHeader,
-    TableRow,
-} from '@/components/ui/table';
-import {
-    type ColumnDef,
-    type ColumnFiltersState,
-    flexRender,
-    getCoreRowModel,
-    getFilteredRowModel,
-    getPaginationRowModel,
-    useReactTable,
-} from '@tanstack/react-table';
-import { useEffect, useState } from 'react';
-import { useMediaQuery } from 'usehooks-ts';
 
-import { userProfile, userToken } from '@/actions/auth';
-import { ChangeRole } from '@/actions/employee';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { cn } from '@/lib/utils';
-import { Pagination, Person } from '@/types/employeeType';
-import { usePathname, useRouter } from 'next/navigation';
-import { FaUserLarge } from "react-icons/fa6";
-import { LuEye, LuX } from 'react-icons/lu';
-import { RiDeleteBin5Line } from 'react-icons/ri';
-import { useToast } from '@/hooks/use-toast';
+import { Person } from '@/types/employeeType';
+import { LuX } from 'react-icons/lu';
 
 type ChangeRoleModalRole = {
     selectedPerson: Person | null | undefined,

@@ -1,12 +1,5 @@
 'use client';
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import {
@@ -15,17 +8,8 @@ import {
   userProfile,
   userToken,
 } from '@/actions/auth';
-import { PasswordInput } from '@/components/log-in/password-input';
-import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
+import DetailsCard from '@/components/add-details/detailsCard';
+import { useToast } from '@/hooks/use-toast';
 import { addDetailsSchema } from '@/lib/auth-schema';
 import addDetails from '@/public/images/add-details.webp';
 import AddDetailsMobile from '@/public/images/details-mobile-version.webp';
@@ -33,8 +17,6 @@ import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { useToast } from '@/hooks/use-toast';
-import DetailsCard from '@/components/add-details/detailsCard';
 
 export default function AddDetails() {
   const { toast } = useToast();
