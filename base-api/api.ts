@@ -32,8 +32,8 @@ export default async function apiCall({
     const contentType = response.headers.get('Content-Type');
     if (contentType && contentType.includes('application/json')) {
       const responseData = await response.json();
-      if (!response.ok ) {
-        console.log("error thrown", responseData);
+      if (!response.ok) {
+        console.log('error thrown', responseData);
         throw new Error(responseData?.message || 'Something went wrong');
       }
       return responseData;

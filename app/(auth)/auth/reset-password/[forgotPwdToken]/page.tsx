@@ -40,24 +40,32 @@ export default function Page({
             password: newPassword
         }
 
-    try {
-        const response = await ResetPassword(passwordDetails, forgotPwdToken);
-        toast({
-            title: "Successfully reset password",
-            variant: `success`,
-          });
+        try {
+            const response = await ResetPassword(passwordDetails, forgotPwdToken);
+            if (response && !response.error) {
+                toast({
+                    title: "Successfully reset password",
+                    variant: `success`,
+                });
 
-        if (response.message == "Password reset successfully!") {
-            router.push('/log-in')
+                if (response.message == "Password reset successfully!") {
+                    router.push('/log-in')
+                }
+            } else {
+                toast({
+                    title: response.error.title ? response.error.title : 'Error!',
+                    description: response.error.description ? response.error.description : 'Could not reset password',
+                    variant: 'destructive',
+                  });
+            }
+
+        } catch (error) {
+            console.log(error);
+            toast({
+                title: "Could not reset password",
+                variant: 'destructive',
+            });
         }
-
-    } catch (error) {
-      console.log(error);
-      toast({
-        title: "Could not reset password",
-        variant: 'destructive',
-      });
-    }
     }
 
     return (

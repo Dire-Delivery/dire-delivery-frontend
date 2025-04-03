@@ -98,8 +98,8 @@ export default function SignIn() {
       }
     } else {
       toast({
-        title: data.error.title ? data.error.title : 'Could not log in',
-        description: data.error.description ? data.error.description : '',
+        title: data.error.title ? data.error.title : 'Error!',
+        description: data.error.description ? data.error.description : 'Could not log in',
         variant: 'destructive',
       });
     }
@@ -109,11 +109,21 @@ export default function SignIn() {
     try {
       const data = { email };
       const response = await ForgotPassword(data);
-      console.log({ response });
-      toast({
-        title: 'Successfully sent rest password email',
-        variant: `success`,
-      });
+      console.log("response", response);
+      if (response && !response.error) {
+        toast({
+          title: 'Successfully sent rest password email',
+          variant: `success`,
+        });
+      } else {
+        toast({
+          title: response.error.title ? response.error.title : 'Error!',
+          description: response.error.description
+            ? response.error.description
+            : 'Could not send rest password email',
+          variant: 'destructive',
+        })
+      }
     } catch (error) {
       console.log(error);
       toast({

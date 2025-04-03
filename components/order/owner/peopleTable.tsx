@@ -149,19 +149,28 @@ export function UserDataTable<
             const userData = await userProfile();
             const token = await userToken();
             if (userData && token && selectedPerson) {
-                await ChangeRole(userData.id, selectedPerson.id, view);
-                toast({
-                    title: "Successfully changed roles",
-                    variant: `success`,
-                  });
-                setShowChangeRoleModal(false);
-                setRefreshTableToggle(!refreshTableToggle);
-                
+                const data = await ChangeRole(userData.id, selectedPerson.id, view);
+                if (data && !data.error) {
+                    toast({
+                        title: "Successfully changed roles",
+                        variant: `success`,
+                    });
+                    setShowChangeRoleModal(false);
+                    setRefreshTableToggle(!refreshTableToggle);
+                } else {
+                    toast({
+                        title: data.error.title ? data.error.title : 'Error!',
+                        description: data.error.description ? data.error.description : 'Could not change role',
+                        variant: 'destructive',
+                    });
+                }
+
+
             } else {
                 toast({
                     title: "Could not change role",
                     variant: 'destructive',
-                  });
+                });
                 throw new Error("userData or token not found")
 
             }
@@ -474,7 +483,7 @@ export function UserDataTable<
                             onClick={() => {
                                 setRefreshTableToggle(!refreshTableToggle)
                                 table.nextPage()
-                                
+
                             }}
                             disabled={!table.getCanNextPage()}
                         >
