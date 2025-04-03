@@ -1,7 +1,6 @@
 'use client';
 import { userProfile, userToken } from '@/actions/auth';
 import { DeletePerson, FetchUsers, SearchByName } from '@/actions/employee';
-import AddEmployeeDialogue from '@/components/order/owner/addEmployeeDialogue';
 import { employeeColumns } from '@/components/order/owner/peopleColumn';
 import { UserDataTable } from '@/components/order/owner/peopleTable';
 import { convertToUsersFormat } from '@/lib/utils';
@@ -9,8 +8,11 @@ import { Pagination, Person } from '@/types/employeeType';
 import { userType } from '@/types/user';
 import { ColumnDef } from '@tanstack/react-table';
 import { Plus } from 'lucide-react';
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
+
+const AddEmployeeDialogue = dynamic(() => import('@/components/order/owner/addEmployeeDialogue'), { ssr: false });
 
 export default function UserView({
   view,
