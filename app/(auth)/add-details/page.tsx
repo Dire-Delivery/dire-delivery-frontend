@@ -81,7 +81,8 @@ export default function AddDetails() {
         }
       } else {
         toast({
-          title: 'Could not add information',
+          title: data.error.title ? data.error.title : 'Error!',
+          description: data.error.description ? data.error.description : 'Could not add information',
           variant: 'destructive',
         });
       }
