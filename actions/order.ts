@@ -28,6 +28,7 @@ export const FetchOrder = async (id: string) => {
   const response = await apiCall({ url: fetchURl });
   return response;
 };
+
 export const FetchStatusOrder = async ({
   status,
   userid,
@@ -80,7 +81,6 @@ export const updateOrderStatus = async ({
   const endPoint = `${BaseURL}/orders/${userid}/update-status`;
 
   const response = await apiCall({ url: endPoint, method: 'POST', data: data });
-  console.log('serverResponse:', response);
   return response;
 };
 

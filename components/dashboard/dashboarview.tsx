@@ -1,46 +1,81 @@
 'use client';
 
-import { Users, Shield, Truck, Clock, Package, Building } from 'lucide-react';
-import { Card } from '@/components/ui/card';
-
-import { JSX, useEffect, useState } from 'react';
+import { useEffect, useState, useMemo, useCallback } from 'react';
+import dynamic from 'next/dynamic';
+import { toast } from '@/hooks/use-toast';
+import { formatNewDate } from '@/lib/utils';
+import { columns } from '@/components/order/owner/column';
+import { ColumnDef } from '@tanstack/react-table';
+import { transformOrder } from '@/lib/transformOrder';
+// Types
 import {
   Order,
   TransformedOrder as OriginalTransformedOrder,
 } from '@/types/orderType';
+import { userType } from '@/types/user';
+import { dashboardTotals, locations } from '@/types/dashboard';
+
+// API functions
 import {
   DeleteOrder,
   FetchOrder,
   orderByDate,
   statusFilterDate,
 } from '@/actions/order';
-import { formatNewDate } from '@/lib/utils';
+import { userProfile } from '@/actions/auth';
+import { dashboardTotalsAPI, fetchLocations } from '@/actions/dashboard';
+import SkeletonTable from './SkeletonTable';
+import SkeletonDashCards from './skeletonCards';
+
+// Components
+const DataTable = dynamic(
+  () =>
+    import('@/components/order/owner/orderTable').then((mod) => mod.DataTable),
+  {
+    loading: () => <SkeletonTable />, // Add a loading skeleton
+    ssr: false,
+  }
+);
+
+const DashCards = dynamic(() => import('@/components/dashboard/cards'), {
+  loading: () => <SkeletonDashCards />,
+  ssr: false,
+});
 
 interface TransformedOrder extends OriginalTransformedOrder {
+  id: string;
   addedBy: string;
 }
 
-import { columns } from '@/components/order/owner/column';
-import { ColumnDef } from '@tanstack/react-table';
-import { DataTable } from '@/components/order/owner/orderTable';
-import { userProfile } from '@/actions/auth';
-import { userType } from '@/types/user';
-import { toast } from '@/hooks/use-toast';
-import { dashboardTotals, locations } from '@/types/dashboard';
-import { dashboardTotalsAPI, fetchLocations } from '@/actions/dashboard';
-import { v4 as uuidv4 } from 'uuid';
+interface OrderApiResponse {
+  orders?: Order[];
+  totalPage?: number;
+  currentPage?: number;
+  totalOrders?: number;
+  error?: string;
+}
 
 export default function Dashboardview() {
+  // State management (keeping separate states as in original)
   const [orders, setOrders] = useState<TransformedOrder[] | null>(null);
-
-  const [user, setUser] = useState<userType | null>(null);
+  const [user, setUser] = useState<userType>({
+    id: '',
+    email: '',
+    createdAt: '',
+    image: '',
+    location: '',
+    name: '',
+    password: '',
+    role: '',
+    updatedAt: '',
+  });
   const [pagenumber, setPagenumber] = useState<number>(1);
-  const [loading, setloading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [triggerstate, SetTriggerState] = useState<boolean>(false);
+  const [triggerstate, setTriggerstate] = useState<boolean>(false);
   const [filterValue, setFilterValue] = useState<string>('All Status');
-  const [dashboarTotals, setdashboardTotals] = useState<dashboardTotals>({
+  const [dashboarTotals, setDashboardTotals] = useState<dashboardTotals>({
     totalAdmins: 0,
     totalEmployees: 0,
     totalOrders: 0,
@@ -50,297 +85,149 @@ export default function Dashboardview() {
   });
   const [orderAmount, setOrderAmount] = useState<number>(0);
   const [locations, setLocations] = useState<locations[]>([]);
+
   const redirectLink = '/owner/orders';
+  const today = useMemo(() => formatNewDate(new Date()), []);
 
-  const role = user?.role;
-  const name = user?.name;
-  const userId = user?.id;
+  // Memoized user data
+  const { role, name, id: userId } = user;
 
-  const today = formatNewDate(new Date());
+  // Fetch all data with caching
+  const fetchAllData = useCallback(async () => {
+    setLoading(true);
 
-  useEffect(() => {
-    const fetchOrders = async () => {
-      const decoded = await userProfile();
-      const user = decoded as userType;
-      setUser(user);
-      try {
-        const orderRespose = await orderByDate({
-          userid: user.id!,
-          date: today,
-          pagenumber: pagenumber,
-        });
-        const totalsResponse = await dashboardTotalsAPI(user.id);
-        const locationRespose = await fetchLocations();
-        setLocations(locationRespose);
-        setdashboardTotals(totalsResponse);
-        setOrders([]);
-        const result = orderRespose;
-        setTotalPages(result.totalPage);
-        setCurrentPage(result.currentPage);
-        setloading(false);
-        setOrders(
-          result.orders.map((result: Order) => ({
-            transactionCode: result.orderDetails.order.transactionCode, // Use transactionCode instead of orderId
-            senderName: result.orderDetails.sender?.name || '',
-            reciverName: result.orderDetails.receiver?.name || '',
-            description: result.orderDetails.item?.description || '',
-            weight: result.orderDetails.item?.weight || 0,
-            quantity: result.orderDetails.item?.quantity || 0,
-            Price: result.orderDetails.item?.totalPrice || 0,
-            senderAddress: result.orderDetails.sender?.address || '',
-            reciverAddress: result.orderDetails.receiver?.address || '',
-            status: result.orderDetails.order.status || 'unknown', // Get first status
-            createdAt: result.orderDetails.order.createdAT || '',
-            updatedAt: result.updatedAt || '',
-            paymentMethod:
-              result.orderDetails.order?.payment === 0 ? 'Unpaid' : 'Paid', // Adjust payment method logic
-            statuses: {
-              pending: result.orderDetails.status?.find(
-                (s: { status: string }) => s.status === 'Pending'
-              )
-                ? {
-                    type: 'Pending',
-                    date: result.orderDetails.status.find(
-                      (s: { status: string }) => s.status === 'Pending'
-                    )!.date,
-                    location: result.orderDetails.status.find(
-                      (s: { status: string }) => s.status === 'Pending'
-                    )!.location,
-                  }
-                : undefined,
-              delivered: result.orderDetails.status?.find(
-                (s: { status: string }) => s.status === 'Delivered'
-              )
-                ? {
-                    type: 'Delivered',
-                    date: result.orderDetails.status.find(
-                      (s: { status: string }) => s.status === 'Delivered'
-                    )!.date,
-                    location: result.orderDetails.status.find(
-                      (s: { status: string }) => s.status === 'Delivered'
-                    )!.location,
-                  }
-                : undefined,
-              pickedUp: result.orderDetails.status?.find(
-                (s: { status: string }) => s.status === 'Picked up'
-              )
-                ? {
-                    type: 'Picked up',
-                    date: result.orderDetails.status.find(
-                      (s: { status: string }) => s.status === 'Picked up'
-                    )!.date,
-                    location: result.orderDetails.status.find(
-                      (s: { status: string }) => s.status === 'Picked up'
-                    )!.location,
-                  }
-                : undefined,
-            },
-            senderPhoneNumber: result.orderDetails.sender?.phone || '',
-            reciverPhoneNumber: result.orderDetails.receiver?.phone || '',
-            senderEmail: result.orderDetails.sender?.email || '',
-            reciverEmail: result.orderDetails.receiver?.email || '',
-            addedBy: result.orderDetails.employeeInfo?.name || '',
-          }))
-        );
-        setOrderAmount(orderRespose.totalOrders);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchOrders();
-  }, [triggerstate, pagenumber, today]);
-
-  const handleSearch = async (id: string) => {
-    setloading(true);
     try {
-      if (!id) {
-        SetTriggerState(!triggerstate);
+      const [decoded, orderResponse, totalsResponse, locationResponse] =
+        await Promise.all([
+          userProfile(),
+          orderByDate({ userid: user.id!, date: today, pagenumber }),
+          dashboardTotalsAPI(user.id),
+          fetchLocations(),
+        ]);
+
+      setUser(decoded as userType);
+      setLocations(locationResponse);
+
+      if (totalsResponse) {
+        setDashboardTotals(totalsResponse);
       }
-      const response = await FetchOrder(id);
-      const result = response;
-      if (result.error === 'Transaction not found!') {
+
+      const result = orderResponse as OrderApiResponse;
+
+      if (result?.error) {
         setOrders([]);
-        setloading(false);
-      }
-      setOrders([
-        {
-          id: uuidv4(),
-          transactionCode: result.orderDetails.order.transactionCode,
-          senderName: result.orderDetails.sender?.name || '',
-          reciverName: result.orderDetails.receiver?.name || '',
-          description: result.orderDetails.item?.description || '',
-          weight: result.orderDetails.item?.weight || 0,
-          quantity: result.orderDetails.item?.quantity || 0,
-          Price: result.orderDetails.item?.totalPrice || 0,
-          senderAddress: result.orderDetails.sender?.address || '',
-          reciverAddress: result.orderDetails.receiver?.address || '',
-          status: result.orderDetails.status?.[0]?.status || 'unknown', // Get first status
-          createdAt: result.orderDetails.order.createdAT || '',
-          updatedAt: result.updatedAt || '',
-          paymentMethod:
-            result.orderDetails.order?.payment === 0 ? 'Unpaid' : 'Paid', // Adjust payment method logic
-          statuses: {
-            pending: result.orderDetails.status?.find(
-              (s: { status: string }) => s.status === 'Pending'
-            )
-              ? {
-                  type: 'Pending',
-                  date: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'Pending'
-                  )!.date,
-                  location: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'Pending'
-                  )!.location,
-                }
-              : undefined,
-            delivered: result.orderDetails.status?.find(
-              (s: { status: string }) => s.status === 'Delivered'
-            )
-              ? {
-                  type: 'Delivered',
-                  date: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'Delivered'
-                  )!.date,
-                  location: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'Delivered'
-                  )!.location,
-                }
-              : undefined,
-            pickedUp: result.orderDetails.status?.find(
-              (s: { status: string }) => s.status === 'Picked up'
-            )
-              ? {
-                  type: 'Picked up',
-                  date: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'Picked up'
-                  )!.date,
-                  location: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'Picked up'
-                  )!.location,
-                }
-              : undefined,
-          },
-          senderPhoneNumber: result.orderDetails.sender?.phone || '',
-          reciverPhoneNumber: result.orderDetails.receiver?.phone || '',
-          senderEmail: result.orderDetails.sender?.email || '',
-          reciverEmail: result.orderDetails.receiver?.email || '',
-          addedBy: result.orderDetails.employeeInfo?.name || '',
-          addedby: result.orderDetails.employeeInfo?.name || '',
-        },
-      ]);
-      setloading(false);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleDelete = async (id: string) => {
-    const response = await DeleteOrder({ userid: userId!, trxCode: id });
-    if (response.message === 'Order deleted successfully') {
-      toast({
-        title: 'Deleted Successfully',
-        description: `Transaction ${id} Deleted succesfully `,
-        variant: `success`,
-      });
-      setOrders((prevItems) =>
-        prevItems
-          ? prevItems.filter((item) => item.transactionCode !== id)
-          : null
-      );
-    }
-    SetTriggerState(!triggerstate);
-  };
-
-  const handleFilter = async (status: string) => {
-    try {
-      if (status === 'All Status') {
-        setFilterValue(status);
-        SetTriggerState(!triggerstate);
         return;
       }
-      const response = await statusFilterDate({
-        userid: user!.id,
-        pagenumber: pagenumber,
-        status: status,
-        date: today,
-      });
-      const result = response;
-      if (result.error === 'No Order could be found!') {
-        setFilterValue(status);
+
+      if (result?.orders) {
+        setTotalPages(result.totalPage ?? 1);
+        setCurrentPage(result.currentPage ?? 1);
+        setOrderAmount(result.totalOrders ?? 0);
+
+        setOrders(result.orders.map((order: Order) => transformOrder(order)));
+      } else {
         setOrders([]);
       }
-      setTotalPages(response.totalPage);
-      setCurrentPage(response.currentPage);
-      setFilterValue(status);
-      setOrders(
-        result.orders.map((result: Order) => ({
-          transactionCode: result.orderDetails.order.transactionCode, // Use transactionCode instead of orderId
-          senderName: result.orderDetails.sender?.name || '',
-          reciverName: result.orderDetails.receiver?.name || '',
-          description: result.orderDetails.item?.description || '',
-          weight: result.orderDetails.item?.weight || 0,
-          quantity: result.orderDetails.item?.quantity || 0,
-          Price: result.orderDetails.item?.totalPrice || 0,
-          senderAddress: result.orderDetails.sender?.address || '',
-          reciverAddress: result.orderDetails.receiver?.address || '',
-          status: result.orderDetails.order.status || 'unknown', // Get first status
-          createdAt: result.orderDetails.order.createdAT || '',
-          updatedAt: result.updatedAt || '',
-          paymentMethod:
-            result.orderDetails.order?.payment === 0 ? 'Unpaid' : 'Paid', // Adjust payment method logic
-          statuses: {
-            pending: result.orderDetails.status?.find(
-              (s: { status: string }) => s.status === 'Pending'
-            )
-              ? {
-                  type: 'Pending',
-                  date: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'Pending'
-                  )!.date,
-                  location: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'Pending'
-                  )!.location,
-                }
-              : undefined,
-            delivered: result.orderDetails.status?.find(
-              (s: { status: string }) => s.status === 'Delivered'
-            )
-              ? {
-                  type: 'Delivered',
-                  date: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'Delivered'
-                  )!.date,
-                  location: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'Delivered'
-                  )!.location,
-                }
-              : undefined,
-            pickedUp: result.orderDetails.status?.find(
-              (s: { status: string }) => s.status === 'Picked up'
-            )
-              ? {
-                  type: 'Picked up',
-                  date: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'Picked up'
-                  )!.date,
-                  location: result.orderDetails.status.find(
-                    (s: { status: string }) => s.status === 'Picked up'
-                  )!.location,
-                }
-              : undefined,
-          },
-          senderPhoneNumber: result.orderDetails.sender?.phone || '',
-          reciverPhoneNumber: result.orderDetails.receiver?.phone || '',
-          senderEmail: result.orderDetails.sender?.email || '',
-          reciverEmail: result.orderDetails.receiver?.email || '',
-          addedBy: result.orderDetails.employeeInfo?.name || '',
-        }))
-      );
-      setloading(false);
     } catch (error) {
-      console.log(error);
+      console.error('Failed to fetch data:', error);
+      setOrders([]);
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [user.id, pagenumber, today]);
+
+  useEffect(() => {
+    fetchAllData();
+  }, [fetchAllData, triggerstate]);
+
+  // Search handler
+  const handleSearch = useCallback(async (id: string) => {
+    setLoading(true);
+    try {
+      if (!id) {
+        setTriggerstate((prev) => !prev);
+        return;
+      }
+      const response = await FetchOrder(id);
+      if (response.error === 'Transaction not found!') {
+        setOrders([]);
+        setLoading(false);
+        return;
+      }
+      setOrders([transformOrder(response)]);
+    } catch (error) {
+      console.error('Search failed:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  // Delete handler
+  const handleDelete = useCallback(
+    async (id: string) => {
+      try {
+        const response = await DeleteOrder({ userid: userId!, trxCode: id });
+
+        if (response.message === 'Order deleted successfully') {
+          toast({
+            title: 'Deleted Successfully',
+            description: `Transaction ${id} Deleted successfully`,
+            variant: 'success',
+          });
+
+          setOrders((prevItems) =>
+            prevItems
+              ? prevItems.filter((item) => item.transactionCode !== id)
+              : null
+          );
+          setTriggerstate((prev) => !prev);
+        }
+      } catch (error) {
+        console.error('Delete failed:', error);
+      }
+    },
+    [userId]
+  );
+
+  // Filter handler
+  const handleFilter = useCallback(
+    async (status: string) => {
+      setLoading(true);
+
+      try {
+        if (status === 'All Status') {
+          setFilterValue(status);
+          setTriggerstate((prev) => !prev);
+          return;
+        }
+
+        const response = await statusFilterDate({
+          userid: user.id!,
+          pagenumber: pagenumber,
+          status: status,
+          date: today,
+        });
+
+        if (response.error === 'No Order could be found!') {
+          setFilterValue(status);
+          setOrders([]);
+          setLoading(false);
+          return;
+        }
+
+        setFilterValue(status);
+        setTotalPages(response.totalPage);
+        setCurrentPage(response.currentPage);
+
+        setOrders(response.orders.map((order: Order) => transformOrder(order)));
+      } catch (error) {
+        console.error('Filter failed:', error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [user.id, pagenumber, today]
+  );
 
   return (
     <main className="min-h-screen bg-slate-50 p-4 md:p-8">
@@ -352,130 +239,34 @@ export default function Dashboardview() {
           <p className="text-slate-600">Here&apos;s Your Report</p>
         </div>
 
-        {/* Stats Row 1 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard
-            title="Total Employees"
-            value={dashboarTotals.totalEmployees ?? 0}
-            icon={<Users className="h-6 w-6 text-white" />}
-            color="bg-blue-400"
-          />
-          <StatCard
-            title="Total Admins"
-            value={dashboarTotals.totalAdmins ?? 0}
-            icon={<Shield className="h-6 w-6 text-white" />}
-            color="bg-purple-400"
-          />
-          <StatCard
-            title="Delivered Items"
-            value={dashboarTotals.totalDelivered ?? 0}
-            icon={<Truck className="h-6 w-6 text-white" />}
-            color="bg-red-400"
-          />
-          <StatCard
-            title="Pending Items"
-            value={dashboarTotals.totalPending ?? 0}
-            icon={<Clock className="h-6 w-6 text-white" />}
-            color="bg-yellow-400"
-          />
-        </div>
+        <DashCards dashboarTotals={dashboarTotals} locations={locations} />
 
-        {/* Stats Row 2 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <StatCard
-            title="Total Orders"
-            value={dashboarTotals.totalOrders ?? 0}
-            icon={<Package className="h-6 w-6 text-white" />}
-            color="bg-emerald-400"
-          />
-          <StatCard
-            title="Cities"
-            value={locations.length}
-            icon={<Building className="h-6 w-6 text-white" />}
-            color="bg-blue-400"
-          />
-          <StatCard
-            title="Picked Up Items"
-            value={dashboarTotals.totalPickedup ?? 0}
-            icon={<Users className="h-6 w-6 text-white" />}
-            color="bg-purple-400"
-          />
-        </div>
-        {orders ? (
-          <DataTable
-            orderAmount={orderAmount}
-            loading={loading}
-            redirectLink={redirectLink}
-            totalPages={totalPages}
-            setTotalPages={setTotalPages}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            pagenumber={pagenumber}
-            setPagenumber={setPagenumber}
-            role={role!}
-            name={name!}
-            columns={
-              columns as ColumnDef<
-                { transactionCode: string; id: string; addedBy: string },
-                unknown
-              >[]
-            }
-            data={orders}
-            totalEntries={orders.length}
-            handleDelete={handleDelete}
-            handleSearch={handleSearch}
-            handlefilter={handleFilter}
-            filterValue={filterValue}
-          />
-        ) : (
-          <DataTable
-            orderAmount={orderAmount}
-            filterValue={filterValue}
-            handlefilter={handleFilter}
-            loading={loading}
-            redirectLink={redirectLink}
-            totalPages={totalPages}
-            setTotalPages={setTotalPages}
-            currentPage={currentPage}
-            setCurrentPage={setCurrentPage}
-            pagenumber={pagenumber}
-            setPagenumber={setPagenumber}
-            role={role!}
-            name={name!}
-            columns={
-              columns as ColumnDef<
-                { transactionCode: string; id: string; addedBy: string },
-                unknown
-              >[]
-            }
-            data={[]}
-            totalEntries={0}
-            handleDelete={handleDelete}
-            handleSearch={handleSearch}
-          />
-        )}
+        <DataTable
+          orderAmount={orderAmount}
+          loading={loading}
+          redirectLink={redirectLink}
+          totalPages={totalPages}
+          setTotalPages={setTotalPages}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          pagenumber={pagenumber}
+          setPagenumber={setPagenumber}
+          role={role!}
+          name={name!}
+          columns={
+            columns as ColumnDef<
+              { transactionCode: string; id: string; addedBy: string },
+              unknown
+            >[]
+          }
+          data={orders || []}
+          totalEntries={orders?.length || 0}
+          handleDelete={handleDelete}
+          handleSearch={handleSearch}
+          handlefilter={handleFilter}
+          filterValue={filterValue}
+        />
       </div>
     </main>
-  );
-}
-
-type StatCard = {
-  title: string;
-  value: number;
-  color: string;
-  icon: JSX.Element;
-};
-
-function StatCard({ title, value, icon, color }: StatCard) {
-  return (
-    <Card className="p-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <p className="text-sm text-gray-500">{title}</p>
-          <p className="text-4xl font-bold">{value}</p>
-        </div>
-        <div className={`rounded-full p-3 ${color}`}>{icon}</div>
-      </div>
-    </Card>
   );
 }

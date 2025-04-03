@@ -32,7 +32,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { signInFormSchema } from '@/lib/auth-schema';
-import Login from '@/public/images/log-in.png';
+import Login from '@/public/images/log-in.webp';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import { useState } from 'react';

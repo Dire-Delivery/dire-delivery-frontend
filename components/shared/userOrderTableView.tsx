@@ -51,7 +51,17 @@ export default function UserOrderTabelView({ redirectLink, userId }: props) {
   const [totalPages, setTotalPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [triggerstate, SetTriggerState] = useState<boolean>(false);
-  const [user, setUser] = useState<userType | null>(null);
+  const [user, setUser] = useState<userType>({
+    id: '',
+    email: '',
+    createdAt: '',
+    image: '',
+    location: '',
+    name: '',
+    password: '',
+    role: '',
+    updatedAt: '',
+  });
   const [personInfo, setPersonInfo] = useState<User>();
   const [showChangeRoleModal, setShowChangeRoleModal] = useState(false);
   const [filterValue, setFilterValue] = useState<string>('All Status');

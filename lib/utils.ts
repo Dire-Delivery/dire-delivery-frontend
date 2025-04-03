@@ -50,3 +50,24 @@ export function splitName(name: string): {
   const lastName = nameParts.slice(1).join(' ') || '';
   return { firstName, lastName };
 }
+
+export function priceCalculator(weight: number, basePrice: number): number {
+  if (weight <= 1 && weight > 0) {
+    return basePrice!;
+  } else {
+    return basePrice! * weight;
+  }
+}
+
+export function formatTrackDate(date: string): string {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'long',
+    day: '2-digit',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  };
+  const parsedDate = new Date(date);
+  return parsedDate.toLocaleDateString('en-US', options).replace(',', '');
+}
